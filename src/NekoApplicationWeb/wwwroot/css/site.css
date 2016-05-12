@@ -1,0 +1,56 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 60px;
+}
+
+/* Set widths on the form inputs since otherwise they're 100% wide */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+a {
+    color: black;
+}
+
+#logoImage {
+    height: 35px;
+    margin-top: 10px;
+}
+
+.navbar-nav>li>a {
+    height: 35px;
+    line-height: 35px;
+    font-size: 15px;
+}
+
+.navbar {min-height:80px !important;}
+
+
+.navbar-brand {
+    float: left;
+    padding: 11px 15px;
+    font-size: 35px;
+    line-height: 55px;
+    height: 40px;
+    color: black !important;
+}
+
+/*Not selected nav pills*/
+.nav-pills > li > a, .nav-pills > li > a:hover, .nav-pills > li > a:focus {
+
+}
+
+.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
+    color: #ffffff;
+    background-color: blue;
+}
