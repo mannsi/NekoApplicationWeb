@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
+using NekoApplicationWeb.ViewModels;
 
 namespace NekoApplicationWeb.Controllers
 {
@@ -17,11 +18,26 @@ namespace NekoApplicationWeb.Controllers
         }
 
         [Route("Umsaekjandi")]
+        [HttpGet]
         public IActionResult Personal()
         {
-            ViewData["ContentHeader"] = "Umsækjandi";
+            ViewData["ContentHeader"] = "Umsækjendur";
             ViewData["selectedNavPillId"] = "navPillApplicant";
-            return View();
+
+            var vm = new PersonalViewModel();
+            return View(vm);
+        }
+
+        [HttpPost]
+        public IActionResult PersonalForward(PersonalViewModel vm)
+        {
+            return RedirectToAction("Education");
+        }
+
+        [HttpPost]
+        public IActionResult PersonalBackwards(PersonalViewModel vm)
+        {
+            return RedirectToAction("Index");
         }
 
         [Route("Menntun")]
@@ -68,6 +84,11 @@ namespace NekoApplicationWeb.Controllers
         public IActionResult Error()
         {
             return View();
+        }
+
+        private void AddError(string errorMessage)
+        {
+            ModelState.AddModelError(string.Empty, errorMessage);
         }
     }
 }
