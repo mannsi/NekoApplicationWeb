@@ -121,7 +121,31 @@ namespace NekoApplicationWeb.Controllers
         {
             ViewData["ContentHeader"] = "Fjármál";
             ViewData["selectedNavPillId"] = "navPillFinances";
-            return View();
+
+            var vm = new FinancesViewModel()
+            {
+                MonthlyPayPreTax = 500000,
+                MonthlyPayPreTaxSpouse = 400000,
+                OtherLoans = new List<OtherLoan>()
+                {
+                    new OtherLoan() { Remains = 1000000, MonthlyPayment = 25000}      
+                }
+            };
+            return View(vm);
+        }
+
+        [Route("FinancesForward")]
+        [HttpPost]
+        public IActionResult FinancesForward(PersonalViewModel vm)
+        {
+            return RedirectToAction("Loan");
+        }
+
+        [Route("FinancesBackwards")]
+        [HttpPost]
+        public IActionResult FinancesBackwards(PersonalViewModel vm)
+        {
+            return RedirectToAction("Employment");
         }
 
         [Route("Lan")]
