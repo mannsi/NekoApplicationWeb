@@ -15,11 +15,11 @@ namespace NekoApplicationWeb.ViewModels
 
         [Required(ErrorMessage = "Verður að fylla")]
         [Display(Name = "Tekjur á mánuði fyrir skatt")]
-        [DataType(DataType.Text)]
+        [DataType(DataType.Currency)]
         public int MonthlyPayPreTax { get; set; }
 
         [Display(Name = "Tekjur á mánuði fyrir skatt")]
-        [DataType(DataType.Text)]
+        [DataType(DataType.Currency)]
         public int MonthlyPayPreTaxSpouse { get; set; }
 
         public List<OtherLoan> OtherLoans { get; set; }

@@ -1,9 +1,25 @@
 ﻿// Write your Javascript code.
 $(document)
-    .ready(function () {
+    .ready(function() {
         setActivePill();
         updateProgressBar();
+
+        $(".currencyInput")
+            .focusout(function() {
+                setCurrencyNumber(this);
+            });
+
+        $(".currencyInput")
+            .focus(function () {
+                unformatCurrencyNumber(this);
+        });
+
+        $(".currencyInput").each(function () {
+            setCurrencyNumber(this);
+        });
+
     });
+
 
 function setActivePill() {
     var selectedNavPillId = $("#selectedNavPillId").attr("selectedNavPillId");
@@ -25,3 +41,15 @@ function updateProgressBar() {
     $("#pillProgressBar").css("width", percentageString);
     $("#pillProgressBar").text(percentageString);
 };
+
+function setCurrencyNumber(currencyInput) {
+    var unformattedNumber = $(currencyInput).val();
+    var formattedNumber = unformattedNumber.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+    $(currencyInput).val(formattedNumber);
+}
+
+function unformatCurrencyNumber(currencyInput) {
+    var formattedNumber = $(currencyInput).val();
+    var unformattedNumber = formattedNumber.replace(/\./g, "");
+    $(currencyInput).val(unformattedNumber);
+}

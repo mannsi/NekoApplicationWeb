@@ -10,7 +10,7 @@
         <div class="form-group">
             <label asp-for="@Model.MonthlyPayPreTax" class="col-lg-4 control-label"></label>
             <div class="col-lg-8">
-                <input asp-for="@Model.MonthlyPayPreTax" class="form-control" />
+                <input asp-for="@Model.MonthlyPayPreTax" class="form-control currencyInput" />
                 <span asp-validation-for="@Model.MonthlyPayPreTax" class="text-danger"></span>
             </div>
         </div>
@@ -19,25 +19,25 @@
         <div class="form-group">
             <label asp-for="@Model.MonthlyPayPreTaxSpouse" class="col-lg-4 control-label"></label>
             <div class="col-lg-8">
-                <input asp-for="@Model.MonthlyPayPreTaxSpouse" class="form-control"/>
+                <input asp-for="@Model.MonthlyPayPreTaxSpouse" class="form-control currencyInput"/>
                 <span asp-validation-for="@Model.MonthlyPayPreTaxSpouse" class="text-danger"></span>
             </div>
         </div>
 
-        <legend>Önnur lán</legend>
+        <legend>Aðrar skuldir</legend>
         @foreach (var otherLoan in Model.OtherLoans)
         {
             <div class="form-group">
                 <label asp-for="@otherLoan.Remains" class="col-lg-4 control-label"></label>
                 <div class="col-lg-8">
-                    <input asp-for="@otherLoan.Remains" class="form-control"/>
+                    <input asp-for="@otherLoan.Remains" class="form-control currencyInput"/>
                     <span asp-validation-for="@otherLoan.Remains" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group">
                 <label asp-for="@otherLoan.MonthlyPayment" class="col-lg-4 control-label"></label>
                 <div class="col-lg-8">
-                    <input asp-for="@otherLoan.MonthlyPayment" class="form-control" />
+                    <input asp-for="@otherLoan.MonthlyPayment" class="form-control currencyInput" />
                     <span asp-validation-for="@otherLoan.MonthlyPayment" class="text-danger"></span>
                 </div>
             </div>

@@ -153,7 +153,32 @@ namespace NekoApplicationWeb.Controllers
         {
             ViewData["ContentHeader"] = "Lán";
             ViewData["selectedNavPillId"] = "navPillLoan";
-            return View();
+
+            var vm = new LoanViewModel
+            {
+                BuyingPrice = 22000000,
+                PropertyNumber = "123-1234",
+                NekoLoanAmount = 2500000,
+                BankLoans = new List<BankLoan>
+                {
+                    new BankLoan {MonthlyPayment = 190000, Principal = 19500000 }
+                }
+            };
+            return View(vm);
+        }
+
+        [Route("LoanForward")]
+        [HttpPost]
+        public IActionResult LoanForward(PersonalViewModel vm)
+        {
+            return RedirectToAction("Summary");
+        }
+
+        [Route("LoanBackwards")]
+        [HttpPost]
+        public IActionResult LoanBackwards(PersonalViewModel vm)
+        {
+            return RedirectToAction("Finances");
         }
 
         [Route("Samatekt")]
