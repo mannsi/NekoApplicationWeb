@@ -1,13 +1,88 @@
-﻿<form class="form-horizontal">
+﻿@using System.Threading.Tasks
+@using NekoApplicationWeb.ViewModels
+@model NekoApplicationWeb.ViewModels.EmploymentViewModel
+
+
+<form class="form-horizontal" action="" method="post">
     <fieldset>
-        <legend>Starfsferill</legend>
-        <div class="form-group">
-            <label for="inputEmail" class="col-lg-2 control-label">Email</label>
-            <div class="col-lg-10">
-                <input type="text" class="form-control" id="inputEmail" placeholder="Email">
+        <legend>Störf</legend>
+        <div asp-validation-summary="ValidationSummary.ModelOnly" class="text-danger"></div>
+        @foreach (var employment in Model.Employements)
+        {
+            <div class="form-group">
+                <label asp-for="@employment.Title" class="col-lg-2 control-label"></label>
+                <div class="col-lg-10">
+                    <input asp-for="@employment.Title" class="form-control" />
+                    <span asp-validation-for="@employment.Title" class="text-danger"></span>
+                </div>
             </div>
+            <div class="form-group">
+                <label asp-for="@employment.CompanyName" class="col-lg-2 control-label"></label>
+                <div class="col-lg-10">
+                    <input asp-for="@employment.CompanyName" class="form-control" />
+                    <span asp-validation-for="@employment.CompanyName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="@employment.From" class="col-lg-2 control-label"></label>
+                <div class="col-lg-10">
+                    <input asp-for="@employment.From" value="@employment.From.ToString("yyyy-MM-dd")" class="form-control" />
+                    <span asp-validation-for="@employment.From" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="@employment.To" class="col-lg-2 control-label"></label>
+                <div class="col-lg-10">
+                    <input asp-for="@employment.To" value="@employment.To.ToString("yyyy-MM-dd")" class="form-control" />
+                    <span asp-validation-for="@employment.To" class="text-danger"></span>
+                </div>
+            </div>
+        }
+        <div class="col-lg-10 col-lg-offset-2">
+            <button class="btn btn-sm btn-success" style="margin-bottom: 20px;" onclick="alert('Vantar');"><i class="fa fa-plus"></i> Bæta við starfi</button>
+        </div>
+
+        @* TODO add a plus button here that adds a degree *@
+
+        <legend>Störf maka</legend>
+        @foreach (var employment in Model.EmployementsSpouse)
+        {
+            <div class="form-group">
+                <label asp-for="@employment.Title" class="col-lg-2 control-label"></label>
+                <div class="col-lg-10">
+                    <input asp-for="@employment.Title" class="form-control" />
+                    <span asp-validation-for="@employment.Title" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="@employment.CompanyName" class="col-lg-2 control-label"></label>
+                <div class="col-lg-10">
+                    <input asp-for="@employment.CompanyName" class="form-control" />
+                    <span asp-validation-for="@employment.CompanyName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="@employment.From" class="col-lg-2 control-label"></label>
+                <div class="col-lg-10">
+                    <input asp-for="@employment.From" value="@employment.From.ToString("yyyy-MM-dd")" class="form-control" />
+                    <span asp-validation-for="@employment.From" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="@employment.To" class="col-lg-2 control-label"></label>
+                <div class="col-lg-10">
+                    <input asp-for="@employment.To" value="@employment.To.ToString("yyyy-MM-dd")" class="form-control" />
+                    <span asp-validation-for="@employment.To" class="text-danger"></span>
+                </div>
+            </div>
+        }
+        <div class="col-lg-10 col-lg-offset-2">
+            <button class="btn btn-sm btn-success" style="margin-bottom: 20px;" onclick="alert('Vantar');"><i class="fa fa-plus"></i> Bæta við starfi</button>
+        </div>
+
+        <div class="col-lg-12">
+            <button type="submit" class="btn btn-info pull-left" formaction="@Url.Action("EmploymentBackwards", "Home")"><i class="fa fa-arrow-left" aria-hidden="true"></i> Til baka</button>
+            <button type="submit" class="btn btn-info pull-right" formaction="@Url.Action("EmploymentForward", "Home")">Áfram <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
         </div>
     </fieldset>
 </form>
-<a asp-controller="Home" asp-action="Education" class="btn btn-success pull-left"><i class="fa fa-arrow-left" aria-hidden="true"></i> Til baka</a>
-<a asp-controller="Home" asp-action="Finances" class="btn btn-success pull-right">Áfram <i class="fa fa-arrow-right" aria-hidden="true"></i></a>

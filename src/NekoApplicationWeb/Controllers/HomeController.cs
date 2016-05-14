@@ -86,7 +86,34 @@ namespace NekoApplicationWeb.Controllers
         {
             ViewData["ContentHeader"] = "Starfsferill";
             ViewData["selectedNavPillId"] = "navPillEmployment";
-            return View();
+
+            var vm = new EmploymentViewModel()
+            {
+                Employements = new List<Employment>
+                {
+                    new Employment {Title="Forritari", CompanyName = "Advania", From = DateTime.Now.AddMonths(-8), To = DateTime.Now}
+                },
+                EmployementsSpouse = new List<Employment>
+                {
+                    new Employment()
+                }
+            };
+
+            return View(vm);
+        }
+
+        [Route("EmploymentForward")]
+        [HttpPost]
+        public IActionResult EmploymentForward(PersonalViewModel vm)
+        {
+            return RedirectToAction("Finances");
+        }
+
+        [Route("EmploymentBackwards")]
+        [HttpPost]
+        public IActionResult EmploymentBackwards(PersonalViewModel vm)
+        {
+            return RedirectToAction("Education");
         }
 
         [Route("Fjarmal")]
