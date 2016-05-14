@@ -57,7 +57,7 @@
             <div class="col-sm-12 col-md-12 col-lg-2 col-lg-offset-1">
                 <span>EINHVERN TEXTA HINGAÐ?</span>
                 <div class="progress">
-                    <div class="progress-bar progress-bar-success" style="width: 60%">60%</div>
+                    <div id="pillProgressBar" class="progress-bar progress-bar-success"></div>
                 </div>
             </div>
         </div>
@@ -74,7 +74,7 @@
             <div class="hidden-sm hidden-md col-lg-2 col-lg-offset-1">
                 <div class="tabbable">
                     <ul class="nav nav-pills nav-stacked">
-                        <li id="navPillApplicant"><a asp-controller="Home" asp-action="Personal">Umsækjandi <i class="fa fa-@(CompletionService.PersonalCompleted()?"check":"minus")-circle pull-right"></i></a></li>
+                        <li id="navPillApplicant"><a asp-controller="Home" asp-action="Personal">Umsækjendur <i class="fa fa-@(CompletionService.PersonalCompleted()?"check":"minus")-circle pull-right"></i></a></li>
                         <li id="navPillEducation"><a asp-controller="Home" asp-action="Education">Menntun <i class="fa fa-@(CompletionService.EducationCompleted()?"check":"minus")-circle pull-right"></i></a></li>
                         <li id="navPillEmployment"><a asp-controller="Home" asp-action="Employment">Starfsferill <i class="fa fa-@(CompletionService.EmploymentCompleted()?"check":"minus")-circle pull-right"></i></a></li>
                         <li id="navPillFinances"><a asp-controller="Home" asp-action="Finances">Fjármál <i class="fa fa-@(CompletionService.FinancesCompleted()?"check":"minus")-circle pull-right"></i></a></li>
