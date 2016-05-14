@@ -49,7 +49,6 @@
                 <span asp-validation-for="EmailSpouse" class="text-danger"></span>
             </div>
         </div>
-
         <button type="submit" class="btn btn-success pull-left" formaction="@Url.Action("PersonalBackwards", "Home")"><i class="fa fa-arrow-left" aria-hidden="true"></i> Til baka</button>
         <button type="submit" class="btn btn-success pull-right" formaction="@Url.Action("PersonalForward", "Home")">Áfram <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
 
@@ -125,4 +124,7 @@
         </div>*@
     </fieldset>
 </form>
-
+@section Scripts {
+    <script src="~/js/Personal.js"></script>
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

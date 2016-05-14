@@ -13,7 +13,7 @@ namespace NekoApplicationWeb.Controllers
         [Route("")]
         public IActionResult Index()
         {
-            ViewData["ContentHeader"] = "Fyrsta sem notandi sér";
+            ViewData["ContentHeader"] = "Umsókn um Neko fasteignalán";
             return View();
         }
 
@@ -24,16 +24,23 @@ namespace NekoApplicationWeb.Controllers
             ViewData["ContentHeader"] = "Umsækjendur";
             ViewData["selectedNavPillId"] = "navPillApplicant";
 
-            var vm = new PersonalViewModel();
+            var vm = new PersonalViewModel
+            {
+                Name = "Jón Jónsson",
+                Email = "jon@corporate.com",
+                Ssn = "1203952159"
+            };
             return View(vm);
         }
 
+        [Route("PersonalForward")]
         [HttpPost]
         public IActionResult PersonalForward(PersonalViewModel vm)
         {
             return RedirectToAction("Education");
         }
 
+        [Route("PersonalBackwards")]
         [HttpPost]
         public IActionResult PersonalBackwards(PersonalViewModel vm)
         {
