@@ -7,6 +7,7 @@ using Microsoft.AspNet.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NekoApplicationWeb.Services;
 
 namespace NekoApplicationWeb
 {
@@ -28,6 +29,8 @@ namespace NekoApplicationWeb
         {
             // Add framework services.
             services.AddMvc();
+
+            services.AddTransient<CompletionService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

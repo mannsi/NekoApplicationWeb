@@ -54,3 +54,18 @@ a {
     color: #ffffff;
     background-color: blue;
 }
+
+li.active>a>i.fa-check-circle {
+    margin-top: 3px;
+    color: white;
+}
+
+li>a>i.fa-check-circle {
+    margin-top: 3px;
+    color: green;
+}
+
+li>a>i.fa-minus-circle {
+    margin-top: 3px;
+    color: red;
+}
