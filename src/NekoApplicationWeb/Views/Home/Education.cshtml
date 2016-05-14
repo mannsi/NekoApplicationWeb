@@ -9,28 +9,28 @@
         @foreach (var degree in Model.Degrees)
         {
             <div class="form-group">
-                <label asp-for="@degree.School" class="col-lg-2 control-label"></label>
-                <div class="col-lg-10">
+                <label asp-for="@degree.School" class="col-lg-4 control-label"></label>
+                <div class="col-lg-8">
                     <input asp-for="@degree.School" class="form-control" />
                     <span asp-validation-for="@degree.School" class="text-danger"></span>
                 </div>
             </div>
-                    <div class="form-group">
-                        <label asp-for="@degree.Degree" class="col-lg-2 control-label"></label>
-                        <div class="col-lg-10">
-                            <input asp-for="@degree.Degree" class="form-control" />
-                            <span asp-validation-for="@degree.Degree" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="@degree.DateFinished" class="col-lg-2 control-label"></label>
-                        <div class="col-lg-10">
-                            <input asp-for="@degree.DateFinished" value="@degree.DateFinished.ToString("yyyy-MM-dd")" class="form-control" />
-                            <span asp-validation-for="@degree.DateFinished" class="text-danger"></span>
-                        </div>
-                    </div>
+            <div class="form-group">
+                <label asp-for="@degree.Degree" class="col-lg-4 control-label"></label>
+                <div class="col-lg-8">
+                    <input asp-for="@degree.Degree" class="form-control" />
+                    <span asp-validation-for="@degree.Degree" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="@degree.DateFinished" class="col-lg-4 control-label"></label>
+                <div class="col-lg-8">
+                    <input asp-for="@degree.DateFinished" value="@degree.DateFinished.ToString("yyyy-MM-dd")" class="form-control" />
+                    <span asp-validation-for="@degree.DateFinished" class="text-danger"></span>
+                </div>
+            </div>
         }
-        <div class="col-lg-10 col-lg-offset-2">
+        <div class="col-lg-8 col-lg-offset-4">
             <button class="btn btn-sm btn-success" style="margin-bottom: 20px;" onclick="alert('Vantar');"><i class="fa fa-plus"></i> Bæta við gráðu</button>
         </div>
 
@@ -40,28 +40,28 @@
         @foreach (var degree in Model.DegreesSpouse)
         {
             <div class="form-group">
-                <label asp-for="@degree.School" class="col-lg-2 control-label"></label>
-                <div class="col-lg-10">
+                <label asp-for="@degree.School" class="col-lg-4 control-label"></label>
+                <div class="col-lg-8">
                     <input asp-for="@degree.School" class="form-control" />
                     <span asp-validation-for="@degree.School" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group">
-                <label asp-for="@degree.Degree" class="col-lg-2 control-label"></label>
-                <div class="col-lg-10">
+                <label asp-for="@degree.Degree" class="col-lg-4 control-label"></label>
+                <div class="col-lg-8">
                     <input asp-for="@degree.Degree" class="form-control" />
                     <span asp-validation-for="@degree.Degree" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group">
-                <label asp-for="@degree.DateFinished" class="col-lg-2 control-label"></label>
-                <div class="col-lg-10">
-                    <input asp-for="@degree.DateFinished" class="form-control" />
+                <label asp-for="@degree.DateFinished" class="col-lg-4 control-label"></label>
+                <div class="col-lg-8">
+                    <input asp-for="@degree.DateFinished" value="@degree.DateFinished.ToString("yyyy-MM-dd")" class="form-control" />
                     <span asp-validation-for="@degree.DateFinished" class="text-danger"></span>
                 </div>
             </div>
         }
-        <div class="col-lg-10 col-lg-offset-2">
+        <div class="col-lg-8 col-lg-offset-4">
             <button class="btn btn-sm btn-success" style="margin-bottom: 20px;" onclick="alert('Vantar');"><i class="fa fa-plus"></i> Bæta við gráðu</button>
         </div>
 

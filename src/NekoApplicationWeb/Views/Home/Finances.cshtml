@@ -8,8 +8,8 @@
         <legend>Tekjur</legend>
         <div asp-validation-summary="ValidationSummary.ModelOnly" class="text-danger"></div>
         <div class="form-group">
-            <label asp-for="@Model.MonthlyPayPreTax" class="col-lg-2 control-label"></label>
-            <div class="col-lg-10">
+            <label asp-for="@Model.MonthlyPayPreTax" class="col-lg-4 control-label"></label>
+            <div class="col-lg-8">
                 <input asp-for="@Model.MonthlyPayPreTax" class="form-control" />
                 <span asp-validation-for="@Model.MonthlyPayPreTax" class="text-danger"></span>
             </div>
@@ -17,8 +17,8 @@
 
         <legend>Tekjur maka</legend>
         <div class="form-group">
-            <label asp-for="@Model.MonthlyPayPreTaxSpouse" class="col-lg-2 control-label"></label>
-            <div class="col-lg-10">
+            <label asp-for="@Model.MonthlyPayPreTaxSpouse" class="col-lg-4 control-label"></label>
+            <div class="col-lg-8">
                 <input asp-for="@Model.MonthlyPayPreTaxSpouse" class="form-control"/>
                 <span asp-validation-for="@Model.MonthlyPayPreTaxSpouse" class="text-danger"></span>
             </div>
@@ -28,21 +28,21 @@
         @foreach (var otherLoan in Model.OtherLoans)
         {
             <div class="form-group">
-                <label asp-for="@otherLoan.Remains" class="col-lg-2 control-label"></label>
-                <div class="col-lg-10">
+                <label asp-for="@otherLoan.Remains" class="col-lg-4 control-label"></label>
+                <div class="col-lg-8">
                     <input asp-for="@otherLoan.Remains" class="form-control"/>
                     <span asp-validation-for="@otherLoan.Remains" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group">
-                <label asp-for="@otherLoan.MonthlyPayment" class="col-lg-2 control-label"></label>
-                <div class="col-lg-10">
+                <label asp-for="@otherLoan.MonthlyPayment" class="col-lg-4 control-label"></label>
+                <div class="col-lg-8">
                     <input asp-for="@otherLoan.MonthlyPayment" class="form-control" />
                     <span asp-validation-for="@otherLoan.MonthlyPayment" class="text-danger"></span>
                 </div>
             </div>
         }
-        <div class="col-lg-10 col-lg-offset-2">
+        <div class="col-lg-8 col-lg-offset-4">
             <button class="btn btn-sm btn-success" style="margin-bottom: 20px;" onclick="alert('Vantar');"><i class="fa fa-plus"></i> Bæta við láni</button>
         </div>
 
