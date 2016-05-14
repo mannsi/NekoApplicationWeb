@@ -19,7 +19,7 @@ namespace NekoApplicationWeb.Controllers
         [Route("Umsaekjandi")]
         public IActionResult Personal()
         {
-            ViewData["ContentHeader"] = "Umsókn um Neko lán";
+            ViewData["ContentHeader"] = "Umsækjandi";
             ViewData["selectedNavPillId"] = "navPillApplicant";
             return View();
         }
@@ -27,7 +27,7 @@ namespace NekoApplicationWeb.Controllers
         [Route("Menntun")]
         public IActionResult Education()
         {
-            ViewData["ContentHeader"] = "Umsókn um Neko lán";
+            ViewData["ContentHeader"] = "Menntun";
             ViewData["selectedNavPillId"] = "navPillEducation";
             return View();
         }
@@ -35,7 +35,7 @@ namespace NekoApplicationWeb.Controllers
         [Route("Starfsferill")]
         public IActionResult Employment()
         {
-            ViewData["ContentHeader"] = "Umsókn um Neko lán";
+            ViewData["ContentHeader"] = "Starfsferill";
             ViewData["selectedNavPillId"] = "navPillEmployment";
             return View();
         }
@@ -43,7 +43,7 @@ namespace NekoApplicationWeb.Controllers
         [Route("Fjarmal")]
         public IActionResult Finances()
         {
-            ViewData["ContentHeader"] = "Umsókn um Neko lán";
+            ViewData["ContentHeader"] = "Fjármál";
             ViewData["selectedNavPillId"] = "navPillFinances";
             return View();
         }
@@ -51,7 +51,7 @@ namespace NekoApplicationWeb.Controllers
         [Route("Lan")]
         public IActionResult Loan()
         {
-            ViewData["ContentHeader"] = "Umsókn um Neko lán";
+            ViewData["ContentHeader"] = "Lán";
             ViewData["selectedNavPillId"] = "navPillLoan";
             return View();
         }
@@ -59,7 +59,7 @@ namespace NekoApplicationWeb.Controllers
         [Route("Samatekt")]
         public IActionResult Summary()
         {
-            ViewData["ContentHeader"] = "Umsókn um Neko lán";
+            ViewData["ContentHeader"] = "Samatekt";
             ViewData["selectedNavPillId"] = "navPillSummary";
             return View();
         }
