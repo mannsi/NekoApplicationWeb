@@ -1,13 +1,74 @@
-﻿<form class="form-horizontal">
+﻿@using System.Threading.Tasks
+@using NekoApplicationWeb.ViewModels
+@model NekoApplicationWeb.ViewModels.EducationViewModel
+
+<form class="form-horizontal" action="" method="post">
     <fieldset>
-        <legend>Menntun</legend>
-        <div class="form-group">
-            <label for="inputEmail" class="col-lg-2 control-label">Email</label>
-            <div class="col-lg-10">
-                <input type="text" class="form-control" id="inputEmail" placeholder="Email">
+        <legend>Gráður</legend>
+        <div asp-validation-summary="ValidationSummary.ModelOnly" class="text-danger"></div>
+        @foreach (var degree in Model.Degrees)
+        {
+            <div class="form-group">
+                <label asp-for="@degree.School" class="col-lg-2 control-label"></label>
+                <div class="col-lg-10">
+                    <input asp-for="@degree.School" class="form-control" />
+                    <span asp-validation-for="@degree.School" class="text-danger"></span>
+                </div>
             </div>
+                    <div class="form-group">
+                        <label asp-for="@degree.Degree" class="col-lg-2 control-label"></label>
+                        <div class="col-lg-10">
+                            <input asp-for="@degree.Degree" class="form-control" />
+                            <span asp-validation-for="@degree.Degree" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="@degree.DateFinished" class="col-lg-2 control-label"></label>
+                        <div class="col-lg-10">
+                            <input asp-for="@degree.DateFinished" value="@degree.DateFinished.ToString("yyyy-MM-dd")" class="form-control" />
+                            <span asp-validation-for="@degree.DateFinished" class="text-danger"></span>
+                        </div>
+                    </div>
+        }
+        <div class="col-lg-10 col-lg-offset-2">
+            <button class="btn btn-sm btn-success" style="margin-bottom: 20px;" onclick="alert('Vantar');"><i class="fa fa-plus"></i> Bæta við gráðu</button>
+        </div>
+
+        @* TODO add a plus button here that adds a degree *@
+
+        <legend>Gráður maka</legend>
+        @foreach (var degree in Model.DegreesSpouse)
+        {
+            <div class="form-group">
+                <label asp-for="@degree.School" class="col-lg-2 control-label"></label>
+                <div class="col-lg-10">
+                    <input asp-for="@degree.School" class="form-control" />
+                    <span asp-validation-for="@degree.School" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="@degree.Degree" class="col-lg-2 control-label"></label>
+                <div class="col-lg-10">
+                    <input asp-for="@degree.Degree" class="form-control" />
+                    <span asp-validation-for="@degree.Degree" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="@degree.DateFinished" class="col-lg-2 control-label"></label>
+                <div class="col-lg-10">
+                    <input asp-for="@degree.DateFinished" class="form-control" />
+                    <span asp-validation-for="@degree.DateFinished" class="text-danger"></span>
+                </div>
+            </div>
+        }
+        <div class="col-lg-10 col-lg-offset-2">
+            <button class="btn btn-sm btn-success" style="margin-bottom: 20px;" onclick="alert('Vantar');"><i class="fa fa-plus"></i> Bæta við gráðu</button>
+        </div>
+
+        @* TODO add a plus button here that adds a degree *@
+        <div class="col-lg-12">
+            <button type="submit" class="btn btn-info pull-left" formaction="@Url.Action("EducationBackwards", "Home")"><i class="fa fa-arrow-left" aria-hidden="true"></i> Til baka</button>
+            <button type="submit" class="btn btn-info pull-right" formaction="@Url.Action("EducationForward", "Home")">Áfram <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
         </div>
     </fieldset>
 </form>
-<a asp-controller="Home" asp-action="Personal" class="btn btn-success pull-left"><i class="fa fa-arrow-left" aria-hidden="true"></i> Til baka</a>
-<a asp-controller="Home" asp-action="Employment" class="btn btn-success pull-right">Áfram <i class="fa fa-arrow-right" aria-hidden="true"></i></a>

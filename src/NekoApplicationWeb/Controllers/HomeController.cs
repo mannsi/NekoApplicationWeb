@@ -52,7 +52,33 @@ namespace NekoApplicationWeb.Controllers
         {
             ViewData["ContentHeader"] = "Menntun";
             ViewData["selectedNavPillId"] = "navPillEducation";
-            return View();
+
+            var vm = new EducationViewModel()
+            {
+                Degrees =  new List<EducationDegree>()
+                {
+                    new EducationDegree() { School = "Háskólinn í Reykjavík", Degree = "MSc í Tölvunarfræði", DateFinished = new DateTime(2018, 6, 1)}
+                },
+                DegreesSpouse = new List<EducationDegree>()
+                {
+                    new EducationDegree()
+                }
+            };
+            return View(vm);
+        }
+
+        [Route("EducationForward")]
+        [HttpPost]
+        public IActionResult EducationForward(PersonalViewModel vm)
+        {
+            return RedirectToAction("Employment");
+        }
+
+        [Route("EducationBackwards")]
+        [HttpPost]
+        public IActionResult EducationBackwards(PersonalViewModel vm)
+        {
+            return RedirectToAction("Personal");
         }
 
         [Route("Starfsferill")]
