@@ -12,6 +12,13 @@ namespace NekoApplicationWeb.Controllers
         [Route("")]
         public IActionResult Index()
         {
+            ViewData["ContentHeader"] = "Fyrsta sem notandi sér";
+            return View();
+        }
+
+        [Route("Umsaekjandi")]
+        public IActionResult Personal()
+        {
             ViewData["ContentHeader"] = "Umsókn um Neko lán";
             ViewData["selectedNavPillId"] = "navPillApplicant";
             return View();
