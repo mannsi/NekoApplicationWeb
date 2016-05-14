@@ -39,7 +39,7 @@ function updateProgressBar() {
     var percentageString = (numberOfCompleted/total * 100) + "%";
 
     $("#pillProgressBar").css("width", percentageString);
-    $("#pillProgressBar").text(percentageString);
+    $("#pillProgressBar").text(numberOfCompleted + '/' + total);
 };
 
 function setCurrencyNumber(currencyInput) {

@@ -31,5 +31,10 @@ namespace NekoApplicationWeb.Services
         {
             return false;
         }
+
+        public bool DocumentsCompleted()
+        {
+            return false;
+        }
     }
 }

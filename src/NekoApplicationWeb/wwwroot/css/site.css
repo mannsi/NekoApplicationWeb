@@ -69,3 +69,7 @@ li>a>i.fa-minus-circle {
     margin-top: 3px;
     color: red;
 }
+
+.btn-default, .btn-default:hover, .btn-default:active, .btn-default:visited {
+    background-color: #ccc !important;
+}

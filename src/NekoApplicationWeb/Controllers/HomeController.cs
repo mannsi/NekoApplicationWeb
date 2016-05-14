@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
 using NekoApplicationWeb.ViewModels;
 
@@ -69,14 +70,14 @@ namespace NekoApplicationWeb.Controllers
 
         [Route("EducationForward")]
         [HttpPost]
-        public IActionResult EducationForward(PersonalViewModel vm)
+        public IActionResult EducationForward(EducationViewModel vm)
         {
             return RedirectToAction("Employment");
         }
 
         [Route("EducationBackwards")]
         [HttpPost]
-        public IActionResult EducationBackwards(PersonalViewModel vm)
+        public IActionResult EducationBackwards(EducationViewModel vm)
         {
             return RedirectToAction("Personal");
         }
@@ -104,14 +105,14 @@ namespace NekoApplicationWeb.Controllers
 
         [Route("EmploymentForward")]
         [HttpPost]
-        public IActionResult EmploymentForward(PersonalViewModel vm)
+        public IActionResult EmploymentForward(EmploymentViewModel vm)
         {
             return RedirectToAction("Finances");
         }
 
         [Route("EmploymentBackwards")]
         [HttpPost]
-        public IActionResult EmploymentBackwards(PersonalViewModel vm)
+        public IActionResult EmploymentBackwards(EmploymentViewModel vm)
         {
             return RedirectToAction("Education");
         }
@@ -136,14 +137,14 @@ namespace NekoApplicationWeb.Controllers
 
         [Route("FinancesForward")]
         [HttpPost]
-        public IActionResult FinancesForward(PersonalViewModel vm)
+        public IActionResult FinancesForward(FinancesViewModel vm)
         {
             return RedirectToAction("Loan");
         }
 
         [Route("FinancesBackwards")]
         [HttpPost]
-        public IActionResult FinancesBackwards(PersonalViewModel vm)
+        public IActionResult FinancesBackwards(FinancesViewModel vm)
         {
             return RedirectToAction("Employment");
         }
@@ -169,16 +170,43 @@ namespace NekoApplicationWeb.Controllers
 
         [Route("LoanForward")]
         [HttpPost]
-        public IActionResult LoanForward(PersonalViewModel vm)
+        public IActionResult LoanForward(LoanViewModel vm)
         {
-            return RedirectToAction("Summary");
+            return RedirectToAction("Documents");
         }
 
         [Route("LoanBackwards")]
         [HttpPost]
-        public IActionResult LoanBackwards(PersonalViewModel vm)
+        public IActionResult LoanBackwards(LoanViewModel vm)
         {
             return RedirectToAction("Finances");
+        }
+
+        [Route("Fylgiskjol")]
+        public IActionResult Documents()
+        {
+            ViewData["ContentHeader"] = "Fylgiskjöl";
+            ViewData["selectedNavPillId"] = "navPillDocuments";
+
+            var vm = new DocumentsViewModel
+            {
+                
+            };
+            return View(vm);
+        }
+
+        [Route("DocumentsForward")]
+        [HttpPost]
+        public IActionResult DocumentsForward(DocumentsViewModel vm)
+        {
+            return RedirectToAction("Summary");
+        }
+
+        [Route("DocumentsBackwards")]
+        [HttpPost]
+        public IActionResult DocumentsBackwards(DocumentsViewModel vm)
+        {
+            return RedirectToAction("Loan");
         }
 
         [Route("Samatekt")]
@@ -187,6 +215,13 @@ namespace NekoApplicationWeb.Controllers
             ViewData["ContentHeader"] = "Samatekt";
             ViewData["selectedNavPillId"] = "navPillSummary";
             return View();
+        }
+
+        [Route("SummaryBackwards")]
+        [HttpPost]
+        public IActionResult SummaryBackwards(PersonalViewModel vm)
+        {
+            return RedirectToAction("Documents");
         }
 
         [Route("Error")]
