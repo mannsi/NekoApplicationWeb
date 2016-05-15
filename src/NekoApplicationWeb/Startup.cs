@@ -46,7 +46,7 @@ namespace NekoApplicationWeb
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Application/Error");
             }
 
             app.UseIISPlatformHandler();
@@ -57,7 +57,7 @@ namespace NekoApplicationWeb
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Account}/{action=StartPage}/{id?}");
             });
         }
 

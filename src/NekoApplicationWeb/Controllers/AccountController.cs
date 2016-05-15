@@ -8,14 +8,26 @@ using NekoApplicationWeb.ViewModels;
 
 namespace NekoApplicationWeb.Controllers
 {
-    //[Route("")]
+    [Route("")]
     public class AccountController : Controller
     {
-        //[Route("")]
+        [Route("")]
+        public IActionResult StartPage()
+        {
+            var vm = new StartPageViewModel();
+            return View();
+        }
+
+        [Route("GleymtLykilord")]
+        public IActionResult ForgotPassword()
+        {
+            return View("StartPage");
+        }
+
+        [HttpPost]
         public IActionResult Login()
         {
-            ViewData["ContentHeader"] = "Umsókn um Neko fasteignalán";
-            return View();
+            return RedirectToAction("Index", "Application");
         }
     }
 }

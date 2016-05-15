@@ -9,9 +9,9 @@ using NekoApplicationWeb.ViewModels;
 namespace NekoApplicationWeb.Controllers
 {
     [Route("")]
-    public class HomeController : Controller
+    public class ApplicationController : Controller
     {
-        [Route("")]
+        [Route("Umsokn")]
         public IActionResult Index()
         {
             ViewData["ContentHeader"] = "Umsókn um Neko fasteignalán";
