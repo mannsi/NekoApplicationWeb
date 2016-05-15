@@ -15,7 +15,8 @@ namespace NekoApplicationWeb.Controllers
         public IActionResult Index()
         {
             ViewData["ContentHeader"] = "Umsókn um Neko fasteignalán";
-            return View();
+            ViewData["vm"] = null;
+            return View("BasePage", "Index");
         }
 
         [Route("Umsaekjandi")]
@@ -31,7 +32,9 @@ namespace NekoApplicationWeb.Controllers
                 Email = "jon@corporate.com",
                 Ssn = "1203952159"
             };
-            return View(vm);
+
+            ViewData["vm"] = vm;
+            return View("BasePage", "Personal");
         }
 
         [Route("PersonalForward")]
@@ -65,7 +68,8 @@ namespace NekoApplicationWeb.Controllers
                     new EducationDegree()
                 }
             };
-            return View(vm);
+            ViewData["vm"] = vm;
+            return View("BasePage", "Education");
         }
 
         [Route("EducationForward")]
@@ -100,7 +104,8 @@ namespace NekoApplicationWeb.Controllers
                 }
             };
 
-            return View(vm);
+            ViewData["vm"] = vm;
+            return View("BasePage", "Employment");
         }
 
         [Route("EmploymentForward")]
@@ -132,7 +137,9 @@ namespace NekoApplicationWeb.Controllers
                     new OtherLoan() { Remains = 1000000, MonthlyPayment = 25000}      
                 }
             };
-            return View(vm);
+
+            ViewData["vm"] = vm;
+            return View("BasePage", "Finances");
         }
 
         [Route("FinancesForward")]
@@ -165,7 +172,9 @@ namespace NekoApplicationWeb.Controllers
                     new BankLoan {MonthlyPayment = 190000, Principal = 19500000 }
                 }
             };
-            return View(vm);
+
+            ViewData["vm"] = vm;
+            return View("BasePage", "Loan");
         }
 
         [Route("LoanForward")]
@@ -192,7 +201,9 @@ namespace NekoApplicationWeb.Controllers
             {
                 
             };
-            return View(vm);
+
+            ViewData["vm"] = vm;
+            return View("BasePage", "Documents");
         }
 
         [Route("DocumentsForward")]
@@ -214,7 +225,9 @@ namespace NekoApplicationWeb.Controllers
         {
             ViewData["ContentHeader"] = "Samatekt";
             ViewData["selectedNavPillId"] = "navPillSummary";
-            return View();
+
+            ViewData["vm"] = null;
+            return View("BasePage", "Summary");
         }
 
         [Route("SummaryBackwards")]

@@ -1,6 +1,5 @@
 ﻿@using System.Threading.Tasks
-@using NekoApplicationWeb.Services
-@inject CompletionService CompletionService
+
 
 <!DOCTYPE html>
 <html>
@@ -52,48 +51,13 @@
             </ul>    
         </div>
     </div>
-    <div class="container body-content">
-        <div class="row">
-            <div class="col-sm-12 col-md-12 col-lg-9">
-                <h1>@ViewData["ContentHeader"]</h1>
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-2 col-lg-offset-1">
-                <span>EINHVERN TEXTA HINGAÐ?</span>
-                <div class="progress">
-                    <div id="pillProgressBar" class="progress-bar progress-bar-success"></div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12 col-md-12 col-lg-9">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        @RenderBody()
-                    </div>
-                </div>
-            </div>
-
-            <div id="selectedNavPillId" class="hidden" selectedNavPillId="@ViewData["selectedNavPillId"]"></div>
-            <div class="hidden-sm hidden-md col-lg-2 col-lg-offset-1">
-                <div class="tabbable">
-                    <ul class="nav nav-pills nav-stacked">
-                        <li id="navPillApplicant"><a asp-controller="Home" asp-action="Personal">Umsækjendur <i class="fa fa-@(CompletionService.PersonalCompleted()?"check":"minus")-circle pull-right"></i></a></li>
-                        <li id="navPillEducation"><a asp-controller="Home" asp-action="Education">Menntun <i class="fa fa-@(CompletionService.EducationCompleted()?"check":"minus")-circle pull-right"></i></a></li>
-                        <li id="navPillEmployment"><a asp-controller="Home" asp-action="Employment">Starfsferill <i class="fa fa-@(CompletionService.EmploymentCompleted()?"check":"minus")-circle pull-right"></i></a></li>
-                        <li id="navPillFinances"><a asp-controller="Home" asp-action="Finances">Fjármál <i class="fa fa-@(CompletionService.FinancesCompleted()?"check":"minus")-circle pull-right"></i></a></li>
-                        <li id="navPillLoan"><a asp-controller="Home" asp-action="Loan">Lán <i class="fa fa-@(CompletionService.LoanCompleted()?"check":"minus")-circle pull-right"></i></a></li>
-                        <li id="navPillDocuments"><a asp-controller="Home" asp-action="Documents">Fylgiskjöl <i class="fa fa-@(CompletionService.DocumentsCompleted()?"check":"minus")-circle pull-right"></i></a></li>
-                        <li id="navPillSummary"><a asp-controller="Home" asp-action="Summary">Yfirlit</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <hr />
-        <footer>
-            <p>&copy; 2016 - Neko umsóknarvefur</p>
-        </footer>
-    </div>
+<div class="container body-content">
+    @RenderBody()
+    <hr/>
+    <footer>
+        <p>&copy; 2016 - Neko umsóknarvefur</p>
+    </footer>
+</div>
 
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>

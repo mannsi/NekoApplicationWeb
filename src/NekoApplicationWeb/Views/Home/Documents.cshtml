@@ -4,17 +4,17 @@
     <fieldset>
         <div class="form-group">
             <label asp-for="@Model.PayCheck1" class="col-lg-4 control-label"></label>
-            <div class="fileinput fileinput-new input-group col-lg-6" data-provides="fileinput">
+            <div class="fileinput fileinput-new input-group col-lg-7" data-provides="fileinput">
                 <div class="form-control" data-trigger="fileinput">
                     <i class="glyphicon glyphicon-file fileinput-exists"></i> 
                     <span class="fileinput-filename"></span>
                 </div>
                 <span class="input-group-addon btn btn-file">
-                    <span class="fileinput-new">Select file</span>
-                    <span class="fileinput-exists">Change</span>
+                    <span class="fileinput-new">Velja skrá</span>
+                    @*<span class="fileinput-exists">Breyta</span>*@
                     <input asp-for="@Model.PayCheck1" type="file">
                 </span>
-                <a href="#" class="input-group-addon btn fileinput-exists" data-dismiss="fileinput">Remove</a>
+                <a href="#" class="input-group-addon btn fileinput-exists" data-dismiss="fileinput">Fjarlægja</a>
             </div>
         </div>
 
