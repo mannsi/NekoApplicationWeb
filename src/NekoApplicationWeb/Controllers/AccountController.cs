@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
+using Microsoft.Extensions.Logging;
 using NekoApplicationWeb.ViewModels;
 
 namespace NekoApplicationWeb.Controllers
@@ -11,6 +12,13 @@ namespace NekoApplicationWeb.Controllers
     [Route("")]
     public class AccountController : Controller
     {
+        private readonly ILogger<AccountController> _logger;
+
+        public AccountController(ILogger<AccountController> logger)
+        {
+            _logger = logger;
+        }
+
         [Route("")]
         public IActionResult StartPage()
         {
