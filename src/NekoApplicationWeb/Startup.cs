@@ -42,7 +42,7 @@ namespace NekoApplicationWeb
             }
             else
             {
-                connectionString = Configuration["Data:DefaultConnection:ConnectionString"];
+                connectionString = Configuration["NekoData:DefaultConnection:ConnectionString"];
             }
 
             services.AddEntityFramework()
