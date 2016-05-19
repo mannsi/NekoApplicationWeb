@@ -1,4 +1,5 @@
-﻿@model NekoApplicationWeb.ViewModels.PersonalViewModel
+﻿@using NekoApplicationWeb.ViewModels.Page
+@model NekoApplicationWeb.ViewModels.Page.PersonalViewModel
 
 <form class="form-horizontal" action="" method="post">
     <fieldset>
@@ -49,8 +50,8 @@
                 <span asp-validation-for="EmailSpouse" class="text-danger"></span>
             </div>
         </div>
-        <button type="submit" class="btn btn-info pull-left" formaction="@Url.Action("PersonalBackwards", "Application")"><i class="fa fa-arrow-left" aria-hidden="true"></i> Til baka</button>
-        <button type="submit" class="btn btn-info pull-right" formaction="@Url.Action("PersonalForward", "Application")">Áfram <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+        <button type="submit" class="btn btn-info pull-left" formaction="@Url.Action("PersonalBackwards", "Page")"><i class="fa fa-arrow-left" aria-hidden="true"></i> Til baka</button>
+        <button type="submit" class="btn btn-info pull-right" formaction="@Url.Action("PersonalForward", "Page")">Áfram <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
     </fieldset>
 </form>
 @section Scripts {

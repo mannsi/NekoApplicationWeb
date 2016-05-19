@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace NekoApplicationWeb.ViewModels
+namespace NekoApplicationWeb.ViewModels.Page
 {
     public class LoanViewModel
     {

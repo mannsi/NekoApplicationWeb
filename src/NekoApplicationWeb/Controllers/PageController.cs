@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
 using NekoApplicationWeb.ViewModels;
+using NekoApplicationWeb.ViewModels.Page;
 
 namespace NekoApplicationWeb.Controllers
 {
     [Route("")]
-    public class ApplicationController : Controller
+    [Authorize]
+    public class PageController : Controller
     {
         [Route("Umsokn")]
         public IActionResult Index()

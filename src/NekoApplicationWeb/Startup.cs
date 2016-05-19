@@ -60,7 +60,7 @@ namespace NekoApplicationWeb
                 o.Password.RequireNonLetterOrDigit = false;
                 o.Password.RequireUppercase = false;
                 o.Password.RequiredLength = 6;
-                o.Cookies.ApplicationCookie.LoginPath = "/Account/StartPage";
+                o.Cookies.ApplicationCookie.LoginPath = "/";
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
@@ -72,7 +72,7 @@ namespace NekoApplicationWeb
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public async void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.MinimumLevel = LogLevel.Information;
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
@@ -98,6 +98,8 @@ namespace NekoApplicationWeb
                     name: "default",
                     template: "{controller=Account}/{action=StartPage}/{id?}");
             });
+
+            await InitialData.CreateDemoUser(app.ApplicationServices);
         }
 
         // Entry point for the application.

@@ -1,6 +1,7 @@
 ﻿@using System.Threading.Tasks
 @using NekoApplicationWeb.ViewModels
-@model NekoApplicationWeb.ViewModels.EducationViewModel
+@using NekoApplicationWeb.ViewModels.Page
+@model NekoApplicationWeb.ViewModels.Page.EducationViewModel
 
 <form class="form-horizontal" action="" method="post">
     <fieldset>
@@ -67,8 +68,8 @@
 
         @* TODO add a plus button here that adds a degree *@
         <div class="col-lg-12">
-            <button type="submit" class="btn btn-info pull-left" formaction="@Url.Action("EducationBackwards", "Application")"><i class="fa fa-arrow-left" aria-hidden="true"></i> Til baka</button>
-            <button type="submit" class="btn btn-info pull-right" formaction="@Url.Action("EducationForward", "Application")">Áfram <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+            <button type="submit" class="btn btn-info pull-left" formaction="@Url.Action("EducationBackwards", "Page")"><i class="fa fa-arrow-left" aria-hidden="true"></i> Til baka</button>
+            <button type="submit" class="btn btn-info pull-right" formaction="@Url.Action("EducationForward", "Page")">Áfram <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
         </div>
     </fieldset>
 </form>

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Http;
 
-namespace NekoApplicationWeb.ViewModels
+namespace NekoApplicationWeb.ViewModels.Page
 {
     public class DocumentsViewModel
     {
