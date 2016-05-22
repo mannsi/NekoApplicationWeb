@@ -32,7 +32,22 @@ namespace NekoApplicationWeb.Controllers
         public IActionResult StartPage()
         {
             var vm = new StartPageViewModel();
-            return View();
+            return View(vm);
+        }
+
+        [Route("NyUmsokn")]
+        [HttpGet]
+        public IActionResult CreateApplication()
+        {
+            var vm = new CreateApplicationViewModel();
+            return View(vm);
+        }
+
+        [Route("NyUmsokn")]
+        [HttpPost]
+        public IActionResult CreateApplication(CreateApplicationViewModel vm)
+        {
+            return View(vm);
         }
 
         [Route("GleymtLykilord")]
@@ -66,6 +81,7 @@ namespace NekoApplicationWeb.Controllers
                 return View("Error");
             }
         }
+
 
         [HttpPost]
         [Route("Utskra")]
