@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NekoApplicationWeb.ServiceInterfaces;
 
 namespace NekoApplicationWeb.Services
 {
-    public class CompletionService
+    public class CompletionService : ICompletionService
     {
         public bool PersonalCompleted()
         {

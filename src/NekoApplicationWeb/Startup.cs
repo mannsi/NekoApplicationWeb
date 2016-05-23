@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using NekoApplicationWeb.Models;
 using NekoApplicationWeb.Services;
 using Microsoft.Data.Entity;
+using NekoApplicationWeb.ServiceInterfaces;
 
 namespace NekoApplicationWeb
 {
@@ -68,7 +69,13 @@ namespace NekoApplicationWeb
             // Add framework services.
             services.AddMvc();
 
-            services.AddTransient<CompletionService>();
+            services.AddTransient<ICompletionService, CompletionService>();
+            services.AddTransient<IEmailService, EmailService>();
+
+            services.Configure<MailOptions>(myOptions =>
+            {
+                myOptions.SendGridApiKey = Configuration["NekoSendGridApiKey"];
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
