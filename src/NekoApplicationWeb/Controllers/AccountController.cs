@@ -160,19 +160,21 @@ namespace NekoApplicationWeb.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View("Error");
+                ModelState.AddModelError("", "Innskráning tókst ekki");
+                return View("StartPage");
             }
 
             var user = await _userManager.FindByNameAsync(vm.Ssn.Replace("-", ""));
             if (user == null)
             {
-                return View("Error");
+                ModelState.AddModelError("", "Innskráning tókst ekki");
+                return View("StartPage");
             }
 
             if (!user.EmailConfirmed)
             {
-                return View("Error",
-                    "Getur verið að þú eigir eftir að staðfesta reikningin þinn. Tölvupóstur með leiðbeiningum ætti að hafa borist.");
+                ModelState.AddModelError("", "Getur verið að þú eigir eftir að staðfesta reikningin þinn. Tölvupóstur með leiðbeiningum ætti að hafa borist.");
+                return View("StartPage");
             }
 
             var signInResult = await _signInManager.PasswordSignInAsync(user, vm.Password, false, false);
@@ -182,7 +184,8 @@ namespace NekoApplicationWeb.Controllers
             }
             else
             {
-                return View("Error");
+                ModelState.AddModelError("", "Innskráning tókst ekki");
+                return View("StartPage");
             }
         }
 
