@@ -44,6 +44,10 @@ namespace NekoApplicationWeb.Controllers
         [Route("")]
         public IActionResult StartPage()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction(nameof(PageController.Index), "Page");
+            }
             var vm = new StartPageViewModel();
             return View(vm);
         }
@@ -111,7 +115,6 @@ namespace NekoApplicationWeb.Controllers
             return View(vm);
         }
 
-        // TODO
         [Route("StadfestaReikning")]
         public async Task<IActionResult> ConfirmEmailAndSetPassword(string userId, string code)
         {
