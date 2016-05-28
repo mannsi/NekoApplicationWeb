@@ -19,16 +19,8 @@ namespace NekoApplicationWeb.ViewModels.Page
         [Display(Name = "Netfang")]
         public string Email { get; set; }
 
-        [DataType(DataType.Text)]
-        [Display(Name = "Kennitala")]
-        public string SsnSpouse { get; set; }
-
-        [DataType(DataType.Text)]
-        [Display(Name = "Nafn")]
-        public string NameSpouse { get; set; }
-
-        [DataType(DataType.EmailAddress, ErrorMessage = "Verður að vera löglegt netfang")]
-        [Display(Name = "Netfang")]
-        public string EmailSpouse { get; set; }
+        [DataType(DataType.Url, ErrorMessage = "Ólögleg slóð")]
+        [Display(Name = "Facebook slóð")]
+        public string FacebookPath { get; set; }
     }
 }

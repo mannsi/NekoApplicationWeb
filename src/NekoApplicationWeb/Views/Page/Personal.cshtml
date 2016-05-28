@@ -1,4 +1,4 @@
-﻿@using NekoApplicationWeb.ViewModels.Page
+﻿
 @model NekoApplicationWeb.ViewModels.Page.PersonalViewModel
 
 <form class="form-horizontal" action="" method="post">
@@ -6,7 +6,7 @@
         <legend>Umsækjandi</legend>
 
         <div asp-validation-summary="ValidationSummary.ModelOnly" class="text-danger"></div>
-        <div class="form-group">
+        <div class="form-group required">
             <label asp-for="Ssn" class="col-lg-4 control-label"></label>
             <div class="col-lg-8">
                 <input asp-for="Ssn" class="form-control"/>
@@ -23,12 +23,23 @@
         <div class="form-group">
             <label asp-for="Email" class="col-lg-4 control-label"></label>
             <div class="col-lg-8">
-                <input asp-for="Email" class="form-control"/>
+                <input asp-for="Email" class="form-control" disabled/>
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
         </div>
+        <div class="form-group">
+            <label asp-for="FacebookPath" class="col-lg-4 control-label"></label>
+            <div class="col-lg-8">
+                <input asp-for="FacebookPath" class="form-control"/>
+                <span asp-validation-for="FacebookPath" class="text-danger"></span>
+            </div>
+        </div>
 
-        <legend>Maki</legend>
+        <div class="col-lg-offset-4 col-lg-8">
+            <div class="btn btn-success"><i class="fa fa-plus"></i> Bæta við umsækjanda</div>
+        </div>
+
+        @*<legend>Maki</legend>
         <div class="form-group">
             <label asp-for="SsnSpouse" class="col-lg-4 control-label"></label>
             <div class="col-lg-8">
@@ -49,7 +60,7 @@
                 <input asp-for="EmailSpouse" class="form-control" />
                 <span asp-validation-for="EmailSpouse" class="text-danger"></span>
             </div>
-        </div>
+        </div>*@
         <button type="submit" class="btn btn-info pull-left" formaction="@Url.Action("PersonalBackwards", "Page")"><i class="fa fa-arrow-left" aria-hidden="true"></i> Til baka</button>
         <button type="submit" class="btn btn-info pull-right" formaction="@Url.Action("PersonalForward", "Page")">Áfram <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
     </fieldset>
