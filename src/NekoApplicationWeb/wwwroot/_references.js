@@ -1,8 +1,17 @@
 ﻿/// <autosync enabled="true" />
 /// <reference path="../gulpfile.js" />
+/// <reference path="js/app-neko.js" />
+/// <reference path="js/controllers.js" />
+/// <reference path="js/education - copy (3).js" />
+/// <reference path="js/employment.js" />
+/// <reference path="js/finances.js" />
+/// <reference path="js/index.js" />
+/// <reference path="js/loan.js" />
+/// <reference path="js/personal - copy.js" />
 /// <reference path="js/personal.js" />
 /// <reference path="js/site.js" />
 /// <reference path="js/startpage.js" />
+/// <reference path="lib/angular/angular.js" />
 /// <reference path="lib/bootstrap/dist/js/bootstrap.js" />
 /// <reference path="lib/jasny-bootstrap/dist/js/jasny-bootstrap.js" />
 /// <reference path="lib/jquery/dist/jquery.js" />

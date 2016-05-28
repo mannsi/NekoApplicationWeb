@@ -1,4 +1,7 @@
 ﻿@model string
+@{
+    var javascriptInlucdePath = $"~/js/{Model}.js";
+}
 
 
 <div class="row">
@@ -24,3 +27,10 @@
     @{ await Html.RenderPartialAsync("RigthNavPillsPartial"); }
 
 </div>
+
+@section Scripts{
+    <script src="~/lib/angular/angular.min.js"></script>
+    <script src="~/js/app-neko.js"></script>
+    <script src="~/js/controllers.js"></script>
+    <script src="@javascriptInlucdePath"></script>
+}
