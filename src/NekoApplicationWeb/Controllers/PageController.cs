@@ -18,6 +18,7 @@ namespace NekoApplicationWeb.Controllers
         public IActionResult Index()
         {
             ViewData["ContentHeader"] = "Umsókn um Neko fasteignalán";
+            ViewData["selectedNavPillId"] = "navPillFrontPage";
             ViewData["vm"] = null;
             return View("BasePage", "Index");
         }
