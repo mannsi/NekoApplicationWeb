@@ -65,5 +65,14 @@
 
             enumerateApplicants();
         };
+
+        vm.continue = function() {
+            $http.post('/api/applicant/list', vm.applicants)
+                .then(function(response) {
+                    window.location.href = 'Menntun';
+                }, function(error) {
+                    alert("Ekki tókst að vista");
+                });
+        };
     };
 })()

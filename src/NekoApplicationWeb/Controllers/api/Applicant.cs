@@ -1,18 +1,18 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using NekoApplicationWeb.ViewModels.Page.Personal;
 
 namespace NekoApplicationWeb.Controllers.api
 {
-    [Route("api")]
+    [Route("api/applicant")]
     [Authorize]
-    public class PageApiController : Controller
+    public class Applicant : Controller
     {
-
-        [Route("applicant/list")]
+        [Route("list")]
         [HttpGet]
-        public List<ApplicantViewModel> Personal()
+        public List<ApplicantViewModel> List()
         {
             var result = new List<ApplicantViewModel>
             {
@@ -28,7 +28,18 @@ namespace NekoApplicationWeb.Controllers.api
             return result;
         }
 
-        [Route("applicant/new")]
+        [Route("list")]
+        [HttpPost]
+        public void SaveList([FromBody]List<ApplicantViewModel> vm)
+        {
+            // TODO save the list
+            foreach (var applicantViewModel in vm)
+            {
+                Debug.WriteLine(applicantViewModel);
+            }
+        }
+
+        [Route("new")]
         [HttpGet]
         public ApplicantViewModel EmptyApplicant()
         {
@@ -40,5 +51,7 @@ namespace NekoApplicationWeb.Controllers.api
                 FacebookPath = ""
             };
         }
+
+        
     }
 }
