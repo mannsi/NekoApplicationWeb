@@ -27,7 +27,7 @@
                 <div class="form-group required" ng-if="!$first">
                     <label class="col-xs-4 control-label">Kennitala</label>
                     <div class="col-xs-8">
-                        <input name="ssn_{{$index}}" class="form-control ssn" ng-model="applicant.Ssn" required mask="391299-9999"/>
+                        <input name="ssn_{{$index}}" class="form-control ssn" ng-model="applicant.Ssn" required mask="391299-9999" ng-change="vm.pageModified = true"/>
                     </div>
                 </div>
             </div>
@@ -47,7 +47,7 @@
                 <div class="form-group required" ng-if="!$first">
                     <label class="col-xs-4 control-label">Netfang</label>
                     <div class="col-xs-8">
-                        <input type="email" class="form-control" ng-model="applicant.Email" required/>
+                        <input type="email" class="form-control" ng-model="applicant.Email" required ng-change="vm.pageModified = true"/>
                     </div>
                 </div>
             </div>
@@ -55,7 +55,7 @@
             <div class="form-group">
                 <label class="col-xs-4 control-label">Facebook slóð</label>
                 <div class="col-xs-8">
-                    <input class="form-control" ng-model="applicant.FacebookPath"/>
+                    <input class="form-control" ng-model="applicant.FacebookPath" ng-change="vm.pageModified = true"/>
                 </div>
             </div>
         </fieldset>
@@ -66,9 +66,9 @@
         </div>
     </form>
     <div class="col-xs-12">
-        <div class="btn btn-info pull-right" ng-click="vm.continue()" ng-disabled="personForm.$invalid">
+        <button class="btn btn-info pull-right" ng-click="vm.continue()" ng-disabled="personForm.$invalid">
             Vista og áfram <i class="fa fa-arrow-right" aria-hidden="true"></i>
-        </div>
+        </button>
     </div>
 </div>
 
