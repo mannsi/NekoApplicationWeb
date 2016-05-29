@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
-using NekoApplicationWeb.Models;
-using NekoApplicationWeb.ViewModels;
-using NekoApplicationWeb.ViewModels.Page;
+using NekoApplicationWeb.ViewModels.Page.Personal;
 
 namespace NekoApplicationWeb.Controllers.api
 {
@@ -13,15 +10,14 @@ namespace NekoApplicationWeb.Controllers.api
     public class PageApiController : Controller
     {
 
-        [Route("applicants")]
+        [Route("applicant/list")]
         [HttpGet]
-        public List<Applicant> Personal()
+        public List<ApplicantViewModel> Personal()
         {
-            var result = new List<Applicant>
+            var result = new List<ApplicantViewModel>
             {
-                new Applicant
+                new ApplicantViewModel
                 {
-                    Legend = "Umsækjandi",
                     Email = "test@testEmail.com",
                     Name = "Mark",
                     Ssn = "1234567899",
@@ -30,6 +26,19 @@ namespace NekoApplicationWeb.Controllers.api
             };
 
             return result;
+        }
+
+        [Route("applicant/new")]
+        [HttpGet]
+        public ApplicantViewModel EmptyApplicant()
+        {
+            return new ApplicantViewModel
+            {
+                Email = "",
+                Name = "",
+                Ssn = "",
+                FacebookPath = ""
+            };
         }
     }
 }

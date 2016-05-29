@@ -7,6 +7,7 @@ using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
 using NekoApplicationWeb.ViewModels;
 using NekoApplicationWeb.ViewModels.Page;
+using NekoApplicationWeb.ViewModels.Page.Personal;
 
 namespace NekoApplicationWeb.Controllers
 {
@@ -30,30 +31,34 @@ namespace NekoApplicationWeb.Controllers
             ViewData["ContentHeader"] = "Umsækjendur";
             ViewData["selectedNavPillId"] = "navPillApplicant";
 
-            var vm = new PersonalViewModel
+            var vm = new List<ApplicantViewModel>
             {
-                Name = "Jón Jónsson",
-                Email = "jon@corporate.com",
-                Ssn = "1203952159"
+                new ApplicantViewModel
+                {
+                    Email = "test@testEmail.com",
+                    Name = "Mark",
+                    Ssn = "1234567899",
+                    FacebookPath = "facebook.com/TheZuck"
+                }
             };
 
             ViewData["vm"] = vm;
             return View("BasePage", "Personal");
         }
 
-        [Route("PersonalForward")]
-        [HttpPost]
-        public IActionResult PersonalForward(PersonalViewModel vm)
-        {
-            return RedirectToAction("Education");
-        }
+        //[Route("PersonalForward")]
+        //[HttpPost]
+        //public IActionResult PersonalForward(PersonalViewModel vm)
+        //{
+        //    return RedirectToAction("Education");
+        //}
 
-        [Route("PersonalBackwards")]
-        [HttpPost]
-        public IActionResult PersonalBackwards(PersonalViewModel vm)
-        {
-            return RedirectToAction("Index");
-        }
+        //[Route("PersonalBackwards")]
+        //[HttpPost]
+        //public IActionResult PersonalBackwards(PersonalViewModel vm)
+        //{
+        //    return RedirectToAction("Index");
+        //}
 
         [Route("Menntun")]
         public IActionResult Education()
@@ -234,12 +239,12 @@ namespace NekoApplicationWeb.Controllers
             return View("BasePage", "Summary");
         }
 
-        [Route("SummaryBackwards")]
-        [HttpPost]
-        public IActionResult SummaryBackwards(PersonalViewModel vm)
-        {
-            return RedirectToAction("Documents");
-        }
+        //[Route("SummaryBackwards")]
+        //[HttpPost]
+        //public IActionResult SummaryBackwards(PersonalViewModel vm)
+        //{
+        //    return RedirectToAction("Documents");
+        //}
 
         [Route("Error")]
         public IActionResult Error()

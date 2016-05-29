@@ -7,7 +7,8 @@ namespace NekoApplicationWeb.Models
 {
     public class Applicant
     {
-        public string Legend { get; set; } // F.x. Umsækjandi 2
+        public string Id { get; set; }
+        public DateTime Added { get; set; }
         public string Ssn { get; set; }
         public string Email { get; set; }
         public string Name { get; set; }

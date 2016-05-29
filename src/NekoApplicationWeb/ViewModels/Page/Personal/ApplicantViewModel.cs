@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace NekoApplicationWeb.ViewModels.Page
+namespace NekoApplicationWeb.ViewModels.Page.Personal
 {
-    public class PersonalViewModel
+    public class ApplicantViewModel
     {
         [Required(ErrorMessage = "Verður að fylla")]
         [Display(Name = "Kennitala")]

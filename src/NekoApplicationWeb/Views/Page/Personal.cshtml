@@ -1,48 +1,70 @@
 ﻿
-@model NekoApplicationWeb.ViewModels.Page.PersonalViewModel
+@using System.Threading.Tasks
+@using NekoApplicationWeb.ViewModels.Page.Personal
+@using Newtonsoft.Json
+@model List<ApplicantViewModel>
 
 
-<div class="row" ng-app="app-neko" ng-controller="personalPageController as vm" ng-init="vm.initData('@Model')">
+<div class="row" ng-app="app-neko" ng-controller="personalPageController as vm" ng-init="vm.initData(@JsonConvert.SerializeObject(@Model))">
     <form class="form-horizontal" action="" method="post">
         <fieldset ng-repeat="applicant in vm.applicants">
-            <div class="col-lg-12">
-                <legend>{{applicant.Legend}}</legend>
+            <div class="col-lg-11">
+                <legend ng-bind="applicant.Legend"></legend>
             </div>
+            <span ng-show="!$first" class="col-lg-1"><a href="#" ng-click="vm.removeApplicant(applicant)"><i class="fa fa-times" style="color: red;"></i></a></span>
             <div asp-validation-summary="ValidationSummary.ModelOnly" class="text-danger"></div>
-            <div class="form-group required">
-                <label asp-for="Ssn" class="col-lg-4 control-label"></label>
-                <div class="col-lg-8">
-                    <input class="form-control" ng-model="applicant.Ssn"/>
+
+            <div>
+                <div class="form-group" ng-if="$first">
+                    <label class="col-lg-4 control-label">Kennitala</label>
+                    <div class="col-lg-8">
+                        <input class="form-control" ng-model="applicant.Ssn" disabled />
+                    </div>
+                </div>
+                <div class="form-group required" ng-if="!$first">
+                    <label class="col-lg-4 control-label">Kennitala</label>
+                    <div class="col-lg-8">
+                        <input class="form-control" ng-model="applicant.Ssn" />
+                    </div>
                 </div>
             </div>
             <div class="form-group">
-                <label asp-for="Name" class="col-lg-4 control-label"></label>
+                <label class="col-lg-4 control-label">Netfang</label>
                 <div class="col-lg-8">
-                    <input class="form-control" ng-model="applicant.Name"/>
+                    <input class="form-control" ng-model="applicant.Name" disabled />
                 </div>
             </div>
+            <div>
+                <div class="form-group" ng-if="$first">
+                    <label class="col-lg-4 control-label">Netfang</label>
+                    <div class="col-lg-8">
+                        <input class="form-control" ng-model="applicant.Email" disabled/>
+                    </div>
+                </div>
+                <div class="form-group required" ng-if="!$first">
+                    <label class="col-lg-4 control-label">Netfang</label>
+                    <div class="col-lg-8">
+                        <input class="form-control" ng-model="applicant.Email" />
+                    </div>
+                </div>
+            </div>
+            
             <div class="form-group">
-                <label asp-for="Email" class="col-lg-4 control-label"></label>
+                <label class="col-lg-4 control-label">Facebook slóð</label>
                 <div class="col-lg-8">
-                    <input class="form-control" ng-model="applicant.Email"/>
+                    <input class="form-control" ng-model="applicant.FacebookPath" />
                 </div>
-            </div>
-            <div class="form-group">
-                <label asp-for="FacebookPath" class="col-lg-4 control-label"></label>
-                <div class="col-lg-8">
-                    <input class="form-control" ng-model="applicant.FacebookPath"/>
-                </div>
-            </div>
-            <div class="col-lg-offset-4 col-lg-8">
-                <div class="btn btn-success">
-                    <i class="fa fa-plus"></i> Bæta við umsækjanda
-                </div>
-            </div>
-            <div class="col-lg-12">
-                <button type="submit" class="btn btn-info pull-left" formaction="@Url.Action("PersonalBackwards", "Page")"><i class="fa fa-arrow-left" aria-hidden="true"></i> Til baka</button>
-                <button type="submit" class="btn btn-info pull-right" formaction="@Url.Action("PersonalForward", "Page")">Áfram <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
             </div>
         </fieldset>
+        <div class="col-lg-offset-4 col-lg-8">
+            <div class="btn btn-success" ng-click="vm.addApplicant()">
+                <i class="fa fa-plus"></i> Bæta við umsækjanda
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <button type="submit" class="btn btn-info pull-left" formaction="@Url.Action("PersonalBackwards", "Page")"><i class="fa fa-arrow-left" aria-hidden="true"></i> Til baka</button>
+            <button type="submit" class="btn btn-info pull-right" formaction="@Url.Action("PersonalForward", "Page")">Áfram <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+        </div>
     </form>
 </div>
 
