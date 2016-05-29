@@ -1,5 +1,5 @@
 ﻿(function () {
     "use strict";
     // Creating the module
-    angular.module("app-neko", []);
+    angular.module("app-neko", ['ngMask']);
 })()
