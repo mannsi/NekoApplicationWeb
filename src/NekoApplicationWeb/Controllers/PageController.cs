@@ -7,6 +7,7 @@ using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
 using NekoApplicationWeb.ViewModels;
 using NekoApplicationWeb.ViewModels.Page;
+using NekoApplicationWeb.ViewModels.Page.Education;
 using NekoApplicationWeb.ViewModels.Page.Personal;
 
 namespace NekoApplicationWeb.Controllers
@@ -46,56 +47,38 @@ namespace NekoApplicationWeb.Controllers
             return View("BasePage", "Personal");
         }
 
-        //[Route("PersonalForward")]
-        //[HttpPost]
-        //public IActionResult PersonalForward(PersonalViewModel vm)
-        //{
-        //    return RedirectToAction("Education");
-        //}
-
-        //[Route("PersonalBackwards")]
-        //[HttpPost]
-        //public IActionResult PersonalBackwards(PersonalViewModel vm)
-        //{
-        //    return RedirectToAction("Index");
-        //}
-
         [Route("Menntun")]
         public IActionResult Education()
         {
             ViewData["ContentHeader"] = "Menntun";
             ViewData["selectedNavPillId"] = "navPillEducation";
 
-            var vm = new EducationViewModel()
+            var vm = new List<ApplicantDegreesViewModel>
             {
-                Degrees =  new List<EducationDegree>()
+                new ApplicantDegreesViewModel
                 {
-                    new EducationDegree() { School = "Háskólinn í Reykjavík", Degree = "MSc í Tölvunarfræði", DateFinished = new DateTime(2018, 6, 1)}
+                    ApplicantName = "Joe Smoe",
+                    Degrees = new List<DegreeViewModel>
+                    {
+                        new DegreeViewModel { School = "Háskólinn í Reykjavík", Degree = "MSc í Tölvunarfræði", DateFinished = new DateTime(2018, 6, 1) },
+                        new DegreeViewModel { School = "Háskólinn í Reykjavík", Degree = "BS í Tölvunarfræði", DateFinished = new DateTime(2015, 6, 1) }
+                    }
                 },
-                DegreesSpouse = new List<EducationDegree>()
+                new ApplicantDegreesViewModel
                 {
-                    new EducationDegree()
+                    ApplicantName = "Ms Joe Smoe",
+                    Degrees = new List<DegreeViewModel>
+                    {
+                        new DegreeViewModel { School = "Háskólinn í Reykjavík", Degree = "Arts and crafts", DateFinished = new DateTime(2016, 6, 1) }
+                    }
                 }
             };
+
             ViewData["vm"] = vm;
             return View("BasePage", "Education");
         }
 
-        [Route("EducationForward")]
-        [HttpPost]
-        public IActionResult EducationForward(EducationViewModel vm)
-        {
-            return RedirectToAction("Employment");
-        }
-
-        [Route("EducationBackwards")]
-        [HttpPost]
-        public IActionResult EducationBackwards(EducationViewModel vm)
-        {
-            return RedirectToAction("Personal");
-        }
-
-        [Route("Starfsferill")]
+       [Route("Starfsferill")]
         public IActionResult Employment()
         {
             ViewData["ContentHeader"] = "Starfsferill";

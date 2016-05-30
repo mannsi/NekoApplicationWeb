@@ -28,6 +28,7 @@ function setActivePill() {
             var pillId = $(this).attr("id");
             if (pillId === selectedNavPillId) {
                 $(this).addClass("active");
+                $(this).children('a:first').children('i:first').remove();
             }
         });
 };

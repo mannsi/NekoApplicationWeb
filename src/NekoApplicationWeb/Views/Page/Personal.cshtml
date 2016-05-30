@@ -6,12 +6,16 @@
 
 
 <div class="row" ng-app="app-neko" ng-controller="personalPageController as vm" ng-init="vm.initData(@JsonConvert.SerializeObject(@Model))">
-    <form name="personForm" class="form-horizontal" action="" method="post" novalidate>
+    <form name="personForm" class="form-horizontal" action="" method="post">
         <fieldset ng-repeat="applicant in vm.applicants">
-            <div class="col-xs-11">
-                <legend ng-bind="applicant.Legend"></legend>
+            <div class="col-xs-12">
+                <legend>
+                    <span ng-bind="applicant.Legend"></span>
+                    <span>&nbsp;</span>
+                    <span ng-show="!$first"><a href="#" ng-click="vm.removeApplicant(applicant)"><i class="fa fa-times" style="color: red;"></i></a></span>
+                </legend>
             </div>
-            <span ng-show="!$first" class="col-xs-1"><a href="#" ng-click="vm.removeApplicant(applicant)"><i class="fa fa-times" style="color: red;"></i></a></span>
+            
             <div asp-validation-summary="ValidationSummary.ModelOnly" class="text-danger"></div>
 
             <div>
@@ -60,7 +64,7 @@
             </div>
         </fieldset>
         <div class="col-xs-offset-4 col-xs-8">
-            <div class="btn btn-success" ng-click="vm.addApplicant()">
+            <div class="btn btn-success btn-sm" ng-click="vm.addApplicant()">
                 <i class="fa fa-plus"></i> Bæta við umsækjanda
             </div>
         </div>

@@ -8,7 +8,7 @@ namespace NekoApplicationWeb.Controllers.api
 {
     [Route("api/applicant")]
     [Authorize]
-    public class Applicant : Controller
+    public class ApplicantController : Controller
     {
         [Route("list")]
         [HttpGet]
