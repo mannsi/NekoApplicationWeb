@@ -8,6 +8,7 @@ using Microsoft.AspNet.Mvc;
 using NekoApplicationWeb.ViewModels;
 using NekoApplicationWeb.ViewModels.Page;
 using NekoApplicationWeb.ViewModels.Page.Education;
+using NekoApplicationWeb.ViewModels.Page.Employment;
 using NekoApplicationWeb.ViewModels.Page.Personal;
 
 namespace NekoApplicationWeb.Controllers
@@ -84,34 +85,14 @@ namespace NekoApplicationWeb.Controllers
             ViewData["ContentHeader"] = "Starfsferill";
             ViewData["selectedNavPillId"] = "navPillEmployment";
 
-            var vm = new EmploymentViewModel()
-            {
-                Employements = new List<Employment>
-                {
-                    new Employment {Title="Forritari", CompanyName = "Advania", From = DateTime.Now.AddMonths(-8), To = DateTime.Now}
-                },
-                EmployementsSpouse = new List<Employment>
-                {
-                    new Employment()
-                }
-            };
+           var vm = new List<ApplicantEmployment>
+           {
+               new ApplicantEmployment { ApplicantName =  "Joe smoe", Title = "Forritari", CompanyName = "Advania", From = DateTime.Now.AddMonths(-8)},
+               new ApplicantEmployment { ApplicantName =  "Ms Joe smoe", Title = "Stjórnandi", CompanyName = "Þjóðleikhúsið", From = DateTime.Now.AddMonths(-6)}
+           };
 
             ViewData["vm"] = vm;
             return View("BasePage", "Employment");
-        }
-
-        [Route("EmploymentForward")]
-        [HttpPost]
-        public IActionResult EmploymentForward(EmploymentViewModel vm)
-        {
-            return RedirectToAction("Finances");
-        }
-
-        [Route("EmploymentBackwards")]
-        [HttpPost]
-        public IActionResult EmploymentBackwards(EmploymentViewModel vm)
-        {
-            return RedirectToAction("Education");
         }
 
         [Route("Fjarmal")]

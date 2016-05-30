@@ -1,89 +1,65 @@
 ﻿@using System.Threading.Tasks
 @using NekoApplicationWeb.ViewModels
 @using NekoApplicationWeb.ViewModels.Page
-@model NekoApplicationWeb.ViewModels.Page.EmploymentViewModel
+@using Newtonsoft.Json
 
+@model List<NekoApplicationWeb.ViewModels.Page.Employment.ApplicantEmployment>
 
-<form class="form-horizontal" action="" method="post">
-    <fieldset>
-        <legend>Störf</legend>
-        <div asp-validation-summary="ValidationSummary.ModelOnly" class="text-danger"></div>
-        @foreach (var employment in Model.Employements)
-        {
-            <div class="form-group">
-                <label asp-for="@employment.Title" class="col-lg-4 control-label"></label>
-                <div class="col-lg-8">
-                    <input asp-for="@employment.Title" class="form-control" />
-                    <span asp-validation-for="@employment.Title" class="text-danger"></span>
-                </div>
+<div class="row" ng-app="app-neko" ng-controller="employmentPageController as vm" ng-init="vm.initData(@JsonConvert.SerializeObject(Model))">
+    <form name="employmentForm" class="form-horizontal" action="" method="post">
+        <fieldset ng-repeat="applicantEmployment in vm.applicantsEmployment">
+            <div class="col-xs-12">
+                <legend><span ng-bind="applicantEmployment.ApplicantName"></span> - Núverandi starf</legend>
             </div>
-            <div class="form-group">
-                <label asp-for="@employment.CompanyName" class="col-lg-4 control-label"></label>
-                <div class="col-lg-8">
-                    <input asp-for="@employment.CompanyName" class="form-control" />
-                    <span asp-validation-for="@employment.CompanyName" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <label asp-for="@employment.From" class="col-lg-4 control-label"></label>
-                <div class="col-lg-8">
-                    <input asp-for="@employment.From" value="@employment.From.ToString("yyyy-MM-dd")" class="form-control" />
-                    <span asp-validation-for="@employment.From" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <label asp-for="@employment.To" class="col-lg-4 control-label"></label>
-                <div class="col-lg-8">
-                    <input asp-for="@employment.To" value="@employment.To.ToString("yyyy-MM-dd")" class="form-control" />
-                    <span asp-validation-for="@employment.To" class="text-danger"></span>
-                </div>
-            </div>
-        }
-        <div class="col-lg-8 col-lg-offset-4">
-            <button class="btn btn-sm btn-success" style="margin-bottom: 20px;" onclick="alert('Vantar');"><i class="fa fa-plus"></i> Bæta við starfi</button>
-        </div>
+            <div asp-validation-summary="ValidationSummary.ModelOnly" class="text-danger"></div>
 
-        @* TODO add a plus button here that adds a degree *@
+            <div class="form-group required">
+                <label class="col-xs-4 control-label">Titill</label>
+                <div class="col-xs-8">
+                    <input class="form-control" ng-model="applicantEmployment.Title" required ng-change="vm.pageModified = true" />
+                </div>
+            </div>
+            <div class="form-group required">
+                <label class="col-xs-4 control-label">Fyrirtæki</label>
+                <div class="col-xs-8">
+                    <input class="form-control" ng-model="applicantEmployment.CompanyName" required ng-change="vm.pageModified = true" />
+                </div>
+            </div>
+            <div class="form-group required">
+                <label class="col-xs-4 control-label">Frá</label>
+                <div class="col-xs-8">
+                    <input type="date" class="form-control" ng-model="applicantEmployment.From" required ng-change="vm.pageModified = true"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-4 control-label">LinkedIn slóð <i class="fa fa-linkedin-square" aria-hidden="true"></i></label>
+                <div class="col-xs-8">
+                    <input class="form-control" ng-model="applicantEmployment.LinkedInPath" ng-change="vm.pageModified = true"/>
+                </div>
+            </div>
 
-        <legend>Störf maka</legend>
-        @foreach (var employment in Model.EmployementsSpouse)
-        {
             <div class="form-group">
-                <label asp-for="@employment.Title" class="col-lg-4 control-label"></label>
-                <div class="col-lg-8">
-                    <input asp-for="@employment.Title" class="form-control" />
-                    <span asp-validation-for="@employment.Title" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <label asp-for="@employment.CompanyName" class="col-lg-4 control-label"></label>
-                <div class="col-lg-8">
-                    <input asp-for="@employment.CompanyName" class="form-control" />
-                    <span asp-validation-for="@employment.CompanyName" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <label asp-for="@employment.From" class="col-lg-4 control-label"></label>
-                <div class="col-lg-8">
-                    <input asp-for="@employment.From" value="@employment.From.ToString("yyyy-MM-dd")" class="form-control" />
-                    <span asp-validation-for="@employment.From" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <label asp-for="@employment.To" class="col-lg-4 control-label"></label>
-                <div class="col-lg-8">
-                    <input asp-for="@employment.To" value="@employment.To.ToString("yyyy-MM-dd")" class="form-control" />
-                    <span asp-validation-for="@employment.To" class="text-danger"></span>
-                </div>
-            </div>
-        }
-        <div class="col-lg-8 col-lg-offset-4">
-            <button class="btn btn-sm btn-success" style="margin-bottom: 20px;" onclick="alert('Vantar');"><i class="fa fa-plus"></i> Bæta við starfi</button>
-        </div>
+                <label class="col-xs-4 control-label">Ferilskrá</label>
 
+                <div class="col-xs-8">
+                    <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                        <div class="form-control" data-trigger="fileinput">
+                            <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                            <span class="fileinput-filename"></span>
+                        </div>
+                        <span class="input-group-addon btn btn-file">
+                            <span class="fileinput-new">Velja skrá</span>
+                            <input type="file" ng-model="applicantEmployment.Cv">
+                        </span>
+                        <a href="#" class="input-group-addon btn fileinput-exists" data-dismiss="fileinput">Fjarlægja</a>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
         <div class="col-lg-12">
-            <button type="submit" class="btn btn-info pull-left" formaction="@Url.Action("EmploymentBackwards", "Page")"><i class="fa fa-arrow-left" aria-hidden="true"></i> Til baka</button>
-            <button type="submit" class="btn btn-info pull-right" formaction="@Url.Action("EmploymentForward", "Page")">Áfram <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+            <button class="btn btn-info pull-right" ng-click="vm.continue()" ng-disabled="employmentForm.$invalid">
+                Vista og áfram <i class="fa fa-arrow-right" aria-hidden="true"></i>
+            </button>
         </div>
-    </fieldset>
-</form>
+    </form>
+</div>

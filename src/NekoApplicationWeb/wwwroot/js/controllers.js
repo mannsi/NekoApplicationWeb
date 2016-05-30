@@ -3,7 +3,8 @@
     // Getting the existing module
     angular.module("app-neko")
         .controller("personalPageController", personalPageController)
-        .controller("educationPageController", educationPageController);
+        .controller("educationPageController", educationPageController)
+        .controller("employmentPageController", employmentPageController);
 
     function personalPageController($http) {
         var vm = this;
@@ -143,6 +144,46 @@
                 .then(function (response) {
                     vm.pageModified = false;
                     window.location.href = 'Starfsferill';
+                }, function (error) {
+                    alert("Ekki tókst að vista");
+                });
+        };
+
+        init();
+    };
+
+    function employmentPageController($http) {
+        var vm = this;
+
+        vm.applicantsEmployment = [];
+        vm.pageModified = false;
+
+        function init() {
+            $(window).on('beforeunload', function () {
+                if (vm.pageModified) {
+                    return 'You have unsaved changes. Are you sure you wish to continue ?';
+                }
+                else {
+                    //reset
+                    vm.pageModified = false;
+                    return;
+                }
+            });
+        }
+
+        vm.initData = function (data) {
+            for (var i = 0; i < data.length; i++) {
+                data[i].From = new Date(data[i].From);
+            }
+
+            angular.copy(data, vm.applicantsEmployment);
+        };
+
+        vm.continue = function () {
+            $http.post('/api/employment/list', vm.applicantsEmployment)
+                .then(function (response) {
+                    vm.pageModified = false;
+                    window.location.href = 'Fjarmal';
                 }, function (error) {
                     alert("Ekki tókst að vista");
                 });

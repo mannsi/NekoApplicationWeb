@@ -83,3 +83,7 @@ li>a>i.fa-minus-circle {
 .form-group.required .control-label:after {
   content:"*";
 }
+
+.fileinput {
+    max-width: 280px;
+}
