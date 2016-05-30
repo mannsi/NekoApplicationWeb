@@ -118,6 +118,7 @@
                 .then(function (response) {
                         response.data.DateFinished = new Date(response.data.DateFinished);
                         applicantDegrees.Degrees.push(response.data);
+                        vm.pageModified = true;
                     },
                     function(error) {
 
@@ -133,6 +134,7 @@
             }
             if (index > 0) {
                 applicantDegrees.Degrees.splice(index, 1);
+                vm.pageModified = true;
             }
         };
 

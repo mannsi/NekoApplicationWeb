@@ -18,19 +18,19 @@
                 <div class="form-group required">
                     <label class="col-xs-4 control-label">Skóli</label>
                     <div class="col-xs-8">
-                        <input class="form-control" ng-model="degree.School" required/>
+                        <input class="form-control" ng-model="degree.School" required ng-change="vm.pageModified = true"/>
                     </div>
                 </div>
                 <div class="form-group required">
                     <label class="col-xs-4 control-label">Gráða</label>
                     <div class="col-xs-8">
-                        <input class="form-control" ng-model="degree.Degree" required/>
+                        <input class="form-control" ng-model="degree.Degree" required ng-change="vm.pageModified = true"/>
                     </div>
                 </div>
                 <div class="form-group required">
                     <label class="col-xs-4 control-label">Námslok</label>
                     <div class="col-xs-8">
-                        <input type="date" class="form-control" ng-model="degree.DateFinished" required/>
+                        <input type="date" class="form-control" ng-model="degree.DateFinished" required ng-change="vm.pageModified = true"/>
                     </div>
                 </div>
 
