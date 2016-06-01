@@ -4,7 +4,8 @@
     angular.module("app-neko")
         .controller("personalPageController", personalPageController)
         .controller("educationPageController", educationPageController)
-        .controller("employmentPageController", employmentPageController);
+        .controller("employmentPageController", employmentPageController)
+        .controller("financesPageController", financesPageController);
 
     function personalPageController($http) {
         var vm = this;
@@ -76,7 +77,7 @@
                     vm.pageModified = false;
                     window.location.href = 'Menntun';
                 }, function(error) {
-                    alert("Ekki tókst að vista");
+                    alert("Ekki tókst að vista. Villa: " + error);
                 });
         };
 
@@ -145,7 +146,7 @@
                     vm.pageModified = false;
                     window.location.href = 'Starfsferill';
                 }, function (error) {
-                    alert("Ekki tókst að vista");
+                    alert("Ekki tókst að vista. Villa: " + error);
                 });
         };
 
@@ -185,7 +186,114 @@
                     vm.pageModified = false;
                     window.location.href = 'Fjarmal';
                 }, function (error) {
-                    alert("Ekki tókst að vista");
+                    alert("Ekki tókst að vista. Villa: " + error);
+                });
+        };
+
+        init();
+    };
+
+    function financesPageController($http) {
+        var vm = this;
+
+        vm.applicantsFinances = [];
+        vm.pageModified = false;
+
+        function init() {
+            $(window).on('beforeunload', function () {
+                if (vm.pageModified) {
+                    return 'You have unsaved changes. Are you sure you wish to continue ?';
+                }
+                else {
+                    //reset
+                    vm.pageModified = false;
+                    return;
+                }
+            });
+            
+        }
+
+        vm.initData = function (data) {
+            angular.copy(data, vm.applicantsFinances);
+        };
+
+        vm.addOtherIncome = function(applicantFinances) {
+            var selectedOtherIncomeValue = $("#otherIncomeSelect").val();
+            var selectedOtherIncomeString = $("#otherIncomeSelect option:selected").text();
+
+            if (selectedOtherIncomeString !== "") {
+                applicantFinances.OtherIcome.push({
+                    MonthlyAmount: 0,
+                    IncomeType: selectedOtherIncomeValue,
+                    IncomeTypeString: selectedOtherIncomeString
+                });
+            }
+            vm.pageModified = true;
+        };
+
+        vm.removeOtherIncome = function(incomes, incomeToRemove) {
+            for (var i = 0; i < incomes.length; i++) {
+                if (incomes[i] === incomeToRemove) {
+                    incomes.splice(i, 1);
+                    break;
+                }
+            }
+            vm.pageModified = true;
+        };
+
+        vm.addAsset = function (applicantFinances) {
+            var selectedAssetValue = $("#assetsTypeSelect").val();
+            var selectedAssetString = $("#assetsTypeSelect option:selected").text();
+
+            if (selectedAssetString !== "") {
+                applicantFinances.Assets.push({
+                    AssetType: selectedAssetValue,
+                    AssetTypeString: selectedAssetString
+                });
+            }
+            vm.pageModified = true;
+        };
+
+        vm.removeAsset = function (assets, assetToRemove) {
+            for (var i = 0; i < assets.length; i++) {
+                if (assets[i] === assetToRemove) {
+                    assets.splice(i, 1);
+                    break;
+                }
+            }
+            vm.pageModified = true;
+        };
+
+        vm.addDebt = function (applicantFinances) {
+            var selectedDebtValue = $("#debtTypeSelect").val();
+            var selectedDebtString = $("#debtTypeSelect option:selected").text();
+
+            if (selectedDebtString !== "") {
+                applicantFinances.Debts.push({
+                    DebtType: selectedDebtValue,
+                    DebtTypeString: selectedDebtString
+                });
+            }
+            vm.pageModified = true;
+        };
+
+        vm.removeDebt = function (debts, debtToRemove) {
+            for (var i = 0; i < debts.length; i++) {
+                if (debts[i] === debtToRemove) {
+                    debts.splice(i, 1);
+                    break;
+                }
+            }
+            vm.pageModified = true;
+        };
+
+        vm.continue = function () {
+            vm.pageModified = false;
+            $http.post('/api/finances/list', vm.applicantsFinances)
+                .then(function (response) {
+                    window.location.href = 'Lanveiting';
+                }, function (error) {
+                    alert("Ekki tókst að vista. Villa: " + error);
                 });
         };
 

@@ -9,6 +9,7 @@ using NekoApplicationWeb.ViewModels;
 using NekoApplicationWeb.ViewModels.Page;
 using NekoApplicationWeb.ViewModels.Page.Education;
 using NekoApplicationWeb.ViewModels.Page.Employment;
+using NekoApplicationWeb.ViewModels.Page.Finances;
 using NekoApplicationWeb.ViewModels.Page.Personal;
 
 namespace NekoApplicationWeb.Controllers
@@ -101,13 +102,23 @@ namespace NekoApplicationWeb.Controllers
             ViewData["ContentHeader"] = "Fjármál";
             ViewData["selectedNavPillId"] = "navPillFinances";
 
-            var vm = new FinancesViewModel()
+            var vm = new List<ApplicantFinancesViewModel>
             {
-                MonthlyPayPreTax = 500000,
-                MonthlyPayPreTaxSpouse = 400000,
-                OtherLoans = new List<OtherLoan>()
+                new ApplicantFinancesViewModel
                 {
-                    new OtherLoan() { Remains = 1000000, MonthlyPayment = 25000}      
+                    ApplicantName = "Joe Shmoe",
+                    MonthlyPay = new ApplicantIncome {IncomeType = IncomeType.Salary, MonthlyAmount = 500000},
+                    Assets = new List<ApplicantAssets>(),
+                    Debts =new List<ApplicantDebt>(),
+                    OtherIcome = new List<ApplicantIncome>()
+                }, 
+                new ApplicantFinancesViewModel
+                {
+                    ApplicantName = "Ms Joe Shmoe",
+                    MonthlyPay = new ApplicantIncome {IncomeType = IncomeType.Salary, MonthlyAmount = 500000},
+                    Assets = new List<ApplicantAssets>(),
+                    Debts =new List<ApplicantDebt>(),
+                    OtherIcome = new List<ApplicantIncome>()
                 }
             };
 
@@ -115,21 +126,7 @@ namespace NekoApplicationWeb.Controllers
             return View("BasePage", "Finances");
         }
 
-        [Route("FinancesForward")]
-        [HttpPost]
-        public IActionResult FinancesForward(FinancesViewModel vm)
-        {
-            return RedirectToAction("Loan");
-        }
-
-        [Route("FinancesBackwards")]
-        [HttpPost]
-        public IActionResult FinancesBackwards(FinancesViewModel vm)
-        {
-            return RedirectToAction("Employment");
-        }
-
-        [Route("Lan")]
+        [Route("Lanveiting")]
         public IActionResult Loan()
         {
             ViewData["ContentHeader"] = "Lán";

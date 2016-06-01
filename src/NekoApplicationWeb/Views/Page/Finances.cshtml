@@ -1,55 +1,178 @@
 ﻿@using System.Threading.Tasks
-@using NekoApplicationWeb.ViewModels
-@using NekoApplicationWeb.ViewModels.Page
-@model NekoApplicationWeb.ViewModels.Page.FinancesViewModel
+@using NekoApplicationWeb.ViewModels.Page.Finances
+@using Newtonsoft.Json
+@model List<ApplicantFinancesViewModel>
 
 
-<form class="form-horizontal" action="" method="post">
-    <fieldset>
-        <legend>Tekjur</legend>
-        <div asp-validation-summary="ValidationSummary.ModelOnly" class="text-danger"></div>
-        <div class="form-group">
-            <label asp-for="@Model.MonthlyPayPreTax" class="col-lg-4 control-label"></label>
-            <div class="col-lg-8">
-                <input asp-for="@Model.MonthlyPayPreTax" class="form-control currencyInput" />
-                <span asp-validation-for="@Model.MonthlyPayPreTax" class="text-danger"></span>
+<div class="row" ng-app="app-neko" ng-controller="financesPageController as vm" ng-init="vm.initData(@JsonConvert.SerializeObject(Model))">
+    <form name="financesForm" class="form-horizontal" action="" method="post">
+        <fieldset ng-repeat="applicantFinances in vm.applicantsFinances">
+            <div ng-if="!$first" style="height: 50px;"></div>
+            <div class="col-xs-12">
+                <legend><span ng-bind="applicantFinances.ApplicantName"></span></legend>
             </div>
-        </div>
-
-        <legend>Tekjur maka</legend>
-        <div class="form-group">
-            <label asp-for="@Model.MonthlyPayPreTaxSpouse" class="col-lg-4 control-label"></label>
-            <div class="col-lg-8">
-                <input asp-for="@Model.MonthlyPayPreTaxSpouse" class="form-control currencyInput"/>
-                <span asp-validation-for="@Model.MonthlyPayPreTaxSpouse" class="text-danger"></span>
+            <div asp-validation-summary="ValidationSummary.ModelOnly" class="text-primary"></div>
+            <div class="col-xs-12">
+                <h4>Tekjur</h4>
             </div>
-        </div>
-
-        <legend>Aðrar skuldir</legend>
-        @foreach (var otherLoan in Model.OtherLoans)
-        {
-            <div class="form-group">
-                <label asp-for="@otherLoan.Remains" class="col-lg-4 control-label"></label>
-                <div class="col-lg-8">
-                    <input asp-for="@otherLoan.Remains" class="form-control currencyInput"/>
-                    <span asp-validation-for="@otherLoan.Remains" class="text-danger"></span>
+            <div class="form-group required">
+                <div class="col-xs-4 control-label">
+                    <label>Launatekjur</label> <i class="fa fa-question-circle" data-toggle="tooltip" title="Einhver lýsing"></i>
+                </div>
+                <div class="col-xs-8">
+                    <input class="form-control" ng-model="applicantFinances.MonthlyPay.MonthlyAmount" required ng-change="vm.pageModified = true"/>
                 </div>
             </div>
+
             <div class="form-group">
-                <label asp-for="@otherLoan.MonthlyPayment" class="col-lg-4 control-label"></label>
-                <div class="col-lg-8">
-                    <input asp-for="@otherLoan.MonthlyPayment" class="form-control currencyInput" />
-                    <span asp-validation-for="@otherLoan.MonthlyPayment" class="text-danger"></span>
+                <label class="col-xs-4 control-label">Aðrar tekjur</label>
+                <div class="col-xs-8">
+                    <div class="input-group">
+                        <select class="form-control" id="otherIncomeSelect">
+                            <option value="-1"></option>
+                            <option value="2">Leigutekjur</option>
+                            <option value="1">Meðlag</option>
+                        </select>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-success" ng-click="vm.addOtherIncome(applicantFinances)"><i class="fa fa-plus"></i></button>
+                        </span>
+                    </div>
                 </div>
             </div>
-        }
-        <div class="col-lg-8 col-lg-offset-4">
-            <button class="btn btn-sm btn-success" style="margin-bottom: 20px;" onclick="alert('Vantar');"><i class="fa fa-plus"></i> Bæta við láni</button>
-        </div>
+            <div ng-repeat="otherIncome in applicantFinances.OtherIcome">
+                <div class="form-group required">
+                    <label class="col-xs-5 control-label" ng-bind="otherIncome.IncomeTypeString"></label>
+                    <div class="col-xs-7">
+                        <div class="input-group input-group-small">
+                            <input class="form-control small-input" ng-model="otherIncome.MonthlyAmount"/>
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-primary" ng-click="vm.removeOtherIncome(applicantFinances.OtherIcome, otherIncome)"><i class="fa fa-times"></i></button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+            <div class="col-xs-10 col-xs-offset-1"><hr/>
+            </div>
+            <div class="col-xs-12">
+                <h4>Eignir</h4>
+            </div>
+
+            <div class="form-group">
+                <label class="col-xs-4 control-label">Bæta við eign</label>
+                <div class="col-xs-8">
+                    <div class="input-group">
+                        <select class="form-control" id="assetsTypeSelect">
+                            <option value="-1"></option>
+                            <option value="0">Fasteign</option>
+                            <option value="1">Ökutæki</option>
+                        </select>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-success" ng-click="vm.addAsset(applicantFinances)"><i class="fa fa-plus"></i></button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div ng-repeat="asset in applicantFinances.Assets">
+                <div class="form-group required">
+                    <div class="col-xs-5  control-label">
+                        <label ng-bind="asset.AssetTypeString"></label>
+                        <i class="fa fa-question-circle" data-toggle="tooltip" title="Fastanúmer fyrir fasteign, Ökutækjanúmer fyrir ökutæki"></i>
+                    </div>
+                    <div class="col-xs-7">
+                        <div class="input-group input-group-small">
+                            <input class="form-control small-input" ng-model="asset.AssetNumber" placeholder="Númer eignar"/>
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-primary" ng-click="vm.removeAsset(applicantFinances.Assets, asset)"><i class="fa fa-times"></i></button>
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-10 col-xs-offset-1"><hr/>
+            </div>
+            <div class="col-xs-12">
+                <h4>Skuldir</h4>
+            </div>
+
+            <div class="form-group">
+                <label class="col-xs-4 control-label">Bæta við skuld</label>
+                <div class="col-xs-8">
+                    <div class="input-group">
+                        <select class="form-control" id="debtTypeSelect">
+                            <option value="-1"></option>
+                            <option value="0">Námslán</option>
+                            <option value="1">Yfirdráttur</option>
+                            <option value="2">Bílalán</option>
+                            <option value="3">Húsnæðislán</option>
+                            <option value="4">Annað</option>
+                        </select>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-success" ng-click="vm.addDebt(applicantFinances)"><i class="fa fa-plus"></i></button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div ng-repeat="debt in applicantFinances.Debts">
+                <hr ng-if="!$first"/>
+                <div class="form-group">
+                    <div class="col-xs-4 control-label">
+                        <label>Tegund skuldar</label>
+                    </div>
+                    <div class="col-xs-8">
+                        <label class="labelForInput" ng-bind="debt.DebtTypeString"></label>
+                    </div>
+                </div>
+                <div class="form-group required">
+                    <div class="col-xs-4 control-label">
+                        <label>Lánveitandi</label>
+                    </div>
+                    <div class="col-xs-8">
+                        <input class="form-control" ng-model="debt.Lender" required ng-change="vm.pageModified = true"/>
+                    </div>
+                </div>
+                <div class="form-group required">
+                    <div class="col-xs-4 control-label">
+                        <label>Eftirstöðvar</label>
+                    </div>
+                    <div class="col-xs-8">
+                        <input class="form-control" ng-model="debt.LoanRemains" required ng-change="vm.pageModified = true"/>
+                    </div>
+                </div>
+                <div class="form-group required">
+                    <div class="col-xs-4 control-label">
+                        <label>Mánaðarleg greiðslubirði</label>
+                    </div>
+                    <div class="col-xs-8">
+                        <input class="form-control" ng-model="debt.MonthlyPayment" required ng-change="vm.pageModified = true"/>
+                    </div>
+                </div>
+                <div class="form-group required">
+                    <div class="col-xs-4 control-label">
+                        <label>Síðasti greiðsluseðill</label>
+                    </div>
+                    <div class="col-xs-8">
+                        TODO
+                    </div>
+                </div>
+
+                <div class="form-group required">
+                    <div class="col-xs-8 col-xs-offset-4">
+                        <button type="button" class="btn btn-primary btn-sm" ng-click="vm.removeDebt(applicantFinances.Debts, debt)">Fjarlægja</button>
+                    </div>
+                </div>
+            </div>
+
+        </fieldset>
         <div class="col-lg-12">
-            <button type="submit" class="btn btn-info pull-left" formaction="@Url.Action("FinancesBackwards", "Page")"><i class="fa fa-arrow-left" aria-hidden="true"></i> Til baka</button>
-            <button type="submit" class="btn btn-info pull-right" formaction="@Url.Action("FinancesForward", "Page")">Áfram <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+            <button class="btn btn-info pull-right" ng-click="vm.continue()" ng-disabled="educationForm.$invalid">
+                Vista og áfram <i class="fa fa-arrow-right" aria-hidden="true"></i>
+            </button>
         </div>
-    </fieldset>
-</form>
+    </form>
+</div>
