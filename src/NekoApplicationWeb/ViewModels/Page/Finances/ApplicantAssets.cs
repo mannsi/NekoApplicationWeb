@@ -14,6 +14,7 @@ namespace NekoApplicationWeb.ViewModels.Page.Finances
 
         public AssetType AssetType { get; set; }
         public string AssetNumber { get; set; }
+        public bool AssetWillBeSold { get; set; }
 
         public string AssetTypeString
         {

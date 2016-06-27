@@ -249,10 +249,19 @@
             var selectedAssetValue = $("#assetsTypeSelect").val();
             var selectedAssetString = $("#assetsTypeSelect option:selected").text();
 
+            var isProperty = selectedAssetValue === "0";
+            var assetPlaceHolderString = "";
+            if (isProperty) {
+                assetPlaceHolderString = "Fastanúmer eignar";
+            } else {
+                assetPlaceHolderString = "Ökutækjanúmer";
+            }
+
             if (selectedAssetString !== "") {
                 applicantFinances.Assets.push({
                     AssetType: selectedAssetValue,
-                    AssetTypeString: selectedAssetString
+                    AssetTypeString: selectedAssetString,
+                    AssetPlaceholderText: assetPlaceHolderString
                 });
             }
             vm.pageModified = true;
