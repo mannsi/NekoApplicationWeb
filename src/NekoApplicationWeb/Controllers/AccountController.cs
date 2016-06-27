@@ -42,11 +42,12 @@ namespace NekoApplicationWeb.Controllers
         }
 
         [Route("")]
-        public IActionResult StartPage()
+        public async Task<IActionResult> StartPage()
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction(nameof(PageController.Index), "Page");
+                await _signInManager.SignOutAsync();
+                return RedirectToAction("StartPage");
             }
             var vm = new StartPageViewModel();
             return View(vm);
