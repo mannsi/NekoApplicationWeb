@@ -97,3 +97,10 @@ li>a>i.fa-minus-circle {
 .labelForInput {
     padding-top: 9px;
 }
+
+/*Overriding bootstra form control settings*/
+.form-group input[type="checkbox"]{
+    height: 20px;
+    width: 20px;
+    margin-top:10px;
+}

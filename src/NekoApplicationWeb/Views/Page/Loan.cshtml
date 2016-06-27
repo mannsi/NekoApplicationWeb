@@ -1,60 +1,92 @@
 ﻿@using System.Threading.Tasks
-@using NekoApplicationWeb.ViewModels
-@using NekoApplicationWeb.ViewModels.Page
-@model NekoApplicationWeb.ViewModels.Page.LoanViewModel
+@using Newtonsoft.Json
+@model NekoApplicationWeb.ViewModels.Page.Loan.LoanViewModel
 
-
-<form class="form-horizontal" action="" method="post">
-    <fieldset>
-        <legend>Lán</legend>
-        <div asp-validation-summary="ValidationSummary.ModelOnly" class="text-danger"></div>
-        <div class="form-group">
-            <label asp-for="@Model.BuyingPrice" class="col-lg-4 control-label"></label>
-            <div class="col-lg-8">
-                <input asp-for="@Model.BuyingPrice" class="form-control currencyInput"/>
-                <span asp-validation-for="@Model.BuyingPrice" class="text-danger"></span>
+<div class="row" ng-app="app-neko" ng-controller="loanPageController as vm" ng-init="vm.initData(@JsonConvert.SerializeObject(Model))">
+    <form name="loanForm" class="form-horizontal" action="" method="post">
+        <fieldset>
+            
+            <div class="col-xs-12">
+                <legend>Fyrirhuguð fasteignakaup</legend>
             </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="@Model.PropertyNumber" class="col-lg-4 control-label"></label>
-            <div class="col-lg-8">
-                <input asp-for="@Model.PropertyNumber" class="form-control"/>
-                <span asp-validation-for="@Model.PropertyNumber" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="@Model.NekoLoanAmount" class="col-lg-4 control-label"></label>
-            <div class="col-lg-8">
-                <input asp-for="@Model.NekoLoanAmount" class="form-control currencyInput" />
-                <span asp-validation-for="@Model.NekoLoanAmount" class="text-danger"></span>
-            </div>
-        </div>
-
-        <legend>Bankalán</legend>
-        @foreach (var otherLoan in Model.BankLoans)
-        {
-            <div class="form-group">
-                <label asp-for="@otherLoan.Principal" class="col-lg-4 control-label"></label>
-                <div class="col-lg-8">
-                    <input asp-for="@otherLoan.Principal" class="form-control currencyInput" />
-                    <span asp-validation-for="@otherLoan.Principal" class="text-danger"></span>
+            <div asp-validation-summary="ValidationSummary.ModelOnly" class="text-danger"></div>
+            <div class="form-group required">
+                <div class="col-xs-4 control-label">
+                    <label>Kaupverð</label>
+                </div>
+                <div class="col-xs-8">
+                    <input class="form-control" ng-model="vm.BuyingPrice" required ng-change="vm.pageModified = true"/>
                 </div>
             </div>
-            <div class="form-group">
-                <label asp-for="@otherLoan.MonthlyPayment" class="col-lg-4 control-label"></label>
-                <div class="col-lg-8">
-                    <input asp-for="@otherLoan.MonthlyPayment" class="form-control currencyInput" />
-                    <span asp-validation-for="@otherLoan.MonthlyPayment" class="text-danger"></span>
+            <div class="form-group required">
+                <div class="col-xs-4 control-label">
+                    <label>Fastanúmer eignar</label>
+                </div>
+                <div class="col-xs-8">
+                    <input class="form-control" ng-model="vm.PropertyNumber" required ng-change="vm.pageModified = true"/>
                 </div>
             </div>
-        }
-        <div class="col-lg-8 col-lg-offset-4">
-            <button class="btn btn-sm btn-success" style="margin-bottom: 20px;" onclick="alert('Vantar');"><i class="fa fa-plus"></i> Bæta við láni</button>
-        </div>
-
+            <div class="form-group required">
+                <div class="col-xs-4 control-label">
+                    <label>Eigið fé</label>
+                </div>
+                <div class="col-xs-8">
+                    <input class="form-control" ng-model="vm.OwnCapital" required ng-change="vm.pageModified = true"/>
+                </div>
+            </div>
+            <div class="form-group required">
+                <div class="col-xs-4 control-label">
+                    <label>Upphæð Neko láns</label>
+                </div>
+                <div class="col-xs-8">
+                    <input class="form-control" ng-model="vm.NekoLoanAmount" required ng-change="vm.pageModified = true"/>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <legend>Bankalán</legend>
+            </div>
+            <div ng-repeat="bankLoan in vm.loanViewModel.BankLoans">
+                <div class="col-xs-10 col-xs-offset-1">
+                    <hr ng-if="!$first" />
+                </div>
+                <div class="col-xs-12" ng-if="!$first">
+                    <span class="pull-right"><a href="#" ng-click="vm.removeBankLoan(bankLoan)"><i class="fa fa-times" style="color: red;"></i></a></span>
+                </div>
+                <div class="form-group required">
+                    <label class="col-xs-4 control-label">Lánveitandi</label>
+                    <div class="col-xs-8">
+                        <input class="form-control" ng-model="bankLoan.Lender" required ng-change="vm.pageModified = true"/>
+                    </div>
+                </div>
+                <div class="form-group required">
+                    <label class="col-xs-4 control-label">Höfuðstóll</label>
+                    <div class="col-xs-8">
+                        <input class="form-control" ng-model="bankLoan.Principal" required ng-change="vm.pageModified = true"/>
+                    </div>
+                </div>
+                <div class="form-group required">
+                    <label class="col-xs-4 control-label">Mánaðarleg greiðslubyrði</label>
+                    <div class="col-xs-8">
+                        <input class="form-control" ng-model="bankLoan.MonthlyPayment" required ng-change="vm.pageModified = true"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label">Verðtryggt</label>
+                    <div class="col-xs-8">
+                        <input type="checkbox" class="form-control" ng-model="bankLoan.Indexed" ng-change="vm.pageModified = true"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-offset-4 col-xs-8" style="padding-bottom: 20px;">
+                <div class="btn btn-success btn-sm" ng-click="vm.addBankLoan(applicantDegrees)">
+                    <i class="fa fa-plus"></i> Bæta við bankaláni
+                </div>
+            </div>
+        </fieldset>
         <div class="col-lg-12">
-            <button type="submit" class="btn btn-info pull-left" formaction="@Url.Action("LoanBackwards", "Page")"><i class="fa fa-arrow-left" aria-hidden="true"></i> Til baka</button>
-            <button type="submit" class="btn btn-info pull-right" formaction="@Url.Action("LoanForward", "Page")">Áfram <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+            <button class="btn btn-info pull-right" ng-click="vm.continue()" ng-disabled="loanForm.$invalid">
+                Vista og áfram <i class="fa fa-arrow-right" aria-hidden="true"></i>
+            </button>
         </div>
-    </fieldset>
-</form>
+    </form>
+</div>

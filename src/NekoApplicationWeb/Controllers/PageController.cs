@@ -10,6 +10,7 @@ using NekoApplicationWeb.ViewModels.Page;
 using NekoApplicationWeb.ViewModels.Page.Education;
 using NekoApplicationWeb.ViewModels.Page.Employment;
 using NekoApplicationWeb.ViewModels.Page.Finances;
+using NekoApplicationWeb.ViewModels.Page.Loan;
 using NekoApplicationWeb.ViewModels.Page.Personal;
 
 namespace NekoApplicationWeb.Controllers
@@ -129,36 +130,16 @@ namespace NekoApplicationWeb.Controllers
         [Route("Lanveiting")]
         public IActionResult Loan()
         {
-            ViewData["ContentHeader"] = "Lán";
+            ViewData["ContentHeader"] = "Lánveiting";
             ViewData["selectedNavPillId"] = "navPillLoan";
 
             var vm = new LoanViewModel
             {
-                BuyingPrice = 22000000,
-                PropertyNumber = "123-1234",
-                NekoLoanAmount = 2500000,
-                BankLoans = new List<BankLoan>
-                {
-                    new BankLoan {MonthlyPayment = 190000, Principal = 19500000 }
-                }
+                BankLoans = new List<BankLoanViewModel>{new BankLoanViewModel()}
             };
 
             ViewData["vm"] = vm;
             return View("BasePage", "Loan");
-        }
-
-        [Route("LoanForward")]
-        [HttpPost]
-        public IActionResult LoanForward(LoanViewModel vm)
-        {
-            return RedirectToAction("Documents");
-        }
-
-        [Route("LoanBackwards")]
-        [HttpPost]
-        public IActionResult LoanBackwards(LoanViewModel vm)
-        {
-            return RedirectToAction("Finances");
         }
 
         [Route("Fylgiskjol")]

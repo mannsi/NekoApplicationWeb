@@ -5,7 +5,8 @@
         .controller("personalPageController", personalPageController)
         .controller("educationPageController", educationPageController)
         .controller("employmentPageController", employmentPageController)
-        .controller("financesPageController", financesPageController);
+        .controller("financesPageController", financesPageController)
+        .controller("loanPageController", loanPageController);
 
     function personalPageController($http) {
         var vm = this;
@@ -72,11 +73,12 @@
         };
 
         vm.continue = function() {
+            vm.pageModified = false;
             $http.post('/api/applicant/list', vm.applicants)
                 .then(function (response) {
-                    vm.pageModified = false;
                     window.location.href = 'Menntun';
                 }, function(error) {
+                    vm.pageModified = true;
                     alert("Ekki tókst að vista. Villa: " + error);
                 });
         };
@@ -141,11 +143,12 @@
         };
 
         vm.continue = function () {
+            vm.pageModified = false;
             $http.post('/api/degree/list', vm.applicantsDegrees)
                 .then(function (response) {
-                    vm.pageModified = false;
                     window.location.href = 'Starfsferill';
                 }, function (error) {
+                    vm.pageModified = true;
                     alert("Ekki tókst að vista. Villa: " + error);
                 });
         };
@@ -181,11 +184,12 @@
         };
 
         vm.continue = function () {
+            vm.pageModified = false;
             $http.post('/api/employment/list', vm.applicantsEmployment)
                 .then(function (response) {
-                    vm.pageModified = false;
                     window.location.href = 'Fjarmal';
                 }, function (error) {
+                    vm.pageModified = true;
                     alert("Ekki tókst að vista. Villa: " + error);
                 });
         };
@@ -293,10 +297,70 @@
                 .then(function (response) {
                     window.location.href = 'Lanveiting';
                 }, function (error) {
+                    vm.pageModified = true;
                     alert("Ekki tókst að vista. Villa: " + error);
                 });
         };
 
         init();
     };
+
+    function loanPageController($http) {
+        var vm = this;
+
+        vm.loanViewModel = {};
+        vm.pageModified = false;
+
+        function init() {
+            $(window).on('beforeunload', function () {
+                if (vm.pageModified) {
+                    return 'You have unsaved changes. Are you sure you wish to continue ?';
+                }
+                else {
+                    //reset
+                    vm.pageModified = false;
+                    return;
+                }
+            });
+        }
+
+        vm.initData = function (data) {
+            angular.copy(data, vm.loanViewModel);
+        };
+
+        vm.addBankLoan = function () {
+            $http.get('/api/loan/new')
+                .then(function (response) {
+                    vm.loanViewModel.BankLoans.push(response.data);
+                    vm.pageModified = true;
+                    },
+                    function (error) {
+
+                    });
+        };
+
+        vm.removeBankLoan = function (bankLoan) {
+            for (var i = 0; i < vm.loanViewModel.BankLoans.length; i++) {
+                if (bankLoan === vm.loanViewModel.BankLoans[i]) {
+                    vm.loanViewModel.BankLoans.splice(i, 1);
+                    vm.pageModified = true;
+                    break;
+                }
+            }
+        };
+
+        vm.continue = function () {
+            vm.pageModified = false;
+            $http.post('/api/loan', vm.loanViewModel)
+                .then(function (response) {
+                    window.location.href = 'Fylgiskjol';
+                }, function (error) {
+                    vm.pageModified = true;
+                    alert("Ekki tókst að vista. Villa: " + error);
+                });
+        };
+
+        init();
+    };
+
 })()
