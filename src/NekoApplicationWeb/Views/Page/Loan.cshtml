@@ -47,9 +47,9 @@
             </div>
             <div ng-repeat="bankLoan in vm.loanViewModel.BankLoans">
                 <div class="col-xs-10 col-xs-offset-1">
-                    <hr ng-if="!$first" />
+                    <hr ng-if="!$first" ng-cloak/>
                 </div>
-                <div class="col-xs-12" ng-if="!$first">
+                <div class="col-xs-12" ng-if="!$first" ng-cloak>
                     <span class="pull-right"><a href="#" ng-click="vm.removeBankLoan(bankLoan)"><i class="fa fa-times" style="color: red;"></i></a></span>
                 </div>
                 <div class="form-group required">

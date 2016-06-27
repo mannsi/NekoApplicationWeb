@@ -104,3 +104,8 @@ li>a>i.fa-minus-circle {
     width: 20px;
     margin-top:10px;
 }
+
+/* Make sure cloaked items are hidden until angular is ready to show them */
+[ng\:cloak], [ng-cloak], .ng-cloak {
+  display: none !important;
+}
