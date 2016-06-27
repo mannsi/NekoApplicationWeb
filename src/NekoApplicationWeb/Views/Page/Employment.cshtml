@@ -5,7 +5,7 @@
 
 @model List<NekoApplicationWeb.ViewModels.Page.Employment.ApplicantEmployment>
 
-<div class="row" ng-app="app-neko" ng-controller="employmentPageController as vm" ng-init="vm.initData(@JsonConvert.SerializeObject(Model))">
+<div class="row" ng-app="app-neko" ng-controller="employmentPageController as vm" ng-init="vm.initData(@JsonConvert.SerializeObject(Model))" ng-cloak>
     <form name="employmentForm" class="form-horizontal" action="" method="post">
         <fieldset ng-repeat="applicantEmployment in vm.applicantsEmployment">
             <div class="col-xs-12">

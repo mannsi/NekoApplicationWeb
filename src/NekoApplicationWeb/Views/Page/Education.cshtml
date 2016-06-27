@@ -2,7 +2,7 @@
 @using Newtonsoft.Json
 @model List<NekoApplicationWeb.ViewModels.Page.Education.ApplicantDegreesViewModel>
 
-<div class="row" ng-app="app-neko" ng-controller="educationPageController as vm" ng-init="vm.initData(@JsonConvert.SerializeObject(Model))">
+<div class="row" ng-app="app-neko" ng-controller="educationPageController as vm" ng-init="vm.initData(@JsonConvert.SerializeObject(Model))" ng-cloak>
     <form name="educationForm" class="form-horizontal" action="" method="post">
         <fieldset ng-repeat="applicantDegrees in vm.applicantsDegrees">
             <div class="col-xs-12">
@@ -34,7 +34,7 @@
                     </div>
                 </div>
 
-                <div class="col-xs-10 col-xs-offset-1"><hr ng-if="!$last" ng-cloak/>
+                <div class="col-xs-10 col-xs-offset-1"><hr ng-if="!$last"/>
                 </div>
             </div>
             <div class="col-xs-offset-4 col-xs-8" style="padding-bottom: 20px;">

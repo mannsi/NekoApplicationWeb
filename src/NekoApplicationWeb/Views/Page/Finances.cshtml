@@ -4,10 +4,10 @@
 @model List<ApplicantFinancesViewModel>
 
 
-<div class="row" ng-app="app-neko" ng-controller="financesPageController as vm" ng-init="vm.initData(@JsonConvert.SerializeObject(Model))">
+<div class="row" ng-app="app-neko" ng-controller="financesPageController as vm" ng-init="vm.initData(@JsonConvert.SerializeObject(Model))" ng-cloak>
     <form name="financesForm" class="form-horizontal" action="" method="post">
         <fieldset ng-repeat="applicantFinances in vm.applicantsFinances">
-            <div ng-if="!$first" style="height: 50px;" ng-cloak></div>
+            <div ng-if="!$first" style="height: 50px;"></div>
             <div class="col-xs-12">
                 <legend><span ng-bind="applicantFinances.ApplicantName"></span></legend>
             </div>
@@ -119,7 +119,7 @@
             </div>
 
             <div ng-repeat="debt in applicantFinances.Debts">
-                <hr ng-if="!$first" ng-cloak/>
+                <hr ng-if="!$first"/>
                 <div class="form-group">
                     <div class="col-xs-4 control-label">
                         <label>Tegund skuldar</label>
