@@ -6,7 +6,8 @@
         .controller("educationPageController", educationPageController)
         .controller("employmentPageController", employmentPageController)
         .controller("financesPageController", financesPageController)
-        .controller("loanPageController", loanPageController);
+        .controller("loanPageController", loanPageController)
+        .controller("startPageController", startPageController);
 
     function personalPageController($http) {
         var vm = this;
@@ -370,6 +371,11 @@
         };
 
         init();
+    };
+
+    function startPageController($http) {
+        var vm = this;
+        vm.ssn = "";
     };
 
 })()
