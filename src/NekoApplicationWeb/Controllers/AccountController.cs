@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NekoApplicationWeb.Models;
 using NekoApplicationWeb.ServiceInterfaces;
-using NekoApplicationWeb.ViewModels;
 using NekoApplicationWeb.ViewModels.Account;
 using static NekoApplicationWeb.Shared.ExtensionMethods;
-using NekoApplicationWeb.Services;
 
 namespace NekoApplicationWeb.Controllers
 {
@@ -119,7 +114,7 @@ namespace NekoApplicationWeb.Controllers
         [Route("StadfestaReikning")]
         public async Task<IActionResult> ConfirmEmailAndSetPassword(string userId, string code)
         {
-            var loggedInUser = _applicationDbContext.Users.FirstOrDefault(user => user.Id == _httpContextAccessor.HttpContext.User.GetUserId()); ;
+            var loggedInUser = _applicationDbContext.Users.FirstOrDefault(user => user.Id == _userManager.GetUserId(_httpContextAccessor.HttpContext.User)); ;
             if (loggedInUser != null)
             {
                 await _signInManager.SignOutAsync(); 
@@ -205,7 +200,7 @@ namespace NekoApplicationWeb.Controllers
 
             var emailBody = $"Þetta netfang var notað til að skrá umsókn um Neko fasteignalán. Smelltu á <a href=\"{callbackUrl}\">hérna</a> til að staðfesta reikningin þinn.";
 
-            await _emailService.SendEmailAsync(user.Email, "Neko umsókn", emailBody);
+            _emailService.SendEmailAsync(user.Email, "Neko umsókn", emailBody);
         }
     }
 }

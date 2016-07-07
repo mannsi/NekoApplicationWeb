@@ -1,7 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.OptionsModel;
+using Microsoft.Extensions.Options;
 using NekoApplicationWeb.ServiceInterfaces;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 
 namespace NekoApplicationWeb.Services
 {
@@ -17,24 +20,19 @@ namespace NekoApplicationWeb.Services
             MailOptions = optionsAccessor.Value;
         }
 
-        public Task SendEmailAsync(string email, string subject, string message)
+        public void SendEmailAsync(string emailAddress, string subject, string message)
         {
-            _logger.LogInformation($"Email sent to {email} with subject '{subject}'");
+            _logger.LogInformation($"Email sent to {emailAddress} with subject '{subject}'");
 
-            // Plug in your email service here to send an email.
-            var myMessage = new SendGrid.SendGridMessage();
-            myMessage.AddTo(email);
-            myMessage.From = new System.Net.Mail.MailAddress("neko@neko.is", "Neko");
-            myMessage.Subject = subject;
-            myMessage.Text = message;
-            myMessage.Html = message;
-            //var credentials = new System.Net.NetworkCredential(
-            //    Options.SendGridUser,
-            //    Options.SendGridKey);
-            // Create a Web transport for sending email.
-            var transportWeb = new SendGrid.Web(MailOptions.SendGridApiKey);
-            // Send the email.
-            return transportWeb.DeliverAsync(myMessage);
+            String apiKey = MailOptions.SendGridApiKey;
+            dynamic sg = new SendGridAPIClient(apiKey);
+
+            Email fromEmail = new Email("neko@neko.is");
+            Email toEmail = new Email(emailAddress);
+            Content content = new Content("text/html", message);
+            Mail mail = new Mail(fromEmail, subject, toEmail, content);
+
+            dynamic response = sg.client.mail.send.post(requestBody: mail.Get());
         }
     }
 }

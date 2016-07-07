@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Microsoft.AspNet.Authorization;
-using Microsoft.AspNet.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NekoApplicationWeb.ViewModels.Page.Education;
 using NekoApplicationWeb.ViewModels.Page.Employment;
 using NekoApplicationWeb.ViewModels.Page.Personal;

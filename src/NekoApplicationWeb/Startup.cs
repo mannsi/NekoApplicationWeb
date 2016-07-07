@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.Identity.EntityFramework;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NekoApplicationWeb.Models;
 using NekoApplicationWeb.Services;
-using Microsoft.Data.Entity;
 using NekoApplicationWeb.ServiceInterfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace NekoApplicationWeb
 {
@@ -26,6 +21,7 @@ namespace NekoApplicationWeb
 
             // Set up configuration sources.
             var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json")
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
@@ -46,22 +42,16 @@ namespace NekoApplicationWeb
                 connectionString = Configuration["NekoData:DefaultConnection:ConnectionString"];
             }
 
-            services.AddEntityFramework()
-                .AddSqlServer()
-                .AddDbContext<ApplicationDbContext>(options =>
-                {
-                    options.UseSqlServer(connectionString);
-                });
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(connectionString));
 
-            // Add Identity services to the services container.
             services.AddIdentity<ApplicationUser, IdentityRole>(o =>
             {
                 o.Password.RequireDigit = false;
                 o.Password.RequireLowercase = false;
-                o.Password.RequireNonLetterOrDigit = false;
                 o.Password.RequireUppercase = false;
                 o.Password.RequiredLength = 6;
-                o.Cookies.ApplicationCookie.LoginPath = "/";
+                o.Cookies.ApplicationCookie.LoginPath = "/Account/Login";
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
@@ -81,21 +71,19 @@ namespace NekoApplicationWeb
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public async void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.MinimumLevel = LogLevel.Information;
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
             if (env.IsDevelopment())
             {
                 app.UseBrowserLink();
+                app.UseDatabaseErrorPage();
                 app.UseDeveloperExceptionPage();
             }
             else
             {
                 app.UseExceptionHandler("/Application/Error");
             }
-
-            app.UseIISPlatformHandler();
 
             app.UseStaticFiles();
             app.UseIdentity(); // This allows asp login
@@ -108,8 +96,5 @@ namespace NekoApplicationWeb
 
             await InitialData.CreateDemoUser(app.ApplicationServices);
         }
-
-        // Entry point for the application.
-        public static void Main(string[] args) => WebApplication.Run<Startup>(args);
     }
 }

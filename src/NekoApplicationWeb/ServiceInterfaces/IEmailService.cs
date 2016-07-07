@@ -7,6 +7,6 @@ namespace NekoApplicationWeb.ServiceInterfaces
 {
     public interface IEmailService
     {
-        Task SendEmailAsync(string email, string subject, string message);
+        void SendEmailAsync(string emailAddress, string subject, string message);
     }
 }
