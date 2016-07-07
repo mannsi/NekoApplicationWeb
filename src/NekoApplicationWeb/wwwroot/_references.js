@@ -1,5 +1,7 @@
 ﻿/// <autosync enabled="true" />
 /// <reference path="../gulpfile.js" />
+/// <reference path="js/angular-input-masks-standalone.js" />
+/// <reference path="js/angular-locale_is-is.js" />
 /// <reference path="js/app-neko.js" />
 /// <reference path="js/controllers.js" />
 /// <reference path="js/documents.js" />

@@ -222,9 +222,10 @@
             angular.copy(data, vm.applicantsFinances);
         };
 
-        vm.addOtherIncome = function(applicantFinances) {
-            var selectedOtherIncomeValue = $("#otherIncomeSelect").val();
-            var selectedOtherIncomeString = $("#otherIncomeSelect option:selected").text();
+        vm.addOtherIncome = function (applicantFinances) {
+            var selectIdString = "#otherIncomeSelect-" + applicantFinances.ApplicantSsn;
+            var selectedOtherIncomeValue = $(selectIdString).val();
+            var selectedOtherIncomeString = $(selectIdString + " option:selected").text();
 
             if (selectedOtherIncomeString !== "") {
                 applicantFinances.OtherIcome.push({
@@ -247,8 +248,9 @@
         };
 
         vm.addAsset = function (applicantFinances) {
-            var selectedAssetValue = $("#assetsTypeSelect").val();
-            var selectedAssetString = $("#assetsTypeSelect option:selected").text();
+            var selectIdString = "#assetsTypeSelect-" + applicantFinances.ApplicantSsn;
+            var selectedAssetValue = $(selectIdString).val();
+            var selectedAssetString = $(selectIdString + " option:selected").text();
 
             var isProperty = selectedAssetValue === "0";
             var assetPlaceHolderString = "";
@@ -279,8 +281,9 @@
         };
 
         vm.addDebt = function (applicantFinances) {
-            var selectedDebtValue = $("#debtTypeSelect").val();
-            var selectedDebtString = $("#debtTypeSelect option:selected").text();
+            var selectIdString = "#debtTypeSelect-" + applicantFinances.ApplicantSsn;
+            var selectedDebtValue = $(selectIdString).val();
+            var selectedDebtString = $(selectIdString + " option:selected").text();
 
             if (selectedDebtString !== "") {
                 applicantFinances.Debts.push({
@@ -315,9 +318,10 @@
         init();
     };
 
-    function loanPageController($http) {
+    function loanPageController($http, $scope) {
         var vm = this;
 
+        vm.lenders = [];
         vm.loanViewModel = {};
         vm.pageModified = false;
 
@@ -332,6 +336,14 @@
                     return;
                 }
             });
+
+            $http.get('/api/loan/lenders')
+                .then(function (response) {
+                    vm.lenders = response.data;
+                },
+                    function (error) {
+
+                    });
         }
 
         vm.initData = function (data) {
@@ -368,6 +380,39 @@
                     vm.pageModified = true;
                     alert("Ekki tókst að vista. Villa: " + error);
                 });
+        };
+
+        vm.lenderChange = function() {
+            var lenderValue = $("#lenderSelect").val();
+            var lenderString = $("#lenderSelect" + " option:selected").text();
+
+            $http({
+                url: '/api/loan/defaultLoans',
+                method: "GET",
+                params: {
+                    lenderId: lenderValue,
+                    buyingPrice: vm.loanViewModel.BuyingPrice,
+                    ownCapital: vm.loanViewModel.OwnCapital
+                }
+            }).then(function(repsonse) {
+                
+            }, function(error) {
+                
+            });
+
+            //$http.get('/api/loan/defaultLoans',
+            //    {
+            //        lenderId: lenderValue, 
+            //        buyingPrice: vm.loanViewModel.BuyingPrice,
+            //        ownCapital: vm.loanViewModel.OwnCapital
+            //    })
+            //    .then(function (response) {
+                    
+            //    },
+            //        function (error) {
+
+            //        });
+
         };
 
         init();

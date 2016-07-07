@@ -20,7 +20,7 @@
                     <label>Launatekjur eftir skatt</label> <i class="fa fa-question-circle" data-toggle="tooltip" title="Einhver lýsing"></i>
                 </div>
                 <div class="col-xs-8">
-                    <input class="form-control" ng-model="applicantFinances.MonthlyPay.MonthlyAmount" required ng-change="vm.pageModified = true"/>
+                    <input type="text" class="form-control" ng-model="applicantFinances.MonthlyPay.MonthlyAmount" ui-number-mask="0" required ng-change="vm.pageModified = true"/>
                 </div>
             </div>
 
@@ -28,7 +28,7 @@
                 <label class="col-xs-4 control-label">Aðrar tekjur</label>
                 <div class="col-xs-8">
                     <div class="input-group">
-                        <select class="form-control" id="otherIncomeSelect">
+                        <select class="form-control" id="otherIncomeSelect-{{applicantFinances.ApplicantSsn}}">
                             <option value="-1"></option>
                             <option value="2">Leigutekjur</option>
                             <option value="1">Meðlag</option>
@@ -44,7 +44,7 @@
                     <label class="col-xs-5 control-label" ng-bind="otherIncome.IncomeTypeString"></label>
                     <div class="col-xs-7">
                         <div class="input-group input-group-small">
-                            <input class="form-control small-input" ng-model="otherIncome.MonthlyAmount"/>
+                            <input class="form-control small-input" ng-model="otherIncome.MonthlyAmount" ui-number-mask="0"/>
                             <span class="input-group-btn">
                                 <button type="button" class="btn btn-primary" ng-click="vm.removeOtherIncome(applicantFinances.OtherIcome, otherIncome)"><i class="fa fa-times"></i></button>
                             </span>
@@ -63,7 +63,7 @@
                 <label class="col-xs-4 control-label">Bæta við eign</label>
                 <div class="col-xs-8">
                     <div class="input-group">
-                        <select class="form-control" id="assetsTypeSelect">
+                        <select class="form-control" id="assetsTypeSelect-{{applicantFinances.ApplicantSsn}}">
                             <option value="-1"></option>
                             <option value="0">Fasteign</option>
                             <option value="1">Ökutæki</option>
@@ -113,7 +113,7 @@
                 <label class="col-xs-4 control-label">Bæta við skuld</label>
                 <div class="col-xs-8">
                     <div class="input-group">
-                        <select class="form-control" id="debtTypeSelect">
+                        <select class="form-control" id="debtTypeSelect-{{applicantFinances.ApplicantSsn}}">
                             <option value="-1"></option>
                             <option value="0">Námslán</option>
                             <option value="1">Yfirdráttur</option>
@@ -151,7 +151,7 @@
                         <label>Eftirstöðvar</label>
                     </div>
                     <div class="col-xs-8">
-                        <input class="form-control" ng-model="debt.LoanRemains" required ng-change="vm.pageModified = true"/>
+                        <input class="form-control" ng-model="debt.LoanRemains" required ng-change="vm.pageModified = true" ui-number-mask="0"/>
                     </div>
                 </div>
                 <div class="form-group required">
@@ -159,7 +159,7 @@
                         <label>Mánaðarleg greiðslubyrði</label>
                     </div>
                     <div class="col-xs-8">
-                        <input class="form-control" ng-model="debt.MonthlyPayment" required ng-change="vm.pageModified = true"/>
+                        <input class="form-control" ng-model="debt.MonthlyPayment" required ng-change="vm.pageModified = true" ui-number-mask="0"/>
                     </div>
                 </div>
                 @*<div class="form-group required">

@@ -6,6 +6,14 @@ using System.Threading.Tasks;
 
 namespace NekoApplicationWeb.ViewModels.Page.Loan
 {
+    public enum Lenders
+    {
+        Landsbanki,
+        ArionBanki,
+        IslandsBanki,
+        FrjalsiLifeyrissjodurinn
+    }
+
     public class LoanViewModel
     {
         public LoanViewModel()
@@ -19,8 +27,8 @@ namespace NekoApplicationWeb.ViewModels.Page.Loan
         public string PropertyNumber { get; set; }
         [Required]
         public int OwnCapital { get; set; }
-        [Required]
-        public int NekoLoanAmount { get; set; }
+
+        public string Lender { get; set; }
 
         public List<BankLoanViewModel> BankLoans { get; set; }
     }

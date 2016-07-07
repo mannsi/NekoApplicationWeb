@@ -5,7 +5,7 @@
 <div class="row" ng-app="app-neko" ng-controller="loanPageController as vm" ng-init="vm.initData(@JsonConvert.SerializeObject(Model))" ng-cloak>
     <form name="loanForm" class="form-horizontal" action="" method="post">
         <fieldset>
-            
+
             <div class="col-xs-12">
                 <legend>Fyrirhuguð fasteignakaup</legend>
             </div>
@@ -15,7 +15,7 @@
                     <label>Kaupverð</label>
                 </div>
                 <div class="col-xs-8">
-                    <input class="form-control" ng-model="vm.BuyingPrice" required ng-change="vm.pageModified = true"/>
+                    <input class="form-control" ng-model="vm.loanViewModel.BuyingPrice" required ng-change="vm.pageModified = true" ui-number-mask="0"/>
                 </div>
             </div>
             <div class="form-group required">
@@ -23,7 +23,7 @@
                     <label>Fastanúmer eignar</label>
                 </div>
                 <div class="col-xs-8">
-                    <input class="form-control" ng-model="vm.PropertyNumber" required ng-change="vm.pageModified = true"/>
+                    <input class="form-control" ng-model="vm.loanViewModel.PropertyNumber" required ng-change="vm.pageModified = true" mask="999-9999"/>
                 </div>
             </div>
             <div class="form-group required">
@@ -31,43 +31,68 @@
                     <label>Eigið fé</label>
                 </div>
                 <div class="col-xs-8">
-                    <input class="form-control" ng-model="vm.OwnCapital" required ng-change="vm.pageModified = true"/>
+                    <input class="form-control" ng-model="vm.loanViewModel.OwnCapital" required ng-change="vm.pageModified = true" ui-number-mask="0"/>
                 </div>
             </div>
-            <div class="form-group required">
+            @*<div class="form-group required">
                 <div class="col-xs-4 control-label">
                     <label>Upphæð Neko láns</label>
                 </div>
                 <div class="col-xs-8">
-                    <input class="form-control" ng-model="vm.NekoLoanAmount" required ng-change="vm.pageModified = true"/>
+                    <input class="form-control" ng-model="vm.NekoLoanAmount" required ng-change="vm.pageModified = true" ui-number-mask="0"/>
                 </div>
-            </div>
+            </div>*@
             <div class="col-xs-12">
-                <legend>Bankalán</legend>
+                <legend>Lán</legend>
             </div>
-            <div ng-repeat="bankLoan in vm.loanViewModel.BankLoans">
-                <div class="col-xs-10 col-xs-offset-1">
-                    <hr ng-if="!$first"/>
-                </div>
-                <div class="col-xs-12" ng-if="!$first">
-                    <span class="pull-right"><a href="#" ng-click="vm.removeBankLoan(bankLoan)"><i class="fa fa-times" style="color: red;"></i></a></span>
-                </div>
-                <div class="form-group required">
-                    <label class="col-xs-4 control-label">Lánveitandi</label>
-                    <div class="col-xs-8">
-                        <input class="form-control" ng-model="bankLoan.Lender" required ng-change="vm.pageModified = true"/>
+
+
+            <div class="col-xs-10 col-xs-offset-1" style="margin-bottom: 15px;">
+                <em>Veldu lánveitanda og við setjum upp lán sem uppfyllir þeirra kröfur og lágmarkar greiðslubyrði þína</em>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-4 control-label">Lánveitandi</label>
+                <div class="col-xs-8">
+                    <div class="input-group">
+                        <select id="lenderSelect" class="form-control" ng-model="vm.loanViewModel.Lender"
+                                ng-disabled="vm.loanViewModel.BuyingPrice == 0 || vm.loanViewModel.BuyingPrice == '' 
+                                            || vm.loanViewModel.OwnCapital == '' || vm.loanViewModel.OwnCapital == 0"
+                                ng-change="vm.lenderChange()">
+                            <option ng-repeat="lender in vm.lenders | orderBy: 'Name'" value="{{lender.Id}}">{{lender.Name}}</option>
+                            @*<option value="0">Landsbankinn</option>
+                            <option value="1">Arion banki</option>
+                            <option value="2">Íslandsbanki</option>
+                            <option value="3">Frjálsi Lífeyrissjóðurinn</option>*@
+                        </select>
                     </div>
                 </div>
-                <div class="form-group required">
-                    <label class="col-xs-4 control-label">Höfuðstóll</label>
+            </div>
+            <div ng-repeat="bankLoan in vm.loanViewModel.BankLoans">
+                <div class="col-xs-10 col-xs-offset-1"><hr /></div>
+
+                <div class="col-xs-10 col-xs-offset-1"><h4 class="text-center">Lán {{$index + 1}}</h4></div>
+
+                <div class="form-group">
+                    <label class="col-xs-4 control-label">Upphæð</label>
                     <div class="col-xs-8">
                         <input class="form-control" ng-model="bankLoan.Principal" required ng-change="vm.pageModified = true"/>
                     </div>
                 </div>
-                <div class="form-group required">
-                    <label class="col-xs-4 control-label">Mánaðarleg greiðslubyrði</label>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label">Lánstími</label>
                     <div class="col-xs-8">
-                        <input class="form-control" ng-model="bankLoan.MonthlyPayment" required ng-change="vm.pageModified = true"/>
+                        <div class="input-group">
+                            <select class="form-control">
+                                <option value="5">5 ár</option>
+                                <option value="10">10 ár</option>
+                                <option value="15">15 ár</option>
+                                <option value="20">20 ár</option>
+                                <option value="25">25 ár</option>
+                                <option value="30">30 ár</option>
+                                <option value="35">35 ár</option>
+                                <option value="40">40 ár</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -77,12 +102,13 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xs-offset-4 col-xs-8" style="padding-bottom: 20px;">
+            @*<div class="col-xs-offset-4 col-xs-8" style="padding-bottom: 20px;">
                 <div class="btn btn-success btn-sm" ng-click="vm.addBankLoan(applicantDegrees)">
-                    <i class="fa fa-plus"></i> Bæta við bankaláni
+                    <i class="fa fa-plus"></i> Bæta við láni
                 </div>
-            </div>
+            </div>*@
         </fieldset>
+        
         <div class="col-lg-12">
             <button class="btn btn-info pull-right" ng-click="vm.continue()" ng-disabled="loanForm.$invalid">
                 Vista og áfram <i class="fa fa-arrow-right" aria-hidden="true"></i>

@@ -12,6 +12,7 @@ namespace NekoApplicationWeb.ViewModels.Page.Finances
             Debts = new List<ApplicantDebt>();
         }
 
+        public string ApplicantSsn { get; set; }
         public string ApplicantName { get; set; }
         public ApplicantIncome MonthlyPay { get; set; }
         public List<ApplicantIncome> OtherIcome { get; set; }

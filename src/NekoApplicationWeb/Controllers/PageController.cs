@@ -107,6 +107,7 @@ namespace NekoApplicationWeb.Controllers
             {
                 new ApplicantFinancesViewModel
                 {
+                    ApplicantSsn = "111111-9999",
                     ApplicantName = "Joe Shmoe",
                     MonthlyPay = new ApplicantIncome {IncomeType = IncomeType.Salary, MonthlyAmount = 500000},
                     Assets = new List<ApplicantAssets>(),
@@ -115,6 +116,7 @@ namespace NekoApplicationWeb.Controllers
                 }, 
                 new ApplicantFinancesViewModel
                 {
+                    ApplicantSsn = "111112-9999",
                     ApplicantName = "Ms Joe Shmoe",
                     MonthlyPay = new ApplicantIncome {IncomeType = IncomeType.Salary, MonthlyAmount = 500000},
                     Assets = new List<ApplicantAssets>(),
@@ -135,7 +137,7 @@ namespace NekoApplicationWeb.Controllers
 
             var vm = new LoanViewModel
             {
-                BankLoans = new List<BankLoanViewModel>{new BankLoanViewModel()}
+                BankLoans = new List<BankLoanViewModel>{new BankLoanViewModel(), new BankLoanViewModel()}
             };
 
             ViewData["vm"] = vm;
