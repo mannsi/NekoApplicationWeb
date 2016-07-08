@@ -21,11 +21,5 @@ namespace NekoApplicationWeb.ViewModels.Page.Employment
 
         [DataType(DataType.Date)]
         public DateTime From { get; set; }
-
-        [DataType(DataType.Url)]
-        public string LinkedInPath { get; set; }
-
-        public IFormFile Cv { get; set; }
-
     }
 }

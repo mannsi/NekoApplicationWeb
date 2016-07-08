@@ -194,7 +194,7 @@
                     alert("Ekki tókst að vista. Villa: " + error);
                 });
         };
-
+        
         init();
     };
 

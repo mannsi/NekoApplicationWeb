@@ -25,7 +25,7 @@ namespace NekoApplicationWeb.Controllers
             ViewData["ContentHeader"] = "Umsókn um Neko fasteignalán";
             ViewData["selectedNavPillId"] = "navPillFrontPage";
             ViewData["vm"] = null;
-            return View("BasePage", "Index");
+            return View("BasePage", "index");
         }
 
         [Route("Umsaekjandi")]
@@ -47,7 +47,7 @@ namespace NekoApplicationWeb.Controllers
             };
 
             ViewData["vm"] = vm;
-            return View("BasePage", "Personal");
+            return View("BasePage", "personal");
         }
 
         [Route("Menntun")]
@@ -78,7 +78,7 @@ namespace NekoApplicationWeb.Controllers
             };
 
             ViewData["vm"] = vm;
-            return View("BasePage", "Education");
+            return View("BasePage", "education");
         }
 
        [Route("Starfsferill")]
@@ -94,7 +94,7 @@ namespace NekoApplicationWeb.Controllers
            };
 
             ViewData["vm"] = vm;
-            return View("BasePage", "Employment");
+            return View("BasePage", "employment");
         }
 
         [Route("Fjarmal")]
@@ -126,7 +126,7 @@ namespace NekoApplicationWeb.Controllers
             };
 
             ViewData["vm"] = vm;
-            return View("BasePage", "Finances");
+            return View("BasePage", "finances");
         }
 
         [Route("Lanveiting")]
@@ -156,22 +156,8 @@ namespace NekoApplicationWeb.Controllers
             };
 
             ViewData["vm"] = vm;
-            return View("BasePage", "Documents");
-        }
-
-        [Route("DocumentsForward")]
-        [HttpPost]
-        public IActionResult DocumentsForward(DocumentsViewModel vm)
-        {
-            return RedirectToAction("Summary");
-        }
-
-        [Route("DocumentsBackwards")]
-        [HttpPost]
-        public IActionResult DocumentsBackwards(DocumentsViewModel vm)
-        {
-            return RedirectToAction("Loan");
-        }
+            return View("BasePage", "documents");
+        } 
 
         [Route("Samatekt")]
         public IActionResult Summary()
@@ -180,7 +166,7 @@ namespace NekoApplicationWeb.Controllers
             ViewData["selectedNavPillId"] = "navPillSummary";
 
             ViewData["vm"] = null;
-            return View("BasePage", "Summary");
+            return View("BasePage", "summary");
         }
 
         //[Route("SummaryBackwards")]
