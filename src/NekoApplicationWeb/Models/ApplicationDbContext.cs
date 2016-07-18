@@ -10,6 +10,15 @@ namespace NekoApplicationWeb.Models
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<Lender>()
+                .Property(lender => lender.LoanPaymentServiceFee)
+                .HasDefaultValue(130);
+
+            base.OnModelCreating(builder);
+        }
+
         public DbSet<Lender> Lenders { get; set; }
     }
 }

@@ -61,6 +61,8 @@ namespace NekoApplicationWeb
 
             services.AddTransient<ICompletionService, CompletionService>();
             services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<IInterestsService, InterestsService>();
+            services.AddTransient<ILoanService, LoanService>();
 
             services.Configure<MailOptions>(myOptions =>
             {
@@ -95,6 +97,7 @@ namespace NekoApplicationWeb
             });
 
             await InitialData.CreateDemoUser(app.ApplicationServices);
+            InitialData.CreateLenders(app.ApplicationServices);
         }
     }
 }

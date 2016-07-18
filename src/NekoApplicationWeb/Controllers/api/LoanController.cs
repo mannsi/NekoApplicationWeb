@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NekoApplicationWeb.Models;
+using NekoApplicationWeb.ServiceInterfaces;
 using NekoApplicationWeb.ViewModels.Page.Loan;
 
 namespace NekoApplicationWeb.Controllers.api
@@ -12,10 +13,14 @@ namespace NekoApplicationWeb.Controllers.api
     public class LoanController : Controller
     {
         private readonly ApplicationDbContext _dbContext;
+        private readonly ILoanService _loanService;
 
-        public LoanController(ApplicationDbContext dbContext)
+        public LoanController(
+            ApplicationDbContext dbContext,
+            ILoanService loanService)
         {
             _dbContext = dbContext;
+            _loanService = loanService;
         }
 
         [Route("")]
@@ -41,43 +46,9 @@ namespace NekoApplicationWeb.Controllers.api
 
         [Route("defaultLoans")]
         [HttpGet]
-        public List<BankLoanViewModel> GetDefaultLoans(string lenderId, int buyingPrice, int ownCapital)
+        public List<BankLoanViewModel> GetDefaultLoans(string lenderId, string propertyNumber, int buyingPrice, int ownCapital)
         {
-            // TODO calculations
-            // TODO needs fasteignarmat
-
-            var selectedLender = _dbContext.Lenders.FirstOrDefault(lender => lender.Id == lenderId);
-            if (selectedLender == null) return null;
-
-            
-            var loan1 = new BankLoanViewModel
-            {
-                Principal = (int)(buyingPrice * 0.5) - ownCapital,
-                Indexed = false,
-                LoanDurationYears = 40,
-                LoanDurationMaxYears = 40,
-                LoanDurationMinYears = 15
-            };
-
-            var loan2 = new BankLoanViewModel
-            {
-                Principal = (int)(buyingPrice * 0.7) - loan1.Principal,
-                Indexed = true,
-                LoanDurationYears = 40,
-                LoanDurationMaxYears = 40,
-                LoanDurationMinYears = 15
-            };
-
-            var loan3 = new BankLoanViewModel
-            {
-                Principal = (int)(buyingPrice * 0.85) - loan1.Principal - loan2.Principal,
-                Indexed = true,
-                LoanDurationYears = 15,
-                LoanDurationMaxYears = 15,
-                LoanDurationMinYears = 15
-            };
-
-            return new List<BankLoanViewModel> {loan1, loan2, loan3};
+            return _loanService.GetDefaultLoansForLender(lenderId, propertyNumber, buyingPrice, ownCapital);
         }
 
     }
