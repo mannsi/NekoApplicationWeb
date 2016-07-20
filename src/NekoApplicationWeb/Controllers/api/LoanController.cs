@@ -14,13 +14,16 @@ namespace NekoApplicationWeb.Controllers.api
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly ILoanService _loanService;
+        private readonly IInterestsService _interestsService;
 
         public LoanController(
             ApplicationDbContext dbContext,
-            ILoanService loanService)
+            ILoanService loanService,
+            IInterestsService interestsService)
         {
             _dbContext = dbContext;
             _loanService = loanService;
+            _interestsService = interestsService;
         }
 
         [Route("")]
@@ -48,7 +51,24 @@ namespace NekoApplicationWeb.Controllers.api
         [HttpGet]
         public List<BankLoanViewModel> GetDefaultLoans(string lenderId, string propertyNumber, int buyingPrice, int ownCapital)
         {
-            return _loanService.GetDefaultLoansForLender(lenderId, propertyNumber, buyingPrice, ownCapital);
+            var lender = _dbContext.Lenders.FirstOrDefault(l => l.Id == lenderId);
+            if (lender == null) return null;
+
+            var interestsForLender = _interestsService.GetInterestsMatrix(lender);
+
+            // TODO fetch these values from some service
+            int realEstateValuation = 25000000;
+            int newFireInsuranceValuation = 23000000;
+            int plotAssessmentValue = 3500000;
+
+            return _loanService.GetDefaultLoansForLender(
+                lender, 
+                buyingPrice, 
+                ownCapital, 
+                interestsForLender, 
+                realEstateValuation, 
+                newFireInsuranceValuation, 
+                plotAssessmentValue);
         }
 
     }

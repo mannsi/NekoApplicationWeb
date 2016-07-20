@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{63C58C30-B1BD-4C5D-95D7-55D64DAE1930}"
 EndProject
@@ -11,6 +11,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "NekoApplicationWeb", "src\NekoApplicationWeb\NekoApplicationWeb.xproj", "{462EFFFE-A7CC-4DC8-9856-B8152B6953D2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{B2364A49-3669-4616-BF33-0974BDFE73BE}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "NekoApplicationWeb.Tests", "NekoApplicationWeb.Tests\NekoApplicationWeb.Tests.xproj", "{7B35922C-39D4-4593-9B08-FD33D5B95F25}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,11 +26,16 @@ Global
 		{462EFFFE-A7CC-4DC8-9856-B8152B6953D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{462EFFFE-A7CC-4DC8-9856-B8152B6953D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{462EFFFE-A7CC-4DC8-9856-B8152B6953D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B35922C-39D4-4593-9B08-FD33D5B95F25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B35922C-39D4-4593-9B08-FD33D5B95F25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B35922C-39D4-4593-9B08-FD33D5B95F25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B35922C-39D4-4593-9B08-FD33D5B95F25}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{462EFFFE-A7CC-4DC8-9856-B8152B6953D2} = {63C58C30-B1BD-4C5D-95D7-55D64DAE1930}
+		{7B35922C-39D4-4593-9B08-FD33D5B95F25} = {B2364A49-3669-4616-BF33-0974BDFE73BE}
 	EndGlobalSection
 EndGlobal

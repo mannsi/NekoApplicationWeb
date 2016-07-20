@@ -11,36 +11,22 @@ namespace NekoApplicationWeb.Services
 {
     public class LoanService : ILoanService
     {
-        private readonly ApplicationDbContext _dbContext;
-        private readonly IInterestsService _interestsService;
-
-        public LoanService(
-            ApplicationDbContext dbContext
-            , IInterestsService interestsService)
+        public List<BankLoanViewModel> GetDefaultLoansForLender(
+            Lender lender, 
+            int buyingPrice, 
+            int ownCapital,
+            List<InterestsInfo> interestLinesForLender,
+            int realEstateValuation, 
+            int newFireInsuranceValuation,
+            int plotAssessmentValue)
         {
-            _dbContext = dbContext;
-            _interestsService = interestsService;
-        }
-
-
-        public List<BankLoanViewModel> GetDefaultLoansForLender(string lenderId, string propertyNumber, int buyingPrice, int ownCapital)
-        {
-            var selectedLender = _dbContext.Lenders.FirstOrDefault(lender => lender.Id == lenderId);
-            if (selectedLender == null) return null;
-
-            // TODO fetch data based on property number
-            int realEstateValuation = 25000000; // TODO Fictional numer to try out calculations
-            int newFireInsuranceValuation = 23000000; // TODO Fictional numer to try out calculations
-            int plotAssessmentValue = 3500000; // TODO Fictional numer to try out calculations
-
-            var interestLinesForLender = _interestsService.GetInterestsMatrix(lenderId);
             var bankLoans = new BankLoans();
 
-            switch (lenderId)
+            switch (lender.Id)
             {
                 case Shared.Constants.LandsbankinnId:
                     bankLoans = LandsbankinnLoans(realEstateValuation, newFireInsuranceValuation, plotAssessmentValue,
-                        buyingPrice, ownCapital, interestLinesForLender, selectedLender.LoanPaymentServiceFee);
+                        buyingPrice, ownCapital, interestLinesForLender, lender.LoanPaymentServiceFee);
                     break;
                 case Shared.Constants.ArionId:
                     bankLoans = ArionBankiLoans(realEstateValuation, newFireInsuranceValuation, plotAssessmentValue,
@@ -57,32 +43,27 @@ namespace NekoApplicationWeb.Services
                     break;
             }
 
-            var nekoLoan = GetNekoLoan(bankLoans.TotalPrincipal, buyingPrice, ownCapital);
+            if (bankLoans == null) return null;
+
+            var nekoInteresInfo = interestLinesForLender.FirstOrDefault(interest => interest.LoanType == LoanType.Neko);
+            if (nekoInteresInfo == null) return null;
+
+            var nekoLoan = GetNekoLoan(bankLoans.TotalPrincipal, buyingPrice, ownCapital, nekoInteresInfo);
             bankLoans.Add(nekoLoan);
 
             return bankLoans.Loans;
 
         }
 
-        private BankLoanViewModel GetNekoLoan(int totalBankLoansPrincipal, int buyingPrice, int ownCapital)
+        private BankLoanViewModel GetNekoLoan(int totalBankLoansPrincipal, int buyingPrice, int ownCapital, InterestsInfo nekoInteresInfo)
         {
-            var interestInfo = new InterestsInfo
-            {
-                Indexed = true,
-                InterestPercentage = 8,
-                InterestsForm = InterestsForm.Fixed,
-                LoanTimeYearsMax = 15,
-                LoanTimeYearsMin = 15,
-                LoanType = LoanType.Neko,
-                LoanPaymentType = LoanPaymentType.Neko
-            };
-
             int loanPrincipal = buyingPrice - totalBankLoansPrincipal - ownCapital;
-            int monthlyPayment = (int) (interestInfo.InterestPercentage*loanPrincipal) / 12;
+            var interest = nekoInteresInfo.InterestPercentage/100;
+            int monthlyPayment = (int) Math.Round(interest * loanPrincipal / 12);
 
             var nekoLoan = new BankLoanViewModel
             {
-                InterestInfo = interestInfo,
+                InterestInfo = nekoInteresInfo,
                 LoanDurationYears = 15,
                 LoanDurationMaxYears = 15,
                 LoanDurationMinYears = 15,
@@ -100,24 +81,28 @@ namespace NekoApplicationWeb.Services
 
             var loans = new BankLoans();
             var totalLoanNeeded = buyingPrice - ownCapital;
-            var maxLoanGivenByLandsbankinn = (int)0.85*(newFireInsuranceValuation + plotAssessmentValue);
+            var maxLoanGivenByLandsbankinn = newFireInsuranceValuation + plotAssessmentValue;
             var totalLandsbankinnLoanAmount = Math.Min(totalLoanNeeded, maxLoanGivenByLandsbankinn);
 
-            #region LoanA
-            var loanAInterestLine = interestMatrix.Where(matrix => !matrix.Indexed &&
-                                                                    matrix.LoanToValueStartPercentage == 0 && matrix.LoanToValueEndPercentage <= 50 &&
-                                                                    matrix.LoanPaymentType == LoanPaymentType.Annuitet &&
-                                                                    matrix.LoanTimeYearsMax == 40).MinBy(matrix => matrix.InterestPercentage);
-            if (loanAInterestLine == null)
-            {
-                // No interests line fits the business rule
-                return null;
-            }
+            // If borrower requires below 85% he does not need Neko loan
+            if (1.0*totalLoanNeeded/buyingPrice <= 0.85) return null;
 
-            var loanAMaxPrincipal = (int)(buyingPrice * 0.5) - ownCapital;
+            #region LoanA
+
+            var loanAInterestLines = interestMatrix.Where(matrix => !matrix.Indexed &&
+                                                                    matrix.LoanToValueStartPercentage == 0 && 50 <= matrix.LoanToValueEndPercentage &&
+                                                                    matrix.LoanPaymentType == LoanPaymentType.Annuitet &&
+                                                                    matrix.LoanTimeYearsMax == 40).ToList();
+
+            // No interests line fits the business rule
+            if (!loanAInterestLines.Any()) return null;
+
+            var loanAInterestLine = loanAInterestLines.MinBy(matrix => matrix.InterestPercentage);
+
+            var loanAMaxPrincipal =(int) Math.Max(Math.Round(buyingPrice * 0.5) - ownCapital, 0);
             var loanAPrincipal = Math.Min(loanAMaxPrincipal, totalLandsbankinnLoanAmount);
-            var loanAInterestsPercentage = loanAInterestLine.InterestPercentage;
-            var loanAMonthlyPayments = (int)((loanAInterestsPercentage / 12) / (1 - Math.Pow(1 + loanAInterestsPercentage / 12, -(12*40))))* loanAPrincipal + serviceFee;
+            var loanAInterests = loanAInterestLine.InterestPercentage  / 100;
+            var loanAMonthlyPayments = (int)Math.Round((loanAInterests / 12) / (1 - Math.Pow(1 + loanAInterests / 12, -(12*40))) * loanAPrincipal) + serviceFee;
 
             var loanA = new BankLoanViewModel
             {
@@ -135,17 +120,19 @@ namespace NekoApplicationWeb.Services
             #endregion
 
             #region LoanB
-            var loanBInterestLine = interestMatrix.Where(matrix => matrix.Indexed &&
-                                                                    50 <= matrix.LoanToValueStartPercentage && matrix.LoanToValueEndPercentage <= 70 &&
+            var loanBInterestLines = interestMatrix.Where(matrix => matrix.Indexed &&
+                                                                    matrix.LoanToValueStartPercentage <= 50 && 70 <= matrix.LoanToValueEndPercentage &&
                                                                     matrix.LoanPaymentType == LoanPaymentType.Annuitet &&
-                                                                    matrix.LoanTimeYearsMax == 40).MinBy(matrix => matrix.InterestPercentage);
+                                                                    matrix.LoanTimeYearsMax == 40).ToList();
             // No interests line fits the business rule
-            if (loanBInterestLine == null) return null;
+            if (!loanBInterestLines.Any()) return null;
 
-            var loanBMaxPrincipal = (int) (buyingPrice*0.7) - loanA.Principal;
+            var loanBInterestLine = loanBInterestLines.MinBy(matrix => matrix.InterestPercentage);
+
+            var loanBMaxPrincipal = (int) Math.Max(Math.Round(buyingPrice * 0.7 - (loans.TotalPrincipal + ownCapital)), 0);
             var loanBPrincipal = Math.Min(loanBMaxPrincipal, totalLandsbankinnLoanAmount - loans.TotalPrincipal);
-            var loanBInterestsPercentage = loanBInterestLine.InterestPercentage;
-            var loanBMonthlyPayments = (int)((loanBInterestsPercentage / 12) / (1 - Math.Pow(1 + loanBInterestsPercentage / 12, -(12 * 40)))) * loanBPrincipal + serviceFee;
+            var loanBInterests = loanBInterestLine.InterestPercentage / 100;
+            var loanBMonthlyPayments = (int)Math.Round((loanBInterests / 12) / (1 - Math.Pow(1 + loanBInterests / 12, -(12 * 40))) * loanBPrincipal) + serviceFee;
 
             var loanB = new BankLoanViewModel
             {
@@ -163,18 +150,20 @@ namespace NekoApplicationWeb.Services
             #endregion
 
             #region LoanC
-            var loanCInterestLine = interestMatrix.Where(matrix => matrix.Indexed &&
-                                                                    70 <= matrix.LoanToValueStartPercentage && matrix.LoanToValueEndPercentage <= 85 &&
+            var loanCInterestLines = interestMatrix.Where(matrix => matrix.Indexed &&
+                                                                    matrix.LoanToValueStartPercentage <= 70 && 85 <= matrix.LoanToValueEndPercentage &&
                                                                     matrix.LoanPaymentType == LoanPaymentType.EvenPayments &&
-                                                                    matrix.LoanTimeYearsMax == 15).MinBy(matrix => matrix.InterestPercentage);
+                                                                    matrix.LoanTimeYearsMax == 15).ToList();
             // No interests line fits the business rule
-            if (loanCInterestLine == null) return null;
+            if (!loanCInterestLines.Any()) return null;
 
-            var loanCMaxPrincipal = (int)(buyingPrice * 0.85) - loanA.Principal - loanB.Principal;
+            var loanCInterestLine = loanCInterestLines.MinBy(matrix => matrix.InterestPercentage);
+
+            var loanCMaxPrincipal = (int)Math.Max(Math.Round(buyingPrice * 0.85 - (loans.TotalPrincipal + ownCapital)),0);
 
             var loanCPrincipal = Math.Min(loanCMaxPrincipal, totalLandsbankinnLoanAmount - loans.TotalPrincipal);
-            var loanCInterestsPercentage = loanCInterestLine.InterestPercentage;
-            var loanCMonthlyPayments = (int)(loanCInterestsPercentage/12)*loanCPrincipal + (loanCPrincipal/(12*15)) + serviceFee;
+            var loanCInterests = loanCInterestLine.InterestPercentage / 100;
+            var loanCMonthlyPayments = (int)Math.Round((loanCInterests/12)*loanCPrincipal + (loanCPrincipal/(12*15.0))) + serviceFee;
 
 
             var loanC = new BankLoanViewModel

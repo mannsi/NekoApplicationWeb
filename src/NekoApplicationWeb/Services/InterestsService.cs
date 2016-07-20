@@ -9,18 +9,8 @@ namespace NekoApplicationWeb.Services
 {
     public class InterestsService : IInterestsService
     {
-        private readonly ApplicationDbContext _dbContext;
-
-        public InterestsService(ApplicationDbContext dbContext)
+        public List<InterestsInfo> GetInterestsMatrix(Lender lender)
         {
-            _dbContext = dbContext;
-        }
-
-        public List<InterestsInfo> GetInterestsMatrix(string lenderId)
-        {
-            var selectedLender = _dbContext.Lenders.FirstOrDefault(lender => lender.Id == lenderId);
-            if (selectedLender == null) return null;
-
             // TODO implement different lender interests. Now everything behaves as Landsbankinn
             var interestLines = new List<InterestsInfo>
             {
@@ -44,7 +34,25 @@ namespace NekoApplicationWeb.Services
                     InterestPercentage = 4.65, LoanPaymentType = LoanPaymentType.EvenPayments, LoanTimeYearsMin = 5, LoanTimeYearsMax = 15},
             };
 
+            var nekoInterests = GetNekoInterestInfo();
+            interestLines.Add(nekoInterests);
+
             return interestLines;
         }
+
+        private InterestsInfo GetNekoInterestInfo()
+        {
+            return new InterestsInfo
+            {
+                Indexed = true,
+                InterestPercentage = 8,
+                InterestsForm = InterestsForm.Fixed,
+                LoanTimeYearsMax = 15,
+                LoanTimeYearsMin = 15,
+                LoanType = LoanType.Neko,
+                LoanPaymentType = LoanPaymentType.Neko
+            };
+        }
+
     }
 }
