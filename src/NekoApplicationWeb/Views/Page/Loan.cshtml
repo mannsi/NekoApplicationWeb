@@ -1,63 +1,38 @@
 ﻿@using System.Threading.Tasks
 @using Newtonsoft.Json
 @model NekoApplicationWeb.ViewModels.Page.Loan.LoanViewModel
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script>
-    google.charts.load('current', { 'packages': ['corechart'] });
-    google.charts.setOnLoadCallback(drawChart);
-    function drawChart() {
-
-        var data = google.visualization.arrayToDataTable([
-          ['Effort', 'Amount given'],
-          ['My all', 100],
-        ]);
-
-        var options = {
-            pieHole: 0.5,
-            pieSliceTextStyle: {
-                color: 'black',
-            },
-            legend: 'none'
-        };
-
-        var chart = new google.visualization.PieChart(document.getElementById('donut_single'));
-        chart.draw(data, options);
-    }
-</script>
-@*<div id="donut_single" style="width: 900px; height: 500px;"></div>*@
-<div id="donut_single"></div>
 
 <div class="row" ng-app="app-neko" ng-controller="loanPageController as vm" ng-init="vm.initData(@JsonConvert.SerializeObject(Model))" ng-cloak>
     <form name="loanForm" class="form-horizontal" action="" method="post">
         <fieldset>
 
-            <div class="col-xs-12">
+            <div class="col-sm-12">
                 <legend>Fyrirhuguð fasteignakaup</legend>
             </div>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="col-xs-offset-2"><em>COMMENT: fasteignamati 25M, brunabótamati 23M, lóðarmati 3.5M</em></div>
             <div class="form-group required">
-                <div class="col-xs-4 control-label">
+                <div class="col-sm-4 col-xs-offset-4 col-sm-offset-0 control-label">
                     <label>Kaupverð</label>
                 </div>
-                <div class="col-xs-8">
+                <div class="col-sm-8 col-xs-offset-4 col-sm-offset-0">
                     <input class="form-control" ng-model="vm.loanViewModel.BuyingPrice" required ng-change="vm.pageModified = true" ui-number-mask="0" />
                 </div>
             </div>
             <div class="form-group required">
-                <div class="col-xs-4 control-label">
+                <div class="col-sm-4 col-xs-offset-4 col-sm-offset-0 control-label">
                     <label>Fastanúmer eignar</label>
                 </div>
-                <div class="col-xs-8">
+                <div class="col-sm-8 col-xs-offset-4 col-sm-offset-0">
                     <input class="form-control" ng-model="vm.loanViewModel.PropertyNumber" required ng-change="vm.pageModified = true" mask="999-9999" />
                 </div>
             </div>
             <div class="form-group required">
-                <div class="col-xs-4 control-label">
+                <div class="col-sm-4 col-xs-offset-4 col-sm-offset-0 control-label">
                     <label>Eigið fé</label>
                 </div>
-                <div class="col-xs-8">
+                <div class="col-sm-8 col-xs-offset-4 col-sm-offset-0">
                     <input class="form-control" ng-model="vm.loanViewModel.OwnCapital" required ng-change="vm.pageModified = true" ui-number-mask="0" />
                 </div>
             </div>
@@ -70,8 +45,8 @@
                 <em>Veldu þinn lánveitanda. Við setjum upp lán sem uppfylla allar kröfur og lágmarkar greiðslubyrði þína</em>
             </div>
             <div class="form-group">
-                <label class="col-xs-4 control-label">Lánveitandi</label>
-                <div class="col-xs-8">
+                <label class="col-sm-4 col-xs-offset-4 col-sm-offset-0 control-label">Lánveitandi</label>
+                <div class="col-sm-8 col-xs-offset-4 col-sm-offset-0">
                     <div class="input-group">
                         <select id="lenderSelect" class="form-control" ng-model="vm.loanViewModel.Lender"
                                 ng-disabled="vm.loanViewModel.BuyingPrice == 0 || vm.loanViewModel.BuyingPrice == ''
