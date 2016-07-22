@@ -384,7 +384,7 @@
             vm.pageModified = false;
             $http.post('/api/loan', vm.loanViewModel)
                 .then(function (response) {
-                    window.location.href = 'Fylgiskjol';
+                    window.location.href = 'Samantekt';
                 }, function (error) {
                     vm.pageModified = true;
                     alert("Ekki tókst að vista. Villa: " + error);

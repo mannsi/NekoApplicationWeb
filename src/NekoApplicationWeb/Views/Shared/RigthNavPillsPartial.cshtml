@@ -14,7 +14,7 @@
             <li id="navPillEmployment"><a asp-controller="Page" asp-action="Employment">Starfsferill <i class="fa fa-@(CompletionService.EmploymentCompleted() ? "check" : "minus")-circle pull-right"></i></a></li>
             <li id="navPillFinances"><a asp-controller="Page" asp-action="Finances">Fjármál <i class="fa fa-@(CompletionService.FinancesCompleted() ? "check" : "minus")-circle pull-right"></i></a></li>
             <li id="navPillLoan"><a asp-controller="Page" asp-action="Loan">Lánveiting <i class="fa fa-@(CompletionService.LoanCompleted() ? "check" : "minus")-circle pull-right"></i></a></li>
-            <li id="navPillDocuments"><a asp-controller="Page" asp-action="Documents">Fylgiskjöl <i class="fa fa-@(CompletionService.DocumentsCompleted() ? "check" : "minus")-circle pull-right"></i></a></li>
+            <li id="navPillDocuments">@*<a asp-controller="Page" asp-action="Documents">Fylgiskjöl <i class="fa fa-@(CompletionService.DocumentsCompleted() ? "check" : "minus")-circle pull-right"></i></a>*@</li>
             <li id="navPillSummary"><a asp-controller="Page" asp-action="Summary">Samantekt</a></li>
         </ul>
     </div>

@@ -1,4 +1,5 @@
-﻿@model string
+﻿@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@model string
 @{
     //var javascriptInlucdePath = $"~/js/{Model}.js";
 }
@@ -9,8 +10,8 @@
         <h1>@ViewData["ContentHeader"]</h1>
     </div>
     <div class="hidden-sm col-md-2 col-md-offset-1">
-        <span>EINHVERN TEXTA HINGAÐ?</span>
-        <div class="progress">
+        @*<span>EINHVERN TEXTA HINGAÐ?</span>*@
+        <div class="progress hidden">
             <div id="pillProgressBar" class="progress-bar progress-bar-success"></div>
         </div>
     </div>
