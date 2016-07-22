@@ -34,12 +34,15 @@ namespace NekoApplicationWeb.Services
                     break;
                 case Shared.Constants.IslandsbankiId:
                     // TODO
+                    bankLoans = null;
                     break;
                 case Shared.Constants.FrjalsiLifeyrissjodurinnId:
                     // TODO
+                    bankLoans = null;
                     break;
                 case Shared.Constants.AlmenniLifeyrissjodurinnId:
                     // TODO
+                    bankLoans = null;
                     break;
             }
 

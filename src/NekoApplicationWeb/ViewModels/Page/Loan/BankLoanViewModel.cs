@@ -15,6 +15,39 @@ namespace NekoApplicationWeb.ViewModels.Page.Loan
         public InterestsInfo InterestInfo { get; set; }
         public int MonthlyPayment { get; set; }
 
+        public string InterestsFormString
+        {
+            get
+            {
+                switch (InterestInfo.InterestsForm)
+                {
+                    case InterestsForm.Fixed:
+                        return $"Fastir-{InterestInfo.FixedInterestsYears} ár";
+                    case InterestsForm.Variable:
+                        return "Breytilegir";
+                    default:
+                        return "";
+                }
+            }
+        }
+
+        public string PaymentTypeString
+        {
+            get
+            {
+                switch (InterestInfo.LoanPaymentType)
+                {
+                    case LoanPaymentType.Annuitet:
+                        return "Jafnar greiðslur";
+                    case LoanPaymentType.EvenPayments:
+                        return "Jafnar afborganir";
+                    default:
+                        return "";
+                }
+            }
+        }
+
+        public bool IsNekoLoan => InterestInfo.LoanPaymentType == LoanPaymentType.Neko;
     }
 }
 

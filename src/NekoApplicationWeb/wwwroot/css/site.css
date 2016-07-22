@@ -109,3 +109,7 @@ li>a>i.fa-minus-circle {
 [ng\:cloak], [ng-cloak], .ng-cloak {
   display: none !important;
 }
+
+tbody > tr > th {
+    font-weight: normal;
+}

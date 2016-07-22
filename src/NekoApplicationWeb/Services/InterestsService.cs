@@ -47,6 +47,7 @@ namespace NekoApplicationWeb.Services
                 Indexed = true,
                 InterestPercentage = 8,
                 InterestsForm = InterestsForm.Fixed,
+                FixedInterestsYears = 15,
                 LoanTimeYearsMax = 15,
                 LoanTimeYearsMin = 15,
                 LoanType = LoanType.Neko,

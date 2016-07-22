@@ -51,7 +51,7 @@ namespace NekoApplicationWeb
                 o.Password.RequireLowercase = false;
                 o.Password.RequireUppercase = false;
                 o.Password.RequiredLength = 6;
-                o.Cookies.ApplicationCookie.LoginPath = "/Account/Login";
+                o.Cookies.ApplicationCookie.LoginPath = "/";
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();

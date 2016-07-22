@@ -137,7 +137,9 @@ namespace NekoApplicationWeb.Controllers
 
             var vm = new LoanViewModel
             {
-                BankLoans = new List<BankLoanViewModel>{new BankLoanViewModel(), new BankLoanViewModel()}
+                BuyingPrice = 25000000,
+                OwnCapital = 1000000,
+                BankLoans = new List<BankLoanViewModel>()
             };
 
             ViewData["vm"] = vm;

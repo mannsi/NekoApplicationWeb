@@ -42,7 +42,7 @@ namespace NekoApplicationWeb.Controllers.api
 
         [Route("lenders")]
         [HttpGet]
-        public List<Lender> GetLenders()
+        public List<Lender> Lenders()
         {
             return _dbContext.Lenders.ToList();
         }
