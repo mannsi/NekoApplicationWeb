@@ -205,6 +205,10 @@
         vm.pageModified = false;
 
         function init() {
+            $(document).ready(function () {
+                $('[data-toggle="tooltip"]').tooltip();
+            });
+
             $(window).on('beforeunload', function () {
                 if (vm.pageModified) {
                     return 'You have unsaved changes. Are you sure you wish to continue ?';
@@ -326,7 +330,18 @@
         vm.pageModified = false;
         vm.showBankLoansSection = false;
 
+        vm.greidslubyrdarhlutfall = 0;
+        vm.skuldahlutfall = 0;
+        vm.vedsetningarhlutfall = 0;
+
+        vm.greidslubyrdarhlutfall_Ok = false;
+        vm.skuldahlutfall_Ok = false;
+
         function init() {
+            $(document).ready(function () {
+                $('[data-toggle="popover"]').popover({ trigger: 'hover focus' });
+            });
+
             $(window).on('beforeunload', function () {
                 if (vm.pageModified) {
                     return 'You have unsaved changes. Are you sure you wish to continue ?';
@@ -353,6 +368,20 @@
                 return false;
             }
             return true;
+        };
+
+        function calculateRatios() {
+            var bankLoansPrincipal = vm.loansTotalPrincipal(false);
+            var nekoLoansPrincipal = vm.loansTotalPrincipal(true);
+            var ownCapital = vm.loanViewModel.OwnCapital;
+            var totalFunding = bankLoansPrincipal + nekoLoansPrincipal + ownCapital;
+
+            vm.greidslubyrdarhlutfall = 0;
+            vm.skuldahlutfall = 0;
+            vm.vedsetningarhlutfall = 100 * (totalFunding - ownCapital) / totalFunding ;
+
+            vm.greidslubyrdarhlutfall_Ok = false;
+            vm.skuldahlutfall_Ok = true;
         };
 
         vm.initData = function (data) {
@@ -421,6 +450,7 @@
                 if (response.data !== "") {
                     vm.showBankLoansSection = true;
                 }
+                calculateRatios();
             }, function(error) {
                 
             });

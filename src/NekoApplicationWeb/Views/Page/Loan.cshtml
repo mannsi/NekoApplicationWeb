@@ -2,6 +2,16 @@
 @using Newtonsoft.Json
 @model NekoApplicationWeb.ViewModels.Page.Loan.LoanViewModel
 
+<style>
+    .popover-content {
+        color: black;
+    }
+
+    #nekoLoanTable, #bankLoanTable {
+        margin: 0;
+    }
+</style>
+
 <div class="row" ng-app="app-neko" ng-controller="loanPageController as vm" ng-init="vm.initData(@JsonConvert.SerializeObject(Model))" ng-cloak>
     <form name="loanForm" class="form-horizontal" action="" method="post">
         <fieldset>
@@ -42,7 +52,7 @@
 
 
             <div class="col-xs-10 col-xs-offset-1" style="margin-bottom: 15px;">
-                <em>Veldu þinn lánveitanda. Við setjum upp lán sem uppfylla allar kröfur og lágmarkar greiðslubyrði þína</em>
+                <em>Veldu þinn lánveitanda. Við setjum upp lán sem uppfylla allar kröfur og lágmarkar greiðslubyrði</em>
             </div>
             <div class="form-group">
                 <label class="col-sm-4 col-xs-offset-4 col-sm-offset-0 control-label">Lánveitandi</label>
@@ -60,11 +70,8 @@
                                             || vm.loanViewModel.OwnCapital == '' || vm.loanViewModel.OwnCapital == 0"><i class="fa fa-refresh"></i></a>
                         </span>
                     </div>
-                    
-
                 </div>
             </div>
-
 
             <div class="col-xs-10 col-xs-offset-1">
                 <div id="toMuchOwnCapitalId" class="alert alert-warning hidden" role="alert">
@@ -81,7 +88,7 @@
 
                     <div class="panel-body">
                         <div class="table-responsive">
-                            <table class="table table-sm">
+                            <table class="table table-sm" id="bankLoanTable">
                                 <thead>
                                     <tr>
                                         <th class="text-center">Upphæð</th>
@@ -123,14 +130,14 @@
 
 
             <div class="col-xs-10 col-xs-offset-1" ng-show="vm.showBankLoansSection">
-                <div class="panel panel-success">
+                <div class="panel panel-info">
                     <div class="panel-heading">
                         <div class="panel-title">Lán frá Neko</div>
                     </div>
 
                     <div class="panel-body">
                         <div class="table-responsive">
-                            <table class="table table-sm">
+                            <table class="table table-sm" id="nekoLoanTable">
                                 <thead>
                                     <tr>
                                         <th class="text-center">Upphæð</th>
@@ -171,23 +178,55 @@
             </div>
 
             <div class="col-xs-10 col-xs-offset-1" ng-show="vm.showBankLoansSection">
-                Hvaða gögn á ég að vista frá þessari síðu ? Nóg að vista lánastofnun eða þarf að vista öll lánin líka ?
-
-                <br />
-                <br />
+                Ákvað að prófa aðra útgáfu af upplýsingum um greiðslubyrðarhlutfall, skuldahlutfall og veðsetningarhlutfall. Held að það sé
+                vont að koma 3x pie graphs fyrir á þessari síðu
                 <br/>
-            </div>
 
-            <div class="col-xs-10 col-xs-offset-1" ng-show="vm.showBankLoansSection">
-                Hérna koma upplýsingar um greiðslubyrðarhlutfall, skuldahlutfall og veðsetningarhlutfall.
+                <strong>Önnur vandamál/ákvarðanir</strong>
                 <ul>
-                    <li>Erfitt að koma 3x kökuritum fyrir smekklega</li>
-                    <li>Gögn fyrir kökuritin eru fengin frá öðrum tabs sem getur verið að sé ekki búið að fylla út</li>
+                    <li>Gögn fyrir sumar af þessum tölum eru fengin frá öðrum síðum sem getur verið að sé ekki búið að fylla út</li>
                     <ul>
                         <li>Held ég þurfi að banna það að hoppa áfram í umsókninni svo öll gögn séu til staðar fyrir þessar lykil tölur</li>
                     </ul>
+                    <li>Hvaða gögn á ég að vista frá þessari síðu ? Nóg að vista lánastofnun eða þarf að vista öll lánin líka ?</li>
                 </ul>
             </div>
+        <div ng-show="vm.showBankLoansSection">
+            <div class="col-sm-4 col-xs-12">
+                <div ng-class="vm.greidslubyrdarhlutfall_Ok ? 'panel panel-success' : 'panel panel-primary'">
+                    <div class="panel-heading">
+                        <div class="panel-title text-center">Greiðslubyrðarhlutfall 
+                            <i class="fa fa-question-circle pull-right" data-toggle="popover" data-html="true" data-placement="top" title="Greiðslubyrðarhlutfall" data-content="Hér verður lýsing og jafnvel líka graf"></i></div>
+                    </div>
+                    <div class="panel-body">
+                        <h1 class="text-center">{{vm.greidslubyrdarhlutfall}}%</h1>
+                        <h4 class="text-center">{{vm.greidslubyrdarhlutfall_Ok ? 'Vel gert' : 'Of há greiðslubyrði'}}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-xs-12">
+                <div ng-class="vm.skuldahlutfall_Ok ? 'panel panel-success' : 'panel panel-primary'">
+                    <div class="panel-heading">
+                        <div class="panel-title text-center">Skuldahlutfall <i class="fa fa-question-circle pull-right" data-toggle="popover" data-html="true" data-placement="top" title="Skuldahlutfall" data-content="Hér verður lýsing og jafnvel líka graf"></i></div>
+                    </div>
+                    <div class="panel-body">
+                        <h1 class="text-center">{{vm.skuldahlutfall}}%</h1>
+                        <h4 class="text-center">{{vm.skuldahlutfall_Ok ? 'Vel gert' : 'Þú skuldar of mikið'}}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-xs-12">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <div class="panel-title text-center">Veðsetningarhlutfall <i class="fa fa-question-circle pull-right" data-toggle="popover" data-html="true" data-placement="top" title="Veðsetningarhlutfall" data-content="Hér verður lýsing og jafnvel líka graf"></i></div>
+                    </div>
+                    <div class="panel-body">
+                        <h1 class="text-center">{{vm.vedsetningarhlutfall}}%</h1>
+                        <h4>&nbsp;</h4>
+                    </div>
+                </div>
+            </div>
+        </div>           
         </fieldset>
         <div class="col-lg-12">
             <div class="btn btn-info pull-right" ng-click="vm.continue()" ng-disabled="loanForm.$invalid">
