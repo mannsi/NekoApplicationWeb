@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NekoApplicationWeb.ServiceInterfaces;
 using NekoApplicationWeb.ViewModels;
 using NekoApplicationWeb.ViewModels.Page;
 using NekoApplicationWeb.ViewModels.Page.Education;
@@ -19,6 +20,13 @@ namespace NekoApplicationWeb.Controllers
     [Authorize]
     public class PageController : Controller
     {
+        private readonly IThjodskraService _thjodskraService;
+
+        public PageController(IThjodskraService thjodskraService)
+        {
+            _thjodskraService = thjodskraService;
+        }
+
         [Route("Umsokn")]
         public IActionResult Index()
         {

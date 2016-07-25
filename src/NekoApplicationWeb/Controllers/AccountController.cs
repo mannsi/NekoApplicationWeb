@@ -20,13 +20,15 @@ namespace NekoApplicationWeb.Controllers
         private readonly IEmailService _emailService;
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IThjodskraService _thjodskraService;
 
         public AccountController(ILogger<AccountController> logger, 
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailService emailService,
             ApplicationDbContext applicationDbContext,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            IThjodskraService thjodskraService)
         {
             _logger = logger;
             _userManager = userManager;
@@ -34,6 +36,7 @@ namespace NekoApplicationWeb.Controllers
             _emailService = emailService;
             _applicationDbContext = applicationDbContext;
             _httpContextAccessor = httpContextAccessor;
+            _thjodskraService = thjodskraService;
         }
 
         [Route("")]
@@ -176,6 +179,19 @@ namespace NekoApplicationWeb.Controllers
             var signInResult = await _signInManager.PasswordSignInAsync(user, vm.Password, false, false);
             if (signInResult.Succeeded)
             {
+                //if (string.IsNullOrEmpty(user.UserDisplayName))
+                //{
+                //    var userEntity = _thjodskraService.GetUserEntity(vm.Ssn.Replace("-", ""));
+                //    var familyList = _thjodskraService.UserFamilyInfo(userEntity.FamilyNumber);
+
+                //    if (userEntity != null)
+                //    {
+                //        user.UserDisplayName = userEntity.Name;
+                //    }
+
+                //    await _userManager.UpdateAsync(user);
+                //}
+
                 return RedirectToAction("Index", "Page");
             }
             else

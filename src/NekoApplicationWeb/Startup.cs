@@ -27,7 +27,7 @@ namespace NekoApplicationWeb
             Configuration = builder.Build();
         }
 
-        public IConfigurationRoot Configuration { get; set; }
+        public IConfiguration Configuration { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -63,11 +63,15 @@ namespace NekoApplicationWeb
             services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<IInterestsService, InterestsService>();
             services.AddTransient<ILoanService, LoanService>();
+            services.AddTransient<IThjodskraService, ThjodskraService>();
 
             services.Configure<MailOptions>(myOptions =>
             {
                 myOptions.SendGridApiKey = Configuration["NekoSendGridApiKey"];
             });
+
+            services.AddSingleton(Configuration);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

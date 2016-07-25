@@ -1,9 +1,12 @@
-﻿using NekoApplicationWeb.Models;
+﻿using System.Collections.Generic;
+using NekoApplicationWeb.Models;
+
 
 namespace NekoApplicationWeb.ServiceInterfaces
 {
     public interface IThjodskraService
     {
-        DataEntity GetUserEntity(string ssn);
+        ThjodskraPerson GetUserEntity(string ssn);
+        List<ThjodskraFamilyEntry> UserFamilyInfo(string familyNumber);
     }
 }

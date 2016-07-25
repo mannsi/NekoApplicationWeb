@@ -19,7 +19,7 @@ namespace NekoApplicationWeb.Tests.Loans
 
         private Lender GetLandsBankinn()
         {
-            return new Lender() {Id = Shared.Constants.LandsbankinnId, LoanPaymentServiceFee = _serviceFee };
+            return new Lender() {Id = NekoApplicationWeb.Shared.Constants.LandsbankinnId, LoanPaymentServiceFee = _serviceFee };
         }
 
         private List<InterestsInfo> GetLandsbankinnInterests()
