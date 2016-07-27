@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace NekoApplicationWeb.Models
 {
-    public class LoanDetails
+    public class ExternalLoanDetails
     {
         public string Id { get; set; }
         public Application Application { get; set; }

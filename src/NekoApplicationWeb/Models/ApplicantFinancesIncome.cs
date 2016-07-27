@@ -13,6 +13,9 @@ namespace NekoApplicationWeb.Models
     {
         private string _incomeTypeString;
 
+        public string Id { get; set; }
+        public ApplicationUser User { get; set; }
+
         public int MonthlyAmount { get; set; }
         public IncomeType IncomeType { get; set; }
 

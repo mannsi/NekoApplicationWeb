@@ -30,6 +30,7 @@ namespace NekoApplicationWeb.Models
     /// </summary>
     public class InterestsEntry
     {
+        public string Id { get; set; }
         public Lender Lender { get; set; }
 
         public LoanType LoanType { get; set; }

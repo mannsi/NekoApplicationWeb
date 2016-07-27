@@ -10,6 +10,9 @@
     {
         private string _assetTypeString;
 
+        public string Id { get; set; }
+        public ApplicationUser User { get; set; }
+
         public AssetType AssetType { get; set; }
         public string AssetNumber { get; set; }
         public bool AssetWillBeSold { get; set; }

@@ -15,7 +15,10 @@ namespace NekoApplicationWeb.Models
     public class ApplicantFinancesDebt
     {
         private string _debtTypeString;
-       
+
+        public string Id { get; set; }
+        public ApplicationUser User { get; set; }
+
         public DebtType DebtType { get; set; }
         public string Lender { get; set; }
         public int LoanRemains { get; set; }
