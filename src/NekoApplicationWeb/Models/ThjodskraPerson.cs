@@ -33,6 +33,9 @@ namespace NekoApplicationWeb.Models
 
     public class ThjodskraPerson
     {
+        public string Id { get; set; }
+        public ApplicationUser User { get; set; }
+        public DateTime TimeOfData { get; set; } // When the data was last fetched
         public string Ssn { get; set; }
         public string Name { get; set; }
         public string Home { get; set; }

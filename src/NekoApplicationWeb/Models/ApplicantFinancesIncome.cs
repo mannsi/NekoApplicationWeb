@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace NekoApplicationWeb.ViewModels.Page.Finances
+namespace NekoApplicationWeb.Models
 {
     public enum IncomeType
     {
@@ -9,13 +9,14 @@ namespace NekoApplicationWeb.ViewModels.Page.Finances
         Rent
     }
 
-    public class ApplicantIncome
+    public class ApplicantFinancesIncome
     {
         private string _incomeTypeString;
 
         public int MonthlyAmount { get; set; }
         public IncomeType IncomeType { get; set; }
 
+        [NotMapped]
         public string IncomeTypeString
         {
             get

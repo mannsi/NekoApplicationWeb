@@ -10,7 +10,7 @@ namespace NekoApplicationWeb.ServiceInterfaces
             Lender lender,
             int buyingPrice,
             int ownCapital,
-            List<InterestsInfo> interestLinesForLender,
+            List<InterestsEntry> interestLinesForLender,
             int realEstateValuation,
             int newFireInsuranceValuation,
             int plotAssessmentValue);

@@ -26,7 +26,7 @@ namespace NekoApplicationWeb
                     UserName =  DemoUserSsn,
                     Email = DemoUserEmail,
                     EmailConfirmed = true,
-                    UserDisplayName = "Hans Jón Sigurðsson"
+                    //UserDisplayName = "Hans Jón Sigurðsson"
                 };
 
                 await userManager.CreateAsync(demoUser);
@@ -36,7 +36,6 @@ namespace NekoApplicationWeb
 
         public static void CreateLenders(IServiceProvider applicationServices)
         {
-            // TODO move these bank ids to some other place where I can refernecs also when I am processing data
             var dbContext = (ApplicationDbContext) applicationServices.GetService(typeof (ApplicationDbContext));
             bool lenderAdded = false;
             if (!dbContext.Lenders.Any(lender => lender.Id == Shared.Constants.ArionId))
@@ -69,10 +68,90 @@ namespace NekoApplicationWeb
                 lenderAdded = true;
             }
 
+            if (!dbContext.Lenders.Any(lender => lender.Id == Shared.Constants.NekoLenderId))
+            {
+                dbContext.Lenders.Add(new Lender { Id = Shared.Constants.NekoLenderId, Name = "Neko", LoanPaymentServiceFee = 0 });
+                lenderAdded = true;
+            }
+
             if (lenderAdded)
             {
                 dbContext.SaveChanges();
             }
+        }
+
+        // TODO add other lenders
+        public static void CreateInterestInfo(IServiceProvider applicationServices)
+        {
+            var dbContext = (ApplicationDbContext)applicationServices.GetService(typeof(ApplicationDbContext));
+
+            var neko = dbContext.Lenders.FirstOrDefault(lender => lender.Id == Shared.Constants.NekoLenderId);
+            if (neko == null) return;
+            if (!dbContext.InterestsEntries.Any(ie => ie.Lender == neko))
+            {
+                CreateNekoInterestInfo(neko, dbContext);
+            }
+
+            var landsbankinn = dbContext.Lenders.FirstOrDefault(lender => lender.Id == Shared.Constants.LandsbankinnId);
+            if (landsbankinn == null) return;
+
+            if (!dbContext.InterestsEntries.Any(ie => ie.Lender == landsbankinn))
+            {
+                CreateLandsbankinnInterestInfo(landsbankinn, dbContext);
+            }
+        }
+
+        private static void CreateLandsbankinnInterestInfo(Lender landsbankinn, ApplicationDbContext dbContext)
+        {
+            // Here are the landsbankinn interest info entries
+            var interestsEntries = new List<InterestsEntry>
+            {
+                new InterestsEntry {LoanType = LoanType.Regular, Indexed = false, LoanToValueStartPercentage = 0, LoanToValueEndPercentage = 70, InterestsForm = InterestsForm.Variable,
+                    InterestPercentage = 7.25, LoanPaymentType = LoanPaymentType.Annuitet, LoanTimeYearsMin = 1, LoanTimeYearsMax = 40},
+                new InterestsEntry {LoanType = LoanType.Regular, Indexed = false, LoanToValueStartPercentage = 0, LoanToValueEndPercentage = 70, InterestsForm = InterestsForm.Fixed,
+                    InterestPercentage = 7.30, LoanPaymentType = LoanPaymentType.Annuitet, LoanTimeYearsMin = 1, LoanTimeYearsMax = 40, FixedInterestsYears = 3},
+                new InterestsEntry {LoanType = LoanType.Regular, Indexed = false, LoanToValueStartPercentage = 0, LoanToValueEndPercentage = 70, InterestsForm = InterestsForm.Fixed,
+                    InterestPercentage = 7.45, LoanPaymentType = LoanPaymentType.Annuitet, LoanTimeYearsMin = 1, LoanTimeYearsMax = 40, FixedInterestsYears = 5},
+                new InterestsEntry {LoanType = LoanType.Regular, Indexed = true, LoanToValueStartPercentage = 0, LoanToValueEndPercentage = 70, InterestsForm = InterestsForm.Variable,
+                    InterestPercentage = 3.65, LoanPaymentType = LoanPaymentType.Annuitet, LoanTimeYearsMin = 5, LoanTimeYearsMax = 40},
+                new InterestsEntry {LoanType = LoanType.Regular, Indexed = true, LoanToValueStartPercentage = 0, LoanToValueEndPercentage = 70, InterestsForm = InterestsForm.Fixed,
+                    InterestPercentage = 3.85, LoanPaymentType = LoanPaymentType.Annuitet, LoanTimeYearsMin = 5, LoanTimeYearsMax = 40, FixedInterestsYears = 5},
+                new InterestsEntry {LoanType = LoanType.Additional, Indexed = false, LoanToValueStartPercentage = 70, LoanToValueEndPercentage = 85, InterestsForm = InterestsForm.Variable,
+                    InterestPercentage = 8.25, LoanPaymentType = LoanPaymentType.EvenPayments, LoanTimeYearsMin = 1, LoanTimeYearsMax = 15},
+                new InterestsEntry {LoanType = LoanType.Additional, Indexed = false, LoanToValueStartPercentage = 70, LoanToValueEndPercentage = 85, InterestsForm = InterestsForm.Fixed,
+                    InterestPercentage = 8.30, LoanPaymentType = LoanPaymentType.EvenPayments, LoanTimeYearsMin = 1, LoanTimeYearsMax = 15, FixedInterestsYears = 3},
+                new InterestsEntry {LoanType = LoanType.Additional, Indexed = false, LoanToValueStartPercentage = 70, LoanToValueEndPercentage = 85, InterestsForm = InterestsForm.Fixed,
+                    InterestPercentage = 8.45, LoanPaymentType = LoanPaymentType.EvenPayments, LoanTimeYearsMin = 1, LoanTimeYearsMax = 15, FixedInterestsYears = 5},
+                new InterestsEntry {LoanType = LoanType.Additional, Indexed = true, LoanToValueStartPercentage = 70, LoanToValueEndPercentage = 85, InterestsForm = InterestsForm.Variable,
+                    InterestPercentage = 4.65, LoanPaymentType = LoanPaymentType.EvenPayments, LoanTimeYearsMin = 5, LoanTimeYearsMax = 15},
+            };
+
+            foreach (var interestsEntry in interestsEntries)
+            {
+                interestsEntry.Lender = landsbankinn;
+                dbContext.InterestsEntries.Add(interestsEntry);
+            }
+
+            dbContext.SaveChanges();
+        }
+
+        private static void CreateNekoInterestInfo(Lender neko, ApplicationDbContext dbContext)
+        {
+            var interestsEntry = new InterestsEntry
+            {
+                Indexed = true,
+                InterestPercentage = 8,
+                InterestsForm = InterestsForm.Fixed,
+                FixedInterestsYears = 15,
+                LoanTimeYearsMax = 15,
+                LoanTimeYearsMin = 15,
+                LoanType = LoanType.Neko,
+                LoanPaymentType = LoanPaymentType.Neko,
+                Lender = neko
+            };
+
+            dbContext.InterestsEntries.Add(interestsEntry);
+            dbContext.SaveChanges();
         }
     }
 }

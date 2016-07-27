@@ -5,14 +5,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NekoApplicationWeb.Models;
 using NekoApplicationWeb.ServiceInterfaces;
 using NekoApplicationWeb.ViewModels;
 using NekoApplicationWeb.ViewModels.Page;
 using NekoApplicationWeb.ViewModels.Page.Education;
-using NekoApplicationWeb.ViewModels.Page.Employment;
 using NekoApplicationWeb.ViewModels.Page.Finances;
 using NekoApplicationWeb.ViewModels.Page.Loan;
 using NekoApplicationWeb.ViewModels.Page.Personal;
+using ApplicantEmployment = NekoApplicationWeb.ViewModels.Page.Employment.ApplicantEmployment;
 
 namespace NekoApplicationWeb.Controllers
 {
@@ -117,19 +118,19 @@ namespace NekoApplicationWeb.Controllers
                 {
                     ApplicantSsn = "111111-9999",
                     ApplicantName = "Joe Shmoe",
-                    MonthlyPay = new ApplicantIncome {IncomeType = IncomeType.Salary, MonthlyAmount = 500000},
-                    Assets = new List<ApplicantAssets>(),
-                    Debts =new List<ApplicantDebt>(),
-                    OtherIcome = new List<ApplicantIncome>()
+                    MonthlyPay = new ApplicantFinancesIncome {IncomeType = IncomeType.Salary, MonthlyAmount = 500000},
+                    Assets = new List<ApplicantFinancesAsset>(),
+                    Debts =new List<ApplicantFinancesDebt>(),
+                    OtherIcome = new List<ApplicantFinancesIncome>()
                 }, 
                 new ApplicantFinancesViewModel
                 {
                     ApplicantSsn = "111112-9999",
                     ApplicantName = "Ms Joe Shmoe",
-                    MonthlyPay = new ApplicantIncome {IncomeType = IncomeType.Salary, MonthlyAmount = 500000},
-                    Assets = new List<ApplicantAssets>(),
-                    Debts =new List<ApplicantDebt>(),
-                    OtherIcome = new List<ApplicantIncome>()
+                    MonthlyPay = new ApplicantFinancesIncome {IncomeType = IncomeType.Salary, MonthlyAmount = 500000},
+                    Assets = new List<ApplicantFinancesAsset>(),
+                    Debts =new List<ApplicantFinancesDebt>(),
+                    OtherIcome = new List<ApplicantFinancesIncome>()
                 }
             };
 

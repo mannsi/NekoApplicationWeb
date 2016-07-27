@@ -102,6 +102,7 @@ namespace NekoApplicationWeb
 
             await InitialData.CreateDemoUser(app.ApplicationServices);
             InitialData.CreateLenders(app.ApplicationServices);
+            InitialData.CreateInterestInfo(app.ApplicationServices);
         }
     }
 }

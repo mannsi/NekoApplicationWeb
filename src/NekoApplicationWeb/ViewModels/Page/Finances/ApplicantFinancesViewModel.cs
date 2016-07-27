@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using NekoApplicationWeb.Models;
 
 namespace NekoApplicationWeb.ViewModels.Page.Finances
 {
@@ -7,16 +8,16 @@ namespace NekoApplicationWeb.ViewModels.Page.Finances
     {
         public ApplicantFinancesViewModel()
         {
-            OtherIcome = new List<ApplicantIncome>();
-            Assets = new List<ApplicantAssets>();
-            Debts = new List<ApplicantDebt>();
+            OtherIcome = new List<ApplicantFinancesIncome>();
+            Assets = new List<ApplicantFinancesAsset>();
+            Debts = new List<ApplicantFinancesDebt>();
         }
 
         public string ApplicantSsn { get; set; }
         public string ApplicantName { get; set; }
-        public ApplicantIncome MonthlyPay { get; set; }
-        public List<ApplicantIncome> OtherIcome { get; set; }
-        public List<ApplicantAssets> Assets { get; set; }
-        public List<ApplicantDebt> Debts { get; set; }
+        public ApplicantFinancesIncome MonthlyPay { get; set; }
+        public List<ApplicantFinancesIncome> OtherIcome { get; set; }
+        public List<ApplicantFinancesAsset> Assets { get; set; }
+        public List<ApplicantFinancesDebt> Debts { get; set; }
     }
 }

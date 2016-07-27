@@ -5,6 +5,6 @@ namespace NekoApplicationWeb.ServiceInterfaces
 {
     public interface IInterestsService
     {
-        List<InterestsInfo> GetInterestsMatrix(Lender lender);
+        List<InterestsEntry> GetInterestsMatrix(Lender lender);
     }
 }

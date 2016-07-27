@@ -44,7 +44,7 @@ namespace NekoApplicationWeb.Controllers.api
         [HttpGet]
         public List<Lender> Lenders()
         {
-            return _dbContext.Lenders.ToList();
+            return _dbContext.Lenders.Where(lender => lender.Id != Shared.Constants.NekoLenderId).ToList();
         }
 
         [Route("defaultLoans")]

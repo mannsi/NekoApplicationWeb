@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace NekoApplicationWeb.ViewModels.Page.Finances
+﻿namespace NekoApplicationWeb.Models
 {
     public enum AssetType
     {
@@ -8,7 +6,7 @@ namespace NekoApplicationWeb.ViewModels.Page.Finances
         Vehicle
     }
 
-    public class ApplicantAssets
+    public class ApplicantFinancesAsset
     {
         private string _assetTypeString;
 

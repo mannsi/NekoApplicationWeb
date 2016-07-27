@@ -10,6 +10,9 @@ namespace NekoApplicationWeb.Models
 {
     public class ThjodskraFamilyEntry
     {
+        public string Id { get; set; }
+        public DateTime TimeOfData { get; set; } // When the data was last fetched
+        public string FamilyNumber { get; set; }
         public string Ssn { get; set; }
         public string Name { get; set; }
         public GenderCode GenderCode { get; set; }

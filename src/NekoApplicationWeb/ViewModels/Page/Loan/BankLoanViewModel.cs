@@ -12,17 +12,17 @@ namespace NekoApplicationWeb.ViewModels.Page.Loan
         public int LoanDurationYears { get; set; }
         public int LoanDurationMaxYears { get; set; }
         public int LoanDurationMinYears { get; set; }
-        public InterestsInfo InterestInfo { get; set; }
+        public InterestsEntry InterestEntry { get; set; }
         public int MonthlyPayment { get; set; }
 
         public string InterestsFormString
         {
             get
             {
-                switch (InterestInfo.InterestsForm)
+                switch (InterestEntry.InterestsForm)
                 {
                     case InterestsForm.Fixed:
-                        return $"Fastir-{InterestInfo.FixedInterestsYears} ár";
+                        return $"Fastir-{InterestEntry.FixedInterestsYears} ár";
                     case InterestsForm.Variable:
                         return "Breytilegir";
                     default:
@@ -35,7 +35,7 @@ namespace NekoApplicationWeb.ViewModels.Page.Loan
         {
             get
             {
-                switch (InterestInfo.LoanPaymentType)
+                switch (InterestEntry.LoanPaymentType)
                 {
                     case LoanPaymentType.Annuitet:
                         return "Jafnar greiðslur";
@@ -47,7 +47,7 @@ namespace NekoApplicationWeb.ViewModels.Page.Loan
             }
         }
 
-        public bool IsNekoLoan => InterestInfo.LoanPaymentType == LoanPaymentType.Neko;
+        public bool IsNekoLoan => InterestEntry.LoanPaymentType == LoanPaymentType.Neko;
     }
 }
 

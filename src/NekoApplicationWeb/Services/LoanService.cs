@@ -15,7 +15,7 @@ namespace NekoApplicationWeb.Services
             Lender lender, 
             int buyingPrice, 
             int ownCapital,
-            List<InterestsInfo> interestLinesForLender,
+            List<InterestsEntry> interestLinesForLender,
             int realEstateValuation, 
             int newFireInsuranceValuation,
             int plotAssessmentValue)
@@ -58,15 +58,15 @@ namespace NekoApplicationWeb.Services
 
         }
 
-        private BankLoanViewModel GetNekoLoan(int totalBankLoansPrincipal, int buyingPrice, int ownCapital, InterestsInfo nekoInteresInfo)
+        private BankLoanViewModel GetNekoLoan(int totalBankLoansPrincipal, int buyingPrice, int ownCapital, InterestsEntry nekoInteresEntry)
         {
             int loanPrincipal = buyingPrice - totalBankLoansPrincipal - ownCapital;
-            var interest = nekoInteresInfo.InterestPercentage/100;
+            var interest = nekoInteresEntry.InterestPercentage/100;
             int monthlyPayment = (int) Math.Round(interest * loanPrincipal / 12);
 
             var nekoLoan = new BankLoanViewModel
             {
-                InterestInfo = nekoInteresInfo,
+                InterestEntry = nekoInteresEntry,
                 LoanDurationYears = 15,
                 LoanDurationMaxYears = 15,
                 LoanDurationMinYears = 15,
@@ -78,7 +78,7 @@ namespace NekoApplicationWeb.Services
         }
 
         private BankLoans LandsbankinnLoans(int realEstateValuation, int newFireInsuranceValuation,
-            int plotAssessmentValue, int buyingPrice, int ownCapital, List<InterestsInfo> interestMatrix, int serviceFee)
+            int plotAssessmentValue, int buyingPrice, int ownCapital, List<InterestsEntry> interestMatrix, int serviceFee)
         {
             // Landsbankinn will loan up to 85% of buying price, but never more than newFireInsuranceValuation + plotAssessmentValue
 
@@ -113,7 +113,7 @@ namespace NekoApplicationWeb.Services
                 LoanDurationYears = 40,
                 LoanDurationMaxYears = 40,
                 LoanDurationMinYears = 15,
-                InterestInfo = loanAInterestLine,
+                InterestEntry = loanAInterestLine,
                 MonthlyPayment = loanAMonthlyPayments
             };
             loans.Add(loanA);
@@ -143,7 +143,7 @@ namespace NekoApplicationWeb.Services
                 LoanDurationYears = 40,
                 LoanDurationMaxYears = 40,
                 LoanDurationMinYears = 15,
-                InterestInfo = loanBInterestLine,
+                InterestEntry = loanBInterestLine,
                 MonthlyPayment = loanBMonthlyPayments
             };
             loans.Add(loanB);
@@ -175,7 +175,7 @@ namespace NekoApplicationWeb.Services
                 LoanDurationYears = 15,
                 LoanDurationMaxYears = 15, 
                 LoanDurationMinYears = 15,
-                InterestInfo = loanCInterestLine,
+                InterestEntry = loanCInterestLine,
                 MonthlyPayment = loanCMonthlyPayments
             };
             loans.Add(loanC);
@@ -186,7 +186,7 @@ namespace NekoApplicationWeb.Services
         }
 
         private BankLoans ArionBankiLoans(int realEstateValuation, int newFireInsuranceValuation,
-            int plotAssessmentValue, int buyingPrice, int ownCapital, List<InterestsInfo> interestsLines)
+            int plotAssessmentValue, int buyingPrice, int ownCapital, List<InterestsEntry> interestsLines)
         {
             return null;
         }

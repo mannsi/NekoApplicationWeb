@@ -26,10 +26,12 @@ namespace NekoApplicationWeb.Models
     }
 
     /// <summary>
-    /// A single line from and interests matrix provided by a single company (f.x. a bank)
+    /// A single line from and interests matrix provided by a single lender (f.x. a bank)
     /// </summary>
-    public class InterestsInfo
+    public class InterestsEntry
     {
+        public Lender Lender { get; set; }
+
         public LoanType LoanType { get; set; }
         public bool Indexed { get; set; }
         public int LoanToValueStartPercentage { get; set; }

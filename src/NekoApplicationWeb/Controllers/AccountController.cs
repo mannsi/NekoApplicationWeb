@@ -87,7 +87,7 @@ namespace NekoApplicationWeb.Controllers
                 user = new ApplicationUser
                 {
                     UserName = ssn,
-                    UserDisplayName = ssn,
+                    //UserDisplayName = ssn,
                     Email = vm.Email
                 };
 
@@ -218,5 +218,21 @@ namespace NekoApplicationWeb.Controllers
 
             _emailService.SendEmailAsync(user.Email, "Neko umsókn", emailBody);
         }
+
+        private async Task IslandLogin(string ssn)
+        {
+            var user = await _userManager.FindByNameAsync(ssn);
+            if (user == null)
+            {
+                // This is a new user. Redirect him to the EULA page
+            }
+
+            //if (!user.HasAggreedToEula)
+            {
+                // Show user EULA page
+            }
+            
+        }
+        
     }
 }

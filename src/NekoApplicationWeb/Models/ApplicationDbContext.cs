@@ -20,5 +20,17 @@ namespace NekoApplicationWeb.Models
         }
 
         public DbSet<Lender> Lenders { get; set; }
+        public DbSet<InterestsEntry> InterestsEntries { get; set; }
+        public DbSet<ApplicationUserConnection> ApplicationUserConnections { get; set; } 
+        public DbSet<ApplicantEducation> ApplicationEducations { get; set; } 
+        public DbSet<ApplicantEmployment> ApplicantEmployments { get; set; } 
+        public DbSet<ApplicantFinancesAsset> ApplicantFinancesAssets { get; set; } 
+        public DbSet<ApplicantFinancesDebt> ApplicantFinancesDebts{ get; set; } 
+        public DbSet<ApplicantFinancesIncome> ApplicantFinancesIncomes { get; set; }
+        public DbSet<PropertyDetail> PropertyDetails { get; set; } 
+        public DbSet<PropertyValuation> PropertyValuations { get; set; }
+        public DbSet<LoanDetails> LoanDetails { get; set; }
+        public DbSet<ThjodskraPerson> ThjodskraPersons { get; set; }
+        public DbSet<ThjodskraFamilyEntry> ThjodskraFamilyEntries { get; set; }    
     }
 }

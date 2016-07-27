@@ -12,6 +12,7 @@ namespace NekoApplicationWeb.Shared
         public const string IslandsbankiId = "Islandsbanki";
         public const string FrjalsiLifeyrissjodurinnId = "FrjalsiLifeyrissjodurinn";
         public const string AlmenniLifeyrissjodurinnId = "AlmenniLifeyrissjodurinn";
+        public const string NekoLenderId = "Neko";
 
     }
 }

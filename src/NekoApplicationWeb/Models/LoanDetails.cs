@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 
 namespace NekoApplicationWeb.Models
 {
-    public class DataEntity
+    public class LoanDetails
     {
         public string Id { get; set; }
-        public string Description { get; set; }
+        public Application Application { get; set; }
+        public Lender Lender { get; set; }
     }
 }
