@@ -7,6 +7,11 @@ namespace NekoApplicationWeb.Models
 {
     public class Application
     {
+        public Application()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
+
         public string Id { get; set; }
         public DateTime TimeCreated { get; set; }
         public ApplicationUser CreatedByUser { get; set; }

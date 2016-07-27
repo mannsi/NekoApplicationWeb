@@ -1,4 +1,6 @@
-﻿namespace NekoApplicationWeb.Models
+﻿using System;
+
+namespace NekoApplicationWeb.Models
 {
     public enum AssetType
     {
@@ -9,6 +11,11 @@
     public class ApplicantFinancesAsset
     {
         private string _assetTypeString;
+
+        public ApplicantFinancesAsset()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
 
         public string Id { get; set; }
         public ApplicationUser User { get; set; }

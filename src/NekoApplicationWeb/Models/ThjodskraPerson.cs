@@ -33,6 +33,11 @@ namespace NekoApplicationWeb.Models
 
     public class ThjodskraPerson
     {
+        public ThjodskraPerson()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
+
         public string Id { get; set; }
         public ApplicationUser User { get; set; }
         public DateTime TimeOfData { get; set; } // When the data was last fetched

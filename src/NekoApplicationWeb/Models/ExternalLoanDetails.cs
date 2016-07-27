@@ -7,6 +7,11 @@ namespace NekoApplicationWeb.Models
 {
     public class ExternalLoanDetails
     {
+        public ExternalLoanDetails()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
+
         public string Id { get; set; }
         public Application Application { get; set; }
         public Lender Lender { get; set; }

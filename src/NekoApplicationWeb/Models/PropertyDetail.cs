@@ -7,6 +7,11 @@ namespace NekoApplicationWeb.Models
 {
     public class PropertyDetail
     {
+        public PropertyDetail()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
+
         public string Id { get; set; }
         public Application Application { get; set; }
         public string PropertyNumber { get; set; }

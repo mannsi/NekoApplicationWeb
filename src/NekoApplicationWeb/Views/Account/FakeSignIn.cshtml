@@ -1,0 +1,21 @@
+﻿@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@using NekoApplicationWeb.ViewModels.Account
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Fake innskráning</h2>
+        <p>Sláðu inn einhverja kennitölu (án bils) og hermt verður eftir hvernig innskráning með þessari kennitölu yrði í gegnum Island.is</p>
+        <form asp-controller="Account" asp-action="FakeSignIn" method="post" class="form-horizontal" role="form">
+            <fieldset>
+                <div style="margin-bottom: 15px" class="input-group col-md-10 col-md-offset-2">
+                    <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                    <input id="ssn" name="ssn" class="form-control" placeholder="Kennitala" />
+                </div>
+                <div class="col-md-10 col-md-offset-2">
+                    <button type="submit" class="btn btn-success">Innskrá</button>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
+

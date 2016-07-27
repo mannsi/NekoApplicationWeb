@@ -97,7 +97,7 @@ namespace NekoApplicationWeb
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Account}/{action=StartPage}/{id?}");
+                    template: "{controller=Account}/{action=FakeSignIn}/{id?}");
             });
 
             await InitialData.CreateDemoUser(app.ApplicationServices);

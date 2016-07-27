@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NekoApplicationWeb.Models
 {
@@ -12,6 +13,11 @@ namespace NekoApplicationWeb.Models
     public class ApplicantFinancesIncome
     {
         private string _incomeTypeString;
+
+        public ApplicantFinancesIncome()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
 
         public string Id { get; set; }
         public ApplicationUser User { get; set; }

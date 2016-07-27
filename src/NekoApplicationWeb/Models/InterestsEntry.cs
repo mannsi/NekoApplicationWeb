@@ -30,6 +30,11 @@ namespace NekoApplicationWeb.Models
     /// </summary>
     public class InterestsEntry
     {
+        public InterestsEntry()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
+
         public string Id { get; set; }
         public Lender Lender { get; set; }
 

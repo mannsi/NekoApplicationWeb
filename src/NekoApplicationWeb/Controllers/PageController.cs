@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NekoApplicationWeb.Models;
 using NekoApplicationWeb.ServiceInterfaces;
@@ -13,6 +14,7 @@ using NekoApplicationWeb.ViewModels.Page.Education;
 using NekoApplicationWeb.ViewModels.Page.Finances;
 using NekoApplicationWeb.ViewModels.Page.Loan;
 using NekoApplicationWeb.ViewModels.Page.Personal;
+using NekoApplicationWeb.ViewModels.Page.Start;
 using ApplicantEmployment = NekoApplicationWeb.ViewModels.Page.Employment.ApplicantEmployment;
 
 namespace NekoApplicationWeb.Controllers
@@ -22,19 +24,38 @@ namespace NekoApplicationWeb.Controllers
     public class PageController : Controller
     {
         private readonly IThjodskraService _thjodskraService;
+        private readonly ApplicationDbContext _dbContext;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public PageController(IThjodskraService thjodskraService)
+        public PageController(IThjodskraService thjodskraService,
+            ApplicationDbContext dbContext,
+            UserManager<ApplicationUser> userManager)
         {
             _thjodskraService = thjodskraService;
+            _dbContext = dbContext;
+            _userManager = userManager;
         }
 
-        [Route("Umsokn")]
-        public IActionResult Index()
+        [Route("Start")]
+        public async Task<IActionResult> Start()
         {
+            var loggedInUser = await _userManager.GetUserAsync(User);
+            var userApplicationConnection = _dbContext.ApplicationUserConnections.FirstOrDefault(auc => auc.User == loggedInUser);
+            if (userApplicationConnection == null)
+            {
+                return View("Error");
+            }
+
+            var vm = new StartPageViewModel
+            {
+                ShowEula = !userApplicationConnection.UserHasAgreedToEula,
+                UserId = loggedInUser.Id
+            };
+
             ViewData["ContentHeader"] = "Umsókn um Neko fasteignalán";
             ViewData["selectedNavPillId"] = "navPillFrontPage";
-            ViewData["vm"] = null;
-            return View("BasePage", "index");
+            ViewData["vm"] = vm;
+            return View("BasePage", "Start");
         }
 
         [Route("Umsaekjandi")]

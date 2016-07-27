@@ -19,6 +19,7 @@ namespace NekoApplicationWeb.Models
             base.OnModelCreating(builder);
         }
 
+        public DbSet<Application> Applications { get; set; }
         public DbSet<Lender> Lenders { get; set; }
         public DbSet<InterestsEntry> InterestsEntries { get; set; }
         public DbSet<ApplicationUserConnection> ApplicationUserConnections { get; set; } 

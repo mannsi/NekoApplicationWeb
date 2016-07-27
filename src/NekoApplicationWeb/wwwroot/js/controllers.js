@@ -488,7 +488,27 @@
 
     function startPageController($http) {
         var vm = this;
-        vm.ssn = "";
+
+        vm.init = function (model) {
+            vm.startPageViewModel = model;
+            if (model.showEula) {
+                $("#termsModal").modal('show');
+            }
+        };
+
+        vm.agreeButtonClicked = function() {
+            $http.post('/application/readEula', vm.startPageViewModel)
+                .then(function (response) {
+                    $("#termsModal").modal('hide');
+                }, function (error) {
+                    vm.pageModified = true;
+                    alert("Ekki tókst að vista. Villa: " + error);
+                });
+        };
+
+        vm.notAgreeButtonClicked = function () {
+            window.location.href = 'www.neko.is';
+        };
     };
 
 })()

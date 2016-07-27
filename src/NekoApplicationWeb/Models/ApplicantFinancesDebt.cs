@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Http;
 
 namespace NekoApplicationWeb.Models
@@ -15,6 +16,11 @@ namespace NekoApplicationWeb.Models
     public class ApplicantFinancesDebt
     {
         private string _debtTypeString;
+
+        public ApplicantFinancesDebt()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
 
         public string Id { get; set; }
         public ApplicationUser User { get; set; }

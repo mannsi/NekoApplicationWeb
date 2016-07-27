@@ -7,6 +7,11 @@ namespace NekoApplicationWeb.Models
 {
     public class ApplicantEmployment
     {
+        public ApplicantEmployment()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
+
         public string Id { get; set; }
         public ApplicationUser User { get; set; }
         public string Title { get; set; }
