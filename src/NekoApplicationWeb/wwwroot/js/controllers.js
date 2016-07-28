@@ -68,7 +68,7 @@
 
         vm.continue = function() {
             vm.pageModified = false;
-            $http.post('/api/applicant/list', vm.personalViewModel)
+            $http.post('/api/applicant/list', vm.personalViewModel.Applicants)
                 .then(function (response) {
                     window.location.href = 'Menntun';
                 }, function(error) {

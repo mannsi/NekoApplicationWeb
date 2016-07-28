@@ -9,6 +9,11 @@ namespace NekoApplicationWeb.ViewModels
 {
     public class UserViewModel
     {
+        public UserViewModel()
+        {
+            
+        }
+
         public UserViewModel(ApplicationUser user, bool hasConfirmedEula)
         {
             Id = user.Id;
