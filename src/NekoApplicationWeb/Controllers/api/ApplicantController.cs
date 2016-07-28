@@ -30,13 +30,13 @@ namespace NekoApplicationWeb.Controllers.api
 
         [Route("list")]
         [HttpPost]
-        public void SaveList([FromBody]List<ApplicantViewModel> vm)
+        public void SaveList([FromBody]PersonalViewModel vm)
         {
             // TODO save the list
-            foreach (var applicantViewModel in vm)
-            {
-                Debug.WriteLine(applicantViewModel);
-            }
+            //foreach (var applicantViewModel in vm)
+            //{
+            //    Debug.WriteLine(applicantViewModel);
+            //}
         }
 
         [Route("new")]

@@ -4,11 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using NekoApplicationWeb.Models;
 
-namespace NekoApplicationWeb.ViewModels.Page.Start
+namespace NekoApplicationWeb.ViewModels.Page.Personal
 {
-    public class StartPageViewModel
+    public class PersonalViewModel
     {
         public bool ShowEula { get; set; }
         public ApplicationUser EulaUser { get; set; }
+        public List<UserViewModel> Applicants { get; set; }
     }
 }

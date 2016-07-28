@@ -100,7 +100,6 @@ namespace NekoApplicationWeb
                     template: "{controller=Account}/{action=FakeSignIn}/{id?}");
             });
 
-            await InitialData.CreateDemoUser(app.ApplicationServices);
             InitialData.CreateLenders(app.ApplicationServices);
             InitialData.CreateInterestInfo(app.ApplicationServices);
         }

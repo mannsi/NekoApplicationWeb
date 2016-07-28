@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NekoApplicationWeb.Models;
-using NekoApplicationWeb.ViewModels.Account;
-using NekoApplicationWeb.ViewModels.Page.Personal;
-using NekoApplicationWeb.ViewModels.Page.Start;
+using NekoApplicationWeb.ViewModels;
 
 namespace NekoApplicationWeb.Controllers.api
 {
@@ -23,10 +19,10 @@ namespace NekoApplicationWeb.Controllers.api
 
         [Route("readEula")]
         [HttpPost]
-        public void UserReadEula(StartPageViewModel vm)
+        public void UserReadEula([FromBody]ApplicationUser eulaUser)
         {
             var userApplicationConnection =
-                _dbContext.ApplicationUserConnections.FirstOrDefault(auc => auc.User.Id == vm.UserId);
+                _dbContext.ApplicationUserConnections.FirstOrDefault(auc => auc.User.Id == eulaUser.Id);
             if (userApplicationConnection == null)
             {
                 return;

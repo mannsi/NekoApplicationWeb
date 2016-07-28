@@ -49,6 +49,7 @@ namespace NekoApplicationWeb.Models
         public GenderCode GenderCode { get; set; }
         public MaritalStatus MaritalStatus { get; set; }
         public string PlaceOfResidence { get; set; }
+        public string SpouseSsn { get; set; }
 
         public static ThjodskraPerson FromXml(string xmlString)
         {
@@ -71,6 +72,7 @@ namespace NekoApplicationWeb.Models
                     string genderCodeString = resultNode.Element(xmlNameSpace + "KYNKODI")?.Value;
                     string maritalStatusString = resultNode.Element(xmlNameSpace + "HJUSKAPUR")?.Value;
                     string placeOfResidence = resultNode.Element(xmlNameSpace + "LOGHEIMILI_1_12")?.Value;
+                    string spouseSsn = resultNode.Element(xmlNameSpace + "KENNITALA_MAKA")?.Value;
 
                     GenderCode genderCode = GenderCode.Invalid;
                     if (genderCodeString.IsInteger())
@@ -93,7 +95,8 @@ namespace NekoApplicationWeb.Models
                         FamilyNumber = familyNumber,
                         GenderCode = genderCode,
                         MaritalStatus = maritalStatus,
-                        PlaceOfResidence =  placeOfResidence
+                        PlaceOfResidence =  placeOfResidence,
+                        SpouseSsn = spouseSsn
                     };
 
                     return person;

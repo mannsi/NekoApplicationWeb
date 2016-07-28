@@ -7,12 +7,14 @@
         .controller("employmentPageController", employmentPageController)
         .controller("financesPageController", financesPageController)
         .controller("loanPageController", loanPageController)
+        .controller("confirmEulaController", confirmEulaController)
         .controller("startPageController", startPageController);
+    
 
     function personalPageController($http) {
         var vm = this;
 
-        vm.applicants = [];
+        vm.personalViewModel = [];
         vm.pageModified = false;
 
         function init() {
@@ -26,30 +28,21 @@
                     return;
                 }
             });
-        }
-
-        function enumerateApplicants() {
-            for (var i = 0; i < vm.applicants.length; i++) {
-                if (i === 0) {
-                    vm.applicants[i].Legend = "Umsækjandi";
-                } else {
-                    vm.applicants[i].Legend = "Umsækjandi " + (i + 1);
-                }
-            }
         };
 
         vm.initData = function(data) {
             angular.copy(data, vm.applicants);
-            enumerateApplicants();
+            if (data.showEula) {
+                $("#termsModal").modal('show');
+            }
         };
 
         vm.addApplicant = function () {
             $http.get("/api/applicant/new")
                 .then(
                 function (response) {
-                    vm.applicants.push(response.data);
+                    vm.personalViewModel.applicants.push(response.data);
                     vm.pageModified = true;
-                    enumerateApplicants();
                 },
                 function (error) {
 
@@ -59,23 +52,22 @@
         vm.removeApplicant = function (applicant) {
             var index = -1;
             for (var i = 0; i < vm.applicants.length; i++) {
-                if (vm.applicants[i] === applicant) {
+                if (vm.personalViewModel.applicants[i] === applicant) {
                     index = i;
                     break;
                 }
             }
 
             if (index >= 0) {
-                vm.applicants.splice(index, 1);
+                vm.personalViewModel.applicants.splice(index, 1);
             }
 
             vm.pageModified = true;
-            enumerateApplicants();
         };
 
         vm.continue = function() {
             vm.pageModified = false;
-            $http.post('/api/applicant/list', vm.applicants)
+            $http.post('/api/applicant/list', vm.personalViewModel.applicants)
                 .then(function (response) {
                     window.location.href = 'Menntun';
                 }, function(error) {
@@ -489,25 +481,32 @@
     function startPageController($http) {
         var vm = this;
 
-        vm.init = function (model) {
+        vm.initData = function (model) {
             vm.startPageViewModel = model;
-            if (model.showEula) {
-                $("#termsModal").modal('show');
+            if (model.ShowEula) {
+                $("#termsModal").modal({ backdrop: 'static', keyboard: false , show: true});
             }
         };
+    };
 
-        vm.agreeButtonClicked = function() {
-            $http.post('/application/readEula', vm.startPageViewModel)
+    function confirmEulaController($http) {
+        var vm = this;
+
+        vm.initData = function (model) {
+            vm.EulaUser = model;
+        };
+
+        vm.agreeButtonClicked = function () {
+            $http.post('/api/application/readEula', vm.EulaUser)
                 .then(function (response) {
                     $("#termsModal").modal('hide');
                 }, function (error) {
-                    vm.pageModified = true;
-                    alert("Ekki tókst að vista. Villa: " + error);
+
                 });
         };
 
         vm.notAgreeButtonClicked = function () {
-            window.location.href = 'www.neko.is';
+            window.location.href = 'http://www.neko.is';
         };
     };
 

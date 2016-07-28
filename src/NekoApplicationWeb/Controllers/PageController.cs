@@ -40,16 +40,15 @@ namespace NekoApplicationWeb.Controllers
         public async Task<IActionResult> Start()
         {
             var loggedInUser = await _userManager.GetUserAsync(User);
+            if (loggedInUser == null) return View("Error");
+
             var userApplicationConnection = _dbContext.ApplicationUserConnections.FirstOrDefault(auc => auc.User == loggedInUser);
-            if (userApplicationConnection == null)
-            {
-                return View("Error");
-            }
+            if (userApplicationConnection == null) return View("Error");
 
             var vm = new StartPageViewModel
             {
                 ShowEula = !userApplicationConnection.UserHasAgreedToEula,
-                UserId = loggedInUser.Id
+                EulaUser = loggedInUser
             };
 
             ViewData["ContentHeader"] = "Umsókn um Neko fasteignalán";
@@ -58,23 +57,52 @@ namespace NekoApplicationWeb.Controllers
             return View("BasePage", "Start");
         }
 
+        /// <summary>
+        /// Personal info on the applicants
+        /// </summary>
+        /// <param name="verifyingUser">User if coming from a context where a user needs to confirm EULA on this page</param>
+        /// <returns></returns>
         [Route("Umsaekjandi")]
         [HttpGet]
-        public IActionResult Personal()
+        public async Task<IActionResult> Personal(ApplicationUser verifyingUser = null)
         {
+            var loggedInUser = await _userManager.GetUserAsync(User);
+            if (loggedInUser == null) return View("Error");
+
+            var userApplicationConnection = _dbContext.ApplicationUserConnections.FirstOrDefault(auc => auc.User == loggedInUser);
+            if (userApplicationConnection == null) return View("Error");
+
+            var application = userApplicationConnection.Application;
+            var allApplicantsConnections = _dbContext.ApplicationUserConnections.Where(auc => auc.Application == application);
+
+            var viewModelUser = new List<UserViewModel>();
+            foreach (var applicationUserConnection in allApplicantsConnections)
+            {
+                var vmUser = (UserViewModel) applicationUserConnection.User;
+                vmUser.HasConfirmedEula = applicationUserConnection.UserHasAgreedToEula;
+                viewModelUser.Add(vmUser);
+            }
+
             ViewData["ContentHeader"] = "Umsækjendur";
             ViewData["selectedNavPillId"] = "navPillApplicant";
 
-            var vm = new List<ApplicantViewModel>
+            var vm = new PersonalViewModel
             {
-                new ApplicantViewModel
-                {
-                    Email = "test@testEmail.com",
-                    Name = "Mark",
-                    Ssn = "1234567899",
-                    FacebookPath = "facebook.com/TheZuck"
-                }
+                ShowEula = (verifyingUser != null),
+                EulaUser = verifyingUser,
+                Applicants = viewModelUser
             };
+
+            //var vm = new List<ApplicantViewModel>
+            //{
+            //    new ApplicantViewModel
+            //    {
+            //        Email = "test@testEmail.com",
+            //        Name = "Mark",
+            //        Ssn = "1234567899",
+            //        FacebookPath = "facebook.com/TheZuck"
+            //    }
+            //};
 
             ViewData["vm"] = vm;
             return View("BasePage", "personal");

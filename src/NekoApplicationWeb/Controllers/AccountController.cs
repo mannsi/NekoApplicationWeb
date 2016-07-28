@@ -221,57 +221,106 @@ namespace NekoApplicationWeb.Controllers
         [Route("FakeSignIn")]
         public async Task<IActionResult> FakeSignIn(string ssn)
         {
-            var user = await _userManager.FindByNameAsync(ssn);
+            // Only the user that created the application can sign in. Other applicants can only verify via Island.is
+            var user = await _userManager.FindByIdAsync(ssn);
             if (user == null)
             {
-                // This is a new user.
-                user = new ApplicationUser
+                using (var transaction = _dbContext.Database.BeginTransaction())
                 {
-                    UserName = ssn
-                };
-
-                await _userManager.CreateAsync(user);
-
-                try
-                {
-                    FetchAndSaveThjodskraData(ssn);
-                    FetchAndSaveCreditInfoData(ssn);
+                    user = await CreateNewApplication(ssn);
+                    transaction.Commit();
                 }
-                catch (Exception)
-                {
-                    return View("Error");
-                }
-
-                var application = new Application
-                {
-                    CreatedByUser = user,
-                    TimeCreated =  DateTime.Now
-                };
-
-                _dbContext.Applications.Add(application);
-
-                var applicationUserConnection = new ApplicationUserConnection
-                {
-                    Application = application,
-                    User = user,
-                    UserHasAgreedToEula = false
-                };
-
-                _dbContext.ApplicationUserConnections.Add(applicationUserConnection);
-                _dbContext.SaveChanges();
+                await _signInManager.SignInAsync(user, true);
             }
+            else
+            {
+                bool creatingUserLoggingIn = _dbContext.Applications.Any(appl => appl.CreatedByUser == user);
 
-            await _signInManager.SignInAsync(user, false);
+                if (creatingUserLoggingIn)
+                {
+                    await _signInManager.SignInAsync(user, true);
+                }
+                else
+                {
+                    // The user logging in is an extra user that is being verified
+                    return RedirectToAction(nameof(PageController.Personal), "Page", new {verifyingUser = user});
+
+                }
+            }
 
             return RedirectToAction(nameof(PageController.Start), "Page");
         }
+
+        private async Task<ApplicationUser> CreateNewApplication(string ssn)
+        {
+            var thjodskraPerson = FetchAndSaveThjodskraData(ssn);
+            var user = new ApplicationUser
+            {
+                Id = ssn,
+                UserName = thjodskraPerson.Name,
+                IsDeletable = false
+            };
+
+            await _userManager.CreateAsync(user);
+
+            ApplicationUser spouseUser = null;
+
+            if (!string.IsNullOrEmpty(thjodskraPerson.SpouseSsn))
+            {
+                var spouseThjodskraPerson = FetchAndSaveThjodskraData(thjodskraPerson.SpouseSsn);
+
+                // Create applicant from spouse info
+                spouseUser = new ApplicationUser
+                {
+                    Id = thjodskraPerson.SpouseSsn,
+                    UserName = spouseThjodskraPerson.Name,
+                    IsDeletable = false
+                };
+
+                await _userManager.CreateAsync(spouseUser);
+            }
+
+            FetchAndSaveCreditInfoData(ssn);
+
+            var application = new Application
+            {
+                CreatedByUser = user,
+                TimeCreated = DateTime.Now
+            };
+
+            _dbContext.Applications.Add(application);
+
+            var applicationUserConnection = new ApplicationUserConnection
+            {
+                Application = application,
+                User = user,
+                UserHasAgreedToEula = false
+            };
+
+            _dbContext.ApplicationUserConnections.Add(applicationUserConnection);
+
+            if (spouseUser != null)
+            {
+                var applicationSpouseUserConnection = new ApplicationUserConnection
+                {
+                    Application = application,
+                    User = spouseUser,
+                    UserHasAgreedToEula = false
+                };
+
+                _dbContext.ApplicationUserConnections.Add(applicationSpouseUserConnection);
+            }
+            _dbContext.SaveChanges();
+
+            return user;
+        } 
 
         private void FetchAndSaveCreditInfoData(string ssn)
         {
             // TODO
         }
 
-        private void FetchAndSaveThjodskraData(string ssn)
+        private ThjodskraPerson FetchAndSaveThjodskraData(string ssn)
         {
             var thjodskraPerson = _thjodskraService.GetUserEntity(ssn);
             if (thjodskraPerson == null)
@@ -293,6 +342,8 @@ namespace NekoApplicationWeb.Controllers
             }
 
             _dbContext.SaveChanges();
+
+            return thjodskraPerson;
         }
                
     }
