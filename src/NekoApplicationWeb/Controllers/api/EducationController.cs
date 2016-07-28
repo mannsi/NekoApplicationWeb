@@ -13,24 +13,6 @@ namespace NekoApplicationWeb.Controllers.api
     public class EducationController : Controller
     {
         [Route("list")]
-        [HttpGet]
-        public List<ApplicantViewModel> List()
-        {
-            var result = new List<ApplicantViewModel>
-            {
-                new ApplicantViewModel
-                {
-                    Email = "test@testEmail.com",
-                    Name = "Mark",
-                    Ssn = "1234567899",
-                    FacebookPath = "facebook.com/TheZuck"
-                }
-            };
-
-            return result;
-        }
-
-        [Route("list")]
         [HttpPost]
         public void SaveList([FromBody]List<ApplicantDegreesViewModel> vm)
         {

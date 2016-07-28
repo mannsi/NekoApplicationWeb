@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NekoApplicationWeb.Models;
 using NekoApplicationWeb.ServiceInterfaces;
 using NekoApplicationWeb.ViewModels;
@@ -69,18 +71,20 @@ namespace NekoApplicationWeb.Controllers
             var loggedInUser = await _userManager.GetUserAsync(User);
             if (loggedInUser == null) return View("Error");
 
-            var userApplicationConnection = _dbContext.ApplicationUserConnections.FirstOrDefault(auc => auc.User == loggedInUser);
-            if (userApplicationConnection == null) return View("Error");
+            var loggedInUserApplicationConnection = _dbContext.ApplicationUserConnections.Include(connection => connection.Application).FirstOrDefault(auc => auc.User == loggedInUser);
+            if (loggedInUserApplicationConnection == null) return View("Error");
 
-            var application = userApplicationConnection.Application;
-            var allApplicantsConnections = _dbContext.ApplicationUserConnections.Where(auc => auc.Application == application);
+            // Just to make sure the logged in user comes first
+            var viewModelUsers = new List<UserViewModel>();
+            viewModelUsers.Add(new UserViewModel(loggedInUser, loggedInUserApplicationConnection.UserHasAgreedToEula));
 
-            var viewModelUser = new List<UserViewModel>();
-            foreach (var applicationUserConnection in allApplicantsConnections)
+            var application = loggedInUserApplicationConnection.Application;
+            var allApplicantsConnections = _dbContext.ApplicationUserConnections.Include(con => con.User).Where(auc => auc.Application == application).ToList();
+
+            foreach (var applicationUserConnection in allApplicantsConnections.Where(con => con.User != loggedInUser))
             {
-                var vmUser = (UserViewModel) applicationUserConnection.User;
-                vmUser.HasConfirmedEula = applicationUserConnection.UserHasAgreedToEula;
-                viewModelUser.Add(vmUser);
+                var vmUser = new UserViewModel(applicationUserConnection.User, applicationUserConnection.UserHasAgreedToEula);
+                viewModelUsers.Add(vmUser);
             }
 
             ViewData["ContentHeader"] = "Umsækjendur";
@@ -90,7 +94,7 @@ namespace NekoApplicationWeb.Controllers
             {
                 ShowEula = (verifyingUser != null),
                 EulaUser = verifyingUser,
-                Applicants = viewModelUser
+                Applicants = viewModelUsers
             };
 
             //var vm = new List<ApplicantViewModel>

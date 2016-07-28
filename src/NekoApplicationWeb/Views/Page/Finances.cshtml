@@ -180,7 +180,7 @@
 
         </fieldset>
         <div class="col-lg-12">
-            <div class="btn btn-info pull-right" ng-click="vm.continue()" ng-disabled="educationForm.$invalid">
+            <div class="btn btn-info pull-right" ng-click="!educationForm.$invalid || vm.continue()" ng-disabled="educationForm.$invalid">
                 Vista og áfram <i class="fa fa-arrow-right" aria-hidden="true"></i>
             </div>
         </div>

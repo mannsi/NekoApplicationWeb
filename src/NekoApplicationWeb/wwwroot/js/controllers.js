@@ -31,17 +31,18 @@
         };
 
         vm.initData = function(data) {
-            angular.copy(data, vm.applicants);
+            angular.copy(data, vm.personalViewModel);
             if (data.showEula) {
                 $("#termsModal").modal('show');
             }
         };
 
+        // TODO move this to a modal that only gets the ssn of the new user
         vm.addApplicant = function () {
             $http.get("/api/applicant/new")
                 .then(
                 function (response) {
-                    vm.personalViewModel.applicants.push(response.data);
+                    vm.personalViewModel.Applicants.push(response.data);
                     vm.pageModified = true;
                 },
                 function (error) {
@@ -67,7 +68,7 @@
 
         vm.continue = function() {
             vm.pageModified = false;
-            $http.post('/api/applicant/list', vm.personalViewModel.applicants)
+            $http.post('/api/applicant/list', vm.personalViewModel)
                 .then(function (response) {
                     window.location.href = 'Menntun';
                 }, function(error) {
