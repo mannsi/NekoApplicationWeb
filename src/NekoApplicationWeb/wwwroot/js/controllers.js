@@ -16,6 +16,7 @@
 
         vm.personalViewModel = [];
         vm.pageModified = false;
+        vm.newSsn = "";
 
         function init() {
             $(window).on('beforeunload', function () {
@@ -32,17 +33,21 @@
 
         vm.initData = function(data) {
             angular.copy(data, vm.personalViewModel);
-            if (data.showEula) {
-                $("#termsModal").modal('show');
+            if (data.ShowEula) {
+                $("#termsModal").modal({ backdrop: 'static', keyboard: false, show: true });
             }
         };
 
-        // TODO move this to a modal that only gets the ssn of the new user
         vm.addApplicant = function () {
-            $http.get("/api/applicant/new")
+            $http.post("/api/applicant/create", JSON.stringify(vm.newSsn))
                 .then(
                 function (response) {
-                    vm.personalViewModel.Applicants.push(response.data);
+                    if (response.data) {
+                        vm.personalViewModel.Applicants.push(response.data);
+                    }
+                    vm.newSsn = "";
+                    $("#newUserModal").modal('hide');
+
                     vm.pageModified = true;
                 },
                 function (error) {
@@ -51,19 +56,32 @@
         };
 
         vm.removeApplicant = function (applicant) {
-            var index = -1;
-            for (var i = 0; i < vm.applicants.length; i++) {
-                if (vm.personalViewModel.applicants[i] === applicant) {
-                    index = i;
-                    break;
-                }
-            }
+            $http.post("/api/applicant/delete", applicant.Id)
+                .then(
+                function (response) {
+                    var index = -1;
+                    for (var i = 0; i < vm.personalViewModel.Applicants.length; i++) {
+                        if (vm.personalViewModel.Applicants[i] === applicant) {
+                            index = i;
+                            break;
+                        }
+                    }
 
-            if (index >= 0) {
-                vm.personalViewModel.applicants.splice(index, 1);
-            }
+                    if (index >= 0) {
+                        vm.personalViewModel.Applicants.splice(index, 1);
+                    }
+
+                    vm.pageModified = true;
+                },
+                function (error) {
+
+                });
 
             vm.pageModified = true;
+        };
+
+        vm.confirmApplicant = function(applicant) {
+            window.location.href = "/";
         };
 
         vm.continue = function() {

@@ -62,12 +62,14 @@ namespace NekoApplicationWeb.Controllers
         /// <summary>
         /// Personal info on the applicants
         /// </summary>
-        /// <param name="verifyingUser">User if coming from a context where a user needs to confirm EULA on this page</param>
+        /// <param name="verifyingUserId">User id if coming from a context where a user needs to confirm EULA on this page</param>
         /// <returns></returns>
         [Route("Umsaekjandi")]
         [HttpGet]
-        public async Task<IActionResult> Personal(ApplicationUser verifyingUser = null)
+        public async Task<IActionResult> Personal(string verifyingUserId)
         {
+            
+
             var loggedInUser = await _userManager.GetUserAsync(User);
             if (loggedInUser == null) return View("Error");
 
@@ -81,6 +83,11 @@ namespace NekoApplicationWeb.Controllers
             var application = loggedInUserApplicationConnection.Application;
             var allApplicantsConnections = _dbContext.ApplicationUserConnections.Include(con => con.User).Where(auc => auc.Application == application).ToList();
 
+            var verifyingUser = _dbContext.Users.FirstOrDefault(u => u.Id == verifyingUserId);
+            var verifyingUserHasConfirmedEula = verifyingUser != null &&
+                !_dbContext.ApplicationUserConnections.FirstOrDefault(
+                    con => con.Application == application && con.User == verifyingUser).UserHasAgreedToEula;
+
             foreach (var applicationUserConnection in allApplicantsConnections.Where(con => con.User != loggedInUser))
             {
                 var vmUser = new UserViewModel(applicationUserConnection.User, applicationUserConnection.UserHasAgreedToEula);
@@ -92,21 +99,10 @@ namespace NekoApplicationWeb.Controllers
 
             var vm = new PersonalViewModel
             {
-                ShowEula = (verifyingUser != null),
+                ShowEula = verifyingUserHasConfirmedEula,
                 EulaUser = verifyingUser,
                 Applicants = viewModelUsers
             };
-
-            //var vm = new List<ApplicantViewModel>
-            //{
-            //    new ApplicantViewModel
-            //    {
-            //        Email = "test@testEmail.com",
-            //        Name = "Mark",
-            //        Ssn = "1234567899",
-            //        FacebookPath = "facebook.com/TheZuck"
-            //    }
-            //};
 
             ViewData["vm"] = vm;
             return View("BasePage", "personal");

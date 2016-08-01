@@ -1,11 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Razor.Tools.Internal;
 using NekoApplicationWeb.Models;
+using NekoApplicationWeb.ServiceInterfaces;
+using NekoApplicationWeb.Shared;
 using NekoApplicationWeb.ViewModels;
 using NekoApplicationWeb.ViewModels.Page.Personal;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace NekoApplicationWeb.Controllers.api
 {
@@ -14,10 +20,12 @@ namespace NekoApplicationWeb.Controllers.api
     public class ApplicantController : Controller
     {
         private readonly ApplicationDbContext _dbContext;
+        private readonly IThjodskraService _thjodskraService;
 
-        public ApplicantController(ApplicationDbContext dbContext)
+        public ApplicantController(ApplicationDbContext dbContext, IThjodskraService thjodskraService)
         {
             _dbContext = dbContext;
+            _thjodskraService = thjodskraService;
         }
 
         [Route("list")]
@@ -44,6 +52,55 @@ namespace NekoApplicationWeb.Controllers.api
                 transaction.Commit();
             }
         }
-        
+
+        [Route("create")]
+        [HttpPost]
+        public UserViewModel Create([FromBody]string ssn)
+        {
+            ssn = ssn.CleanSsn();
+
+            // Make sure we are not adding somebody that already exists in the database
+            if (_dbContext.Users.Any(u => u.Id == ssn))
+            {
+                return null;
+            }
+
+            var user = new ApplicationUser
+            {
+                Id = ssn,
+                IsDeletable = true
+            };
+            _dbContext.Users.Add(user);
+            _dbContext.SaveChanges();
+
+            // Check if thjodskra entry exists in database
+            var thjodskraPerson = _dbContext.ThjodskraPersons.FirstOrDefault(p => p.Id == ssn);
+
+            if (thjodskraPerson == null)
+            {
+                thjodskraPerson = _thjodskraService.GetUserEntity(ssn);
+                if (thjodskraPerson == null) return null;
+
+                _dbContext.ThjodskraPersons.Add(thjodskraPerson);
+                _dbContext.SaveChanges();
+            }
+
+            var vmUser = new UserViewModel(user, false);
+
+            return vmUser;
+        }
+
+        [Route("delete")]
+        [HttpPost]
+        public void Delete([FromBody]string ssn)
+        {
+            var user = _dbContext.Users.FirstOrDefault(u => u.Id == ssn);
+            if (user != null)
+            {
+                _dbContext.Users.Remove(user);
+                _dbContext.SaveChanges();
+            }
+        }
+
     }
 }

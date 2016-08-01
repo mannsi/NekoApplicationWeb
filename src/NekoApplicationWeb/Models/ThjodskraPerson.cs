@@ -33,15 +33,9 @@ namespace NekoApplicationWeb.Models
 
     public class ThjodskraPerson
     {
-        public ThjodskraPerson()
-        {
-            Id = Guid.NewGuid().ToString();
-        }
-
         public string Id { get; set; }
         public ApplicationUser User { get; set; }
         public DateTime TimeOfData { get; set; } // When the data was last fetched
-        public string Ssn { get; set; }
         public string Name { get; set; }
         public string Home { get; set; }
         public string PostCode { get; set; }
@@ -88,7 +82,7 @@ namespace NekoApplicationWeb.Models
 
                     var person = new ThjodskraPerson
                     {
-                        Ssn = ssn,
+                        Id = ssn,
                         Name = name,
                         Home = home,
                         PostCode = postCode,

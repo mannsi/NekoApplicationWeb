@@ -243,7 +243,7 @@ namespace NekoApplicationWeb.Controllers
                 else
                 {
                     // The user logging in is an extra user that is being verified
-                    return RedirectToAction(nameof(PageController.Personal), "Page", new {verifyingUser = user});
+                    return RedirectToAction(nameof(PageController.Personal), "Page", new {verifyingUserId = user.Id});
 
                 }
             }

@@ -11,6 +11,7 @@
                 <legend>
                     <span ng-bind="applicant.Name"></span>
                     <span>&nbsp;</span>
+                    <span ng-show="!applicant.HasConfirmedEula && vm.personalViewModel.EulaUser.Id != applicant.Id" ng-click="vm.confirmApplicant(applicant)" class="btn btn-xs btn-success" style="margin-bottom: 3px;">Staðfesta</span>
                     <span ng-show="applicant.IsDeletable"><a href="#" ng-click="vm.removeApplicant(applicant)"><i class="fa fa-times" style="color: red;"></i></a></span>
                 </legend>
             </div>
@@ -61,7 +62,7 @@
             </div>
         </fieldset>
         <div class="col-xs-offset-4 col-xs-8">
-            <div class="btn btn-success btn-sm" ng-click="vm.addApplicant()">
+            <div class="btn btn-success btn-sm" data-toggle="modal" data-target="#newUserModal">
                 <i class="fa fa-plus"></i> Bæta við umsækjanda
             </div>
         </div>
@@ -71,7 +72,34 @@
             Vista og áfram <i class="fa fa-arrow-right" aria-hidden="true"></i>
         </div>
     </div>
+
+
+    <div class="modal fade" id="newUserModal" tabindex="-1" role="dialog" aria-labelledby="Nýr umsækjandi" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Bæta við umsækjanda</h3>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="col-xs-4 control-label">Kennitala</label>
+                            <div class="col-xs-8">
+                                <input class="form-control" ng-model="vm.newSsn" mask="391999-9999"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" ng-click="vm.addApplicant()">Bæta við</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Loka</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @{ await Html.RenderPartialAsync("ConfirmEulaModalPartial"); }
 </div>
 
-@{ await Html.RenderPartialAsync("ConfirmEulaModalPartial"); }
+
 

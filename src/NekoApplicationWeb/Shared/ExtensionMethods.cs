@@ -9,6 +9,11 @@ namespace NekoApplicationWeb.Shared
 {
     public static class ExtensionMethods
     {
+        public static string CleanSsn(this string ssn)
+        {
+            return ssn?.Replace("-", "").Replace(" ", "");
+        }
+
         public static bool IsValidSsn(this string ssn)
         {
             if (ssn.Length != 10)
