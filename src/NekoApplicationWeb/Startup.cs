@@ -71,6 +71,7 @@ namespace NekoApplicationWeb
             services.AddTransient<IInterestsService, InterestsService>();
             services.AddTransient<ILoanService, LoanService>();
             services.AddTransient<IThjodskraService, ThjodskraService>();
+            services.AddTransient<IUserService, UserService>();
 
             services.Configure<MailOptions>(myOptions =>
             {

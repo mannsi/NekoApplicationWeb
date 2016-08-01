@@ -22,6 +22,7 @@ namespace NekoApplicationWeb.Controllers
         private readonly ApplicationDbContext _dbContext;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IThjodskraService _thjodskraService;
+        private readonly IUserService _userService;
 
         public AccountController(ILogger<AccountController> logger, 
             UserManager<ApplicationUser> userManager,
@@ -29,7 +30,8 @@ namespace NekoApplicationWeb.Controllers
             IEmailService emailService,
             ApplicationDbContext dbContext,
             IHttpContextAccessor httpContextAccessor,
-            IThjodskraService thjodskraService)
+            IThjodskraService thjodskraService,
+            IUserService userService)
         {
             _logger = logger;
             _userManager = userManager;
@@ -38,6 +40,7 @@ namespace NekoApplicationWeb.Controllers
             _dbContext = dbContext;
             _httpContextAccessor = httpContextAccessor;
             _thjodskraService = thjodskraService;
+            _userService = userService;
         }
 
         //[Route("")]
@@ -254,14 +257,7 @@ namespace NekoApplicationWeb.Controllers
         private async Task<ApplicationUser> CreateNewApplication(string ssn)
         {
             var thjodskraPerson = FetchAndSaveThjodskraData(ssn);
-            var user = new ApplicationUser
-            {
-                Id = ssn,
-                UserName = thjodskraPerson.Name,
-                IsDeletable = false
-            };
-
-            await _userManager.CreateAsync(user);
+            var user = await _userService.CreateUser(ssn, thjodskraPerson.Name, false);
 
             ApplicationUser spouseUser = null;
 
@@ -270,14 +266,7 @@ namespace NekoApplicationWeb.Controllers
                 var spouseThjodskraPerson = FetchAndSaveThjodskraData(thjodskraPerson.SpouseSsn);
 
                 // Create applicant from spouse info
-                spouseUser = new ApplicationUser
-                {
-                    Id = thjodskraPerson.SpouseSsn,
-                    UserName = spouseThjodskraPerson.Name,
-                    IsDeletable = false
-                };
-
-                await _userManager.CreateAsync(spouseUser);
+                spouseUser = await _userService.CreateUser(thjodskraPerson.SpouseSsn, spouseThjodskraPerson.Name, false);
             }
 
             FetchAndSaveCreditInfoData(ssn);
@@ -322,7 +311,13 @@ namespace NekoApplicationWeb.Controllers
 
         private ThjodskraPerson FetchAndSaveThjodskraData(string ssn)
         {
-            var thjodskraPerson = _thjodskraService.GetUserEntity(ssn);
+            var thjodskraPerson = _dbContext.ThjodskraPersons.FirstOrDefault(per => per.Id == ssn);
+            if (thjodskraPerson != null)
+            {
+                return thjodskraPerson;
+            }
+
+            thjodskraPerson = _thjodskraService.GetUserEntity(ssn);
             if (thjodskraPerson == null)
             {
                 throw new Exception("No thjodskra entry found for ssn");

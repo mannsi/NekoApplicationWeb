@@ -68,31 +68,26 @@ namespace NekoApplicationWeb.Controllers
         [HttpGet]
         public async Task<IActionResult> Personal(string verifyingUserId)
         {
-            
-
             var loggedInUser = await _userManager.GetUserAsync(User);
-            if (loggedInUser == null) return View("Error");
 
-            var loggedInUserApplicationConnection = _dbContext.ApplicationUserConnections.Include(connection => connection.Application).FirstOrDefault(auc => auc.User == loggedInUser);
-            if (loggedInUserApplicationConnection == null) return View("Error");
+            var allApplicantsConnections = GetUsersConnectionsForUsersApplication(loggedInUser, _dbContext);
+            if (allApplicantsConnections == null)
+            {
+                return View("Error");
+            }
 
-            // Just to make sure the logged in user comes first
             var viewModelUsers = new List<UserViewModel>();
-            viewModelUsers.Add(new UserViewModel(loggedInUser, loggedInUserApplicationConnection.UserHasAgreedToEula));
-
-            var application = loggedInUserApplicationConnection.Application;
-            var allApplicantsConnections = _dbContext.ApplicationUserConnections.Include(con => con.User).Where(auc => auc.Application == application).ToList();
-
-            var verifyingUser = _dbContext.Users.FirstOrDefault(u => u.Id == verifyingUserId);
-            var verifyingUserHasConfirmedEula = verifyingUser != null &&
-                !_dbContext.ApplicationUserConnections.FirstOrDefault(
-                    con => con.Application == application && con.User == verifyingUser).UserHasAgreedToEula;
-
-            foreach (var applicationUserConnection in allApplicantsConnections.Where(con => con.User != loggedInUser))
+            foreach (var applicationUserConnection in allApplicantsConnections.OrderBy(con => con.User.UserName))
             {
                 var vmUser = new UserViewModel(applicationUserConnection.User, applicationUserConnection.UserHasAgreedToEula);
                 viewModelUsers.Add(vmUser);
             }
+
+            var application = allApplicantsConnections.First().Application;
+            var verifyingUser = _dbContext.Users.FirstOrDefault(u => u.Id == verifyingUserId);
+            var verifyingUserHasConfirmedEula = verifyingUser != null &&
+                !_dbContext.ApplicationUserConnections.FirstOrDefault(
+                    con => con.Application == application && con.User == verifyingUser).UserHasAgreedToEula;
 
             ViewData["ContentHeader"] = "Umsækjendur";
             ViewData["selectedNavPillId"] = "navPillApplicant";
@@ -109,31 +104,37 @@ namespace NekoApplicationWeb.Controllers
         }
 
         [Route("Menntun")]
-        public IActionResult Education()
+        public async Task<IActionResult> Education()
         {
             ViewData["ContentHeader"] = "Menntun";
             ViewData["selectedNavPillId"] = "navPillEducation";
 
-            var vm = new List<ApplicantDegreesViewModel>
+            var vm = new List<ApplicantDegreesViewModel>();
+            var loggedInUser = await _userManager.GetUserAsync(User);
+
+            var userConnections = GetUsersConnectionsForUsersApplication(loggedInUser, _dbContext);
+            if (userConnections == null) return View("Error");
+
+            foreach (var applicationUserConnection in userConnections)
             {
-                new ApplicantDegreesViewModel
+                var user = applicationUserConnection.User;
+                var usersEducationVm = new ApplicantDegreesViewModel {Applicant = user, Degrees = new List<DegreeViewModel>()};
+
+                var usersDegreesFromDb = _dbContext.ApplicationEducations.Where(education => education.User == user);
+
+                foreach (var degreeFomDb in usersDegreesFromDb)
                 {
-                    ApplicantName = "Joe Smoe",
-                    Degrees = new List<DegreeViewModel>
+                    usersEducationVm.Degrees.Add(new DegreeViewModel
                     {
-                        new DegreeViewModel { School = "Háskólinn í Reykjavík", Degree = "MSc í Tölvunarfræði", DateFinished = new DateTime(2018, 6, 1) },
-                        new DegreeViewModel { School = "Háskólinn í Reykjavík", Degree = "BS í Tölvunarfræði", DateFinished = new DateTime(2015, 6, 1) }
-                    }
-                },
-                new ApplicantDegreesViewModel
-                {
-                    ApplicantName = "Ms Joe Smoe",
-                    Degrees = new List<DegreeViewModel>
-                    {
-                        new DegreeViewModel { School = "Háskólinn í Reykjavík", Degree = "Arts and crafts", DateFinished = new DateTime(2016, 6, 1) }
-                    }
+                        Id = degreeFomDb.Id,
+                        Degree = degreeFomDb.Degree,
+                        School = degreeFomDb.School,
+                        DateFinished = degreeFomDb.FinishingDate
+                    } );
+
+                    vm.Add(usersEducationVm);
                 }
-            };
+            }
 
             ViewData["vm"] = vm;
             return View("BasePage", "education");
@@ -245,6 +246,22 @@ namespace NekoApplicationWeb.Controllers
         private void AddError(string errorMessage)
         {
             ModelState.AddModelError(string.Empty, errorMessage);
+        }
+
+        /// <summary>
+        /// Gets user connections for the first application tied to the given user
+        /// </summary>
+        public static List<ApplicationUserConnection> GetUsersConnectionsForUsersApplication(ApplicationUser user, ApplicationDbContext dbContext)
+        {
+            if (user == null) return null;
+
+            var loggedInUserApplicationConnection = dbContext.ApplicationUserConnections.Include(connection => connection.Application).FirstOrDefault(auc => auc.User == user);
+            if (loggedInUserApplicationConnection == null) return null;
+
+            var application = loggedInUserApplicationConnection.Application;
+            var allApplicantsConnections = dbContext.ApplicationUserConnections.Include(con => con.User).Where(auc => auc.Application == application).ToList();
+
+            return allApplicantsConnections;
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Razor.Tools.Internal;
@@ -21,11 +22,13 @@ namespace NekoApplicationWeb.Controllers.api
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly IThjodskraService _thjodskraService;
+        private readonly IUserService _userService;
 
-        public ApplicantController(ApplicationDbContext dbContext, IThjodskraService thjodskraService)
+        public ApplicantController(ApplicationDbContext dbContext, IThjodskraService thjodskraService, IUserService userService)
         {
             _dbContext = dbContext;
             _thjodskraService = thjodskraService;
+            _userService = userService;
         }
 
         [Route("list")]
@@ -55,24 +58,8 @@ namespace NekoApplicationWeb.Controllers.api
 
         [Route("create")]
         [HttpPost]
-        public UserViewModel Create([FromBody]string ssn)
+        public async Task<UserViewModel> Create([FromBody]string ssn)
         {
-            ssn = ssn.CleanSsn();
-
-            // Make sure we are not adding somebody that already exists in the database
-            if (_dbContext.Users.Any(u => u.Id == ssn))
-            {
-                return null;
-            }
-
-            var user = new ApplicationUser
-            {
-                Id = ssn,
-                IsDeletable = true
-            };
-            _dbContext.Users.Add(user);
-            _dbContext.SaveChanges();
-
             // Check if thjodskra entry exists in database
             var thjodskraPerson = _dbContext.ThjodskraPersons.FirstOrDefault(p => p.Id == ssn);
 
@@ -83,6 +70,13 @@ namespace NekoApplicationWeb.Controllers.api
 
                 _dbContext.ThjodskraPersons.Add(thjodskraPerson);
                 _dbContext.SaveChanges();
+            }
+
+            var user = await _userService.CreateUser(ssn, thjodskraPerson.Name, true);
+
+            if (user == null)
+            {
+                return null;
             }
 
             var vmUser = new UserViewModel(user, false);
