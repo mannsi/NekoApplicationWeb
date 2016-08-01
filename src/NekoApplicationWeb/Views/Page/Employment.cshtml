@@ -3,13 +3,13 @@
 @using NekoApplicationWeb.ViewModels.Page
 @using Newtonsoft.Json
 
-@model List<NekoApplicationWeb.ViewModels.Page.Employment.ApplicantEmployment>
+@model List<NekoApplicationWeb.ViewModels.Page.Employment.ApplicantEmploymentViewModel>
 
 <div class="row" ng-app="app-neko" ng-controller="employmentPageController as vm" ng-init="vm.initData(@JsonConvert.SerializeObject(Model))" ng-cloak>
     <form name="employmentForm" class="form-horizontal" action="" method="post">
         <fieldset ng-repeat="applicantEmployment in vm.applicantsEmployment">
             <div class="col-xs-12">
-                <legend><span ng-bind="applicantEmployment.ApplicantName"></span> - Núverandi starf</legend>
+                <legend><span ng-bind="applicantEmployment.Applicant.UserName"></span> - Núverandi starf</legend>
             </div>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 

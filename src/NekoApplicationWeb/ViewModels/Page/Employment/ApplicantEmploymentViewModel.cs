@@ -4,12 +4,13 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using NekoApplicationWeb.Models;
 
 namespace NekoApplicationWeb.ViewModels.Page.Employment
 {
-    public class ApplicantEmployment
+    public class ApplicantEmploymentViewModel
     {
-        public string ApplicantName { get; set; }
+        public ApplicationUser Applicant { get; set; }
 
         [Required]
         [DataType(DataType.Text)]

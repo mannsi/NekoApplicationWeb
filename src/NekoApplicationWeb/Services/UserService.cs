@@ -49,7 +49,7 @@ namespace NekoApplicationWeb.Services
                 User = user,
                 FinishingDate = DateTime.Now
             });
-            _dbContext.ApplicantEmployments.Add(new ApplicantEmployment {User = user});
+            _dbContext.ApplicantEmployments.Add(new ApplicantEmployment {User = user, StartingTime = DateTime.Now});
             _dbContext.SaveChanges();
 
             return user;

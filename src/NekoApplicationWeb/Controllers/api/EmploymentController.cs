@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NekoApplicationWeb.Models;
 using NekoApplicationWeb.ViewModels.Page.Employment;
 
 namespace NekoApplicationWeb.Controllers.api
@@ -10,15 +12,30 @@ namespace NekoApplicationWeb.Controllers.api
     [Authorize]
     public class EmploymentController : Controller
     {
-       [Route("list")]
-        [HttpPost]
-        public void SaveList([FromBody]List<ApplicantEmployment> vm)
+        private readonly ApplicationDbContext _dbContext;
+
+        public EmploymentController(ApplicationDbContext dbContext)
         {
-            // TODO save the list
-            foreach (var applicantDegreesViewModel in vm)
+            _dbContext = dbContext;
+        }
+
+        [Route("list")]
+        [HttpPost]
+        public void SaveList([FromBody]List<ApplicantEmploymentViewModel> vmList)
+        {
+            foreach (var vm in vmList)
             {
-                Debug.WriteLine(applicantDegreesViewModel);
+                var userEmployement = _dbContext.ApplicantEmployments.FirstOrDefault(empl => empl.User == vm.Applicant);
+                if (userEmployement == null) return;
+
+                _dbContext.Update(userEmployement);
+
+                userEmployement.Company = vm.CompanyName;
+                userEmployement.Title = vm.Title;
+                userEmployement.StartingTime = vm.From;
             }
+
+            _dbContext.SaveChanges();
         }
     }
 }

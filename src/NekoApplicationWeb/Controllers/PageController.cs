@@ -17,7 +17,7 @@ using NekoApplicationWeb.ViewModels.Page.Finances;
 using NekoApplicationWeb.ViewModels.Page.Loan;
 using NekoApplicationWeb.ViewModels.Page.Personal;
 using NekoApplicationWeb.ViewModels.Page.Start;
-using ApplicantEmployment = NekoApplicationWeb.ViewModels.Page.Employment.ApplicantEmployment;
+using ApplicantEmploymentViewModel = NekoApplicationWeb.ViewModels.Page.Employment.ApplicantEmploymentViewModel;
 
 namespace NekoApplicationWeb.Controllers
 {
@@ -140,17 +140,32 @@ namespace NekoApplicationWeb.Controllers
             return View("BasePage", "education");
         }
 
-       [Route("Starfsferill")]
-        public IActionResult Employment()
+        [Route("Starfsferill")]
+        public async Task<IActionResult> Employment()
         {
             ViewData["ContentHeader"] = "Starfsferill";
             ViewData["selectedNavPillId"] = "navPillEmployment";
 
-           var vm = new List<ApplicantEmployment>
-           {
-               new ApplicantEmployment { ApplicantName =  "Joe smoe", Title = "Forritari", CompanyName = "Advania", From = DateTime.Now.AddMonths(-8)},
-               new ApplicantEmployment { ApplicantName =  "Ms Joe smoe", Title = "Stjórnandi", CompanyName = "Þjóðleikhúsið", From = DateTime.Now.AddMonths(-6)}
-           };
+            var vm = new List<ApplicantEmploymentViewModel>();
+            var loggedInUser = await _userManager.GetUserAsync(User);
+
+            var userConnections = GetUsersConnectionsForUsersApplication(loggedInUser, _dbContext);
+            if (userConnections == null) return View("Error");
+
+            foreach (var applicationUserConnection in userConnections)
+            {
+                var user = applicationUserConnection.User;
+                var userEmployement = _dbContext.ApplicantEmployments.FirstOrDefault(employment => employment.User == user);
+                if (userEmployement == null) return View("Error");
+
+                vm.Add(new ApplicantEmploymentViewModel
+                {
+                    Applicant = user,
+                    CompanyName = userEmployement.Company,
+                    From = userEmployement.StartingTime,
+                    Title = userEmployement.Title
+                });
+            }
 
             ViewData["vm"] = vm;
             return View("BasePage", "employment");
