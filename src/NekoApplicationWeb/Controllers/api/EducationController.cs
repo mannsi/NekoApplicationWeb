@@ -37,8 +37,8 @@ namespace NekoApplicationWeb.Controllers.api
             foreach (var userConnection in userConnections)
             {
                 var user = userConnection.User;
-                var userDegrees = _dbContext.ApplicationEducations.Where(deg => deg.User == user);
-                _dbContext.ApplicationEducations.RemoveRange(userDegrees);
+                var userDegrees = _dbContext.ApplicantEducations.Where(deg => deg.User == user);
+                _dbContext.ApplicantEducations.RemoveRange(userDegrees);
             }
             _dbContext.SaveChanges();
 
@@ -47,7 +47,7 @@ namespace NekoApplicationWeb.Controllers.api
             {
                 foreach (var degreeVm in degreesVm.Degrees)
                 {
-                    _dbContext.ApplicationEducations.Add(new ApplicantEducation
+                    _dbContext.ApplicantEducations.Add(new ApplicantEducation
                     {
                         Degree = degreeVm.Degree,
                         School = degreeVm.School,

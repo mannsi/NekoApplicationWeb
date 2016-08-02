@@ -120,7 +120,7 @@ namespace NekoApplicationWeb.Controllers
                 var user = applicationUserConnection.User;
                 var usersEducationVm = new ApplicantDegreesViewModel {Applicant = user, Degrees = new List<DegreeViewModel>()};
 
-                var usersDegreesFromDb = _dbContext.ApplicationEducations.Where(education => education.User == user);
+                var usersDegreesFromDb = _dbContext.ApplicantEducations.Where(education => education.User == user);
 
                 foreach (var degreeFomDb in usersDegreesFromDb)
                 {
