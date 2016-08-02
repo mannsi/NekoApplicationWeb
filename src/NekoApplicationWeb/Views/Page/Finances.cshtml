@@ -65,7 +65,7 @@
                             <option value="1">Ökutæki</option>
                         </select>
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-success" ng-click="vm.addAsset(assetViewModel)"><i class="fa fa-plus"></i></button>
+                            <button type="button" class="btn btn-success" ng-click="vm.addAsset(vm.FinancesViewModel.AssetsViewModel)"><i class="fa fa-plus"></i></button>
                         </span>
                     </div>
                 </div>
@@ -118,13 +118,13 @@
                             <option value="4">Annað</option>
                         </select>
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-success" ng-click="vm.addDebt(applicantFinances)"><i class="fa fa-plus"></i></button>
+                            <button type="button" class="btn btn-success" ng-click="vm.addDebt(vm.FinancesViewModel.DebtsViewModel)"><i class="fa fa-plus"></i></button>
                         </span>
                     </div>
                 </div>
             </div>
 
-            <div ng-repeat="debtViewModel in  vm.FinancesViewModel.DebtsViewModel">
+            <div ng-repeat="debtViewModel in vm.FinancesViewModel.DebtsViewModel">
                 <hr ng-if="!$first" />
                 <div class="form-group">
                     <div class="col-xs-4 control-label">
@@ -160,7 +160,7 @@
                 </div>
                 <div class="form-group required">
                     <div class="col-xs-8 col-xs-offset-4">
-                        <button type="button" class="btn btn-primary btn-sm" ng-click="vm.removeDebt(applicantFinances.Debts, debt)">Fjarlægja</button>
+                        <button type="button" class="btn btn-primary btn-sm" ng-click="vm.removeDebt(vm.FinancesViewModel.DebtsViewModel, debtViewModel)">Fjarlægja</button>
                     </div>
                 </div>
             </div>

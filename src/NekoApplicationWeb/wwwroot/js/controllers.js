@@ -237,13 +237,17 @@
             vm.FinancesViewModel = data;
         };
 
-        vm.addOtherIncome = function (financesViewModel) {
-            var selectIdString = "#otherIncomeSelect-" + financesViewModel.ApplicantSsn;
+        vm.addOtherIncome = function (incomesViewModel) {
+            var selectIdString = "#otherIncomeSelect-" + incomesViewModel.Applicant.Id;
             var selectedOtherIncomeValue = $(selectIdString).val();
+            if (selectedOtherIncomeValue === -1) {
+                return;
+            }
+            
             var selectedOtherIncomeString = $(selectIdString + " option:selected").text();
 
             if (selectedOtherIncomeString !== "") {
-                financesViewModel.OtherIcome.push({
+                incomesViewModel.OtherIncomes.push({
                     MonthlyAmount: 0,
                     IncomeType: selectedOtherIncomeValue,
                     IncomeTypeString: selectedOtherIncomeString
@@ -262,9 +266,9 @@
             vm.pageModified = true;
         };
 
-        vm.addAsset = function (applicantFinances) {
-            var selectedAssetValue = $("assetSelectId").val();
-            var selectedAssetString = $("assetSelectId option:selected").text();
+        vm.addAsset = function (assetsViewModel) {
+            var selectedAssetValue = $("#assetSelectId").val();
+            var selectedAssetString = $("#assetSelectId option:selected").text();
 
             var isProperty = selectedAssetValue === "0";
             var assetPlaceHolderString = "";
@@ -275,7 +279,7 @@
             }
 
             if (selectedAssetString !== "") {
-                applicantFinances.Assets.push({
+                assetsViewModel.push({
                     AssetType: selectedAssetValue,
                     AssetTypeString: selectedAssetString,
                     AssetPlaceholderText: assetPlaceHolderString
@@ -294,12 +298,12 @@
             vm.pageModified = true;
         };
 
-        vm.addDebt = function (applicantFinances) {
-            var selectedDebtValue = $("debtSelectId").val();
-            var selectedDebtString = $("debtSelectId option:selected").text();
+        vm.addDebt = function (debtsViewModel) {
+            var selectedDebtValue = $("#debtSelectId").val();
+            var selectedDebtString = $("#debtSelectId option:selected").text();
 
             if (selectedDebtString !== "") {
-                applicantFinances.Debts.push({
+                debtsViewModel.push({
                     DebtType: selectedDebtValue,
                     DebtTypeString: selectedDebtString
                 });
