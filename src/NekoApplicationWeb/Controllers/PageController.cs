@@ -131,9 +131,9 @@ namespace NekoApplicationWeb.Controllers
                         School = degreeFomDb.School,
                         DateFinished = degreeFomDb.FinishingDate
                     } );
-
-                    vm.Add(usersEducationVm);
                 }
+
+                vm.Add(usersEducationVm);
             }
 
             ViewData["vm"] = vm;
