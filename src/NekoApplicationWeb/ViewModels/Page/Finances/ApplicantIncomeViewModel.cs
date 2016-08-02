@@ -1,31 +1,19 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using NekoApplicationWeb.Models;
 
-namespace NekoApplicationWeb.Models
+namespace NekoApplicationWeb.ViewModels.Page.Finances
 {
-    public enum IncomeType
-    {
-        Salary,
-        Alimony,
-        Rent
-    }
-
-    public class ApplicantFinancesIncome
+    public class ApplicantIncomeViewModel
     {
         private string _incomeTypeString;
 
-        public ApplicantFinancesIncome()
-        {
-            Id = Guid.NewGuid().ToString();
-        }
-
         public string Id { get; set; }
-        public ApplicationUser User { get; set; }
-
         public int MonthlyAmount { get; set; }
         public IncomeType IncomeType { get; set; }
 
-        [NotMapped]
         public string IncomeTypeString
         {
             get

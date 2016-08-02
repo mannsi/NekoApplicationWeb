@@ -77,7 +77,7 @@ namespace NekoApplicationWeb.Controllers
             }
 
             var viewModelUsers = new List<UserViewModel>();
-            foreach (var applicationUserConnection in allApplicantsConnections.OrderBy(con => con.User.UserName))
+            foreach (var applicationUserConnection in allApplicantsConnections)
             {
                 var vmUser = new UserViewModel(applicationUserConnection.User, applicationUserConnection.UserHasAgreedToEula);
                 viewModelUsers.Add(vmUser);
@@ -172,32 +172,77 @@ namespace NekoApplicationWeb.Controllers
         }
 
         [Route("Fjarmal")]
-        public IActionResult Finances()
+        public async Task<IActionResult> Finances()
         {
             ViewData["ContentHeader"] = "Fjármál";
             ViewData["selectedNavPillId"] = "navPillFinances";
 
-            var vm = new List<ApplicantFinancesViewModel>
+            var vm = new FinancesViewModel();
+
+            var loggedInUser = await _userManager.GetUserAsync(User);
+            var userConnections = GetUsersConnectionsForUsersApplication(loggedInUser, _dbContext);
+            if (userConnections == null) return View("Error");
+
+            // Add income viewmodels
+            foreach (var userConnection in userConnections)
             {
-                new ApplicantFinancesViewModel
+                var user = userConnection.User;
+
+                var usersIncomes = _dbContext.ApplicantIncomes.Where(income => income.User == user);
+
+                var incomeViewModel = new IncomeViewModel {Applicant = user};
+
+                // Start with the salary part. It cannot be removed and is handled separately
+                var salaryIncome = usersIncomes.First(income => income.IncomeType == IncomeType.Salary);
+                incomeViewModel.SalaryIncome = new ApplicantIncomeViewModel
+                    {
+                        Id = salaryIncome.Id,
+                        IncomeType = salaryIncome.IncomeType,
+                        MonthlyAmount = salaryIncome.MonthlyAmount
+                    };
+
+                // Handle other income
+                foreach (var applicantIncome in usersIncomes.Where(income => income.IncomeType != IncomeType.Salary))
                 {
-                    ApplicantSsn = "111111-9999",
-                    ApplicantName = "Joe Shmoe",
-                    MonthlyPay = new ApplicantFinancesIncome {IncomeType = IncomeType.Salary, MonthlyAmount = 500000},
-                    Assets = new List<ApplicantFinancesAsset>(),
-                    Debts =new List<ApplicantFinancesDebt>(),
-                    OtherIcome = new List<ApplicantFinancesIncome>()
-                }, 
-                new ApplicantFinancesViewModel
-                {
-                    ApplicantSsn = "111112-9999",
-                    ApplicantName = "Ms Joe Shmoe",
-                    MonthlyPay = new ApplicantFinancesIncome {IncomeType = IncomeType.Salary, MonthlyAmount = 500000},
-                    Assets = new List<ApplicantFinancesAsset>(),
-                    Debts =new List<ApplicantFinancesDebt>(),
-                    OtherIcome = new List<ApplicantFinancesIncome>()
+                    incomeViewModel.OtherIncomes.Add(new ApplicantIncomeViewModel
+                    {
+                        Id = applicantIncome.Id,
+                        IncomeType = applicantIncome.IncomeType,
+                        MonthlyAmount = applicantIncome.MonthlyAmount
+                    });
                 }
-            };
+
+                vm.IncomesViewModel.Add(incomeViewModel);
+            }
+
+            var application = userConnections[0].Application;
+
+            // Add assets viewmodels
+            var assets = _dbContext.Assets.Where(asset => asset.Application == application);
+            foreach (var asset in assets)
+            {
+                vm.AssetsViewModel.Add(new AssetViewModel
+                {
+                    Id = asset.Id,
+                    AssetNumber = asset.AssetNumber,
+                    AssetType = asset.AssetType,
+                    AssetWillBeSold = asset.AssetWillBeSold
+                });
+            }
+
+            // Add debts viewmodels
+            var debts = _dbContext.Debts.Where(debt => debt.Application == application);
+            foreach (var debt in debts)
+            {
+                vm.DebtsViewModel.Add(new DebtViewModel
+                {
+                    Id = debt.Id,
+                    DebtType = debt.DebtType,
+                    Lender = debt.Lender,
+                    LoanRemains = debt.LoanRemains,
+                    MonthlyPayment = debt.MonthlyPayment
+                });
+            }
 
             ViewData["vm"] = vm;
             return View("BasePage", "finances");
@@ -274,7 +319,7 @@ namespace NekoApplicationWeb.Controllers
             if (loggedInUserApplicationConnection == null) return null;
 
             var application = loggedInUserApplicationConnection.Application;
-            var allApplicantsConnections = dbContext.ApplicationUserConnections.Include(con => con.User).Where(auc => auc.Application == application).ToList();
+            var allApplicantsConnections = dbContext.ApplicationUserConnections.Include(con => con.User).Where(auc => auc.Application == application).OrderBy(con => con.User.UserName).ToList();
 
             return allApplicantsConnections;
         }

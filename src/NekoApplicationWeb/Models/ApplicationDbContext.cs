@@ -25,9 +25,9 @@ namespace NekoApplicationWeb.Models
         public DbSet<ApplicationUserConnection> ApplicationUserConnections { get; set; } 
         public DbSet<ApplicantEducation> ApplicationEducations { get; set; } 
         public DbSet<ApplicantEmployment> ApplicantEmployments { get; set; } 
-        public DbSet<ApplicantFinancesAsset> ApplicantFinancesAssets { get; set; } 
-        public DbSet<ApplicantFinancesDebt> ApplicantFinancesDebts{ get; set; } 
-        public DbSet<ApplicantFinancesIncome> ApplicantFinancesIncomes { get; set; }
+        public DbSet<Asset> Assets { get; set; } 
+        public DbSet<Debt> Debts{ get; set; } 
+        public DbSet<ApplicantIncome> ApplicantIncomes { get; set; }
         public DbSet<PropertyDetail> PropertyDetails { get; set; } 
         public DbSet<PropertyValuation> PropertyValuations { get; set; }
         public DbSet<ExternalLoanDetails> LoanDetails { get; set; }

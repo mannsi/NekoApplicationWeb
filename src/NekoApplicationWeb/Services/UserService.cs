@@ -44,12 +44,9 @@ namespace NekoApplicationWeb.Services
 
             await _userManager.CreateAsync(user);
 
-            _dbContext.ApplicationEducations.Add(new ApplicantEducation
-            {
-                User = user,
-                FinishingDate = DateTime.Now
-            });
+            _dbContext.ApplicationEducations.Add(new ApplicantEducation {User = user, FinishingDate = DateTime.Now});
             _dbContext.ApplicantEmployments.Add(new ApplicantEmployment {User = user, StartingTime = DateTime.Now});
+            _dbContext.ApplicantIncomes.Add(new ApplicantIncome {User = user, IncomeType = IncomeType.Salary, MonthlyAmount = 0});
             _dbContext.SaveChanges();
 
             return user;

@@ -1,36 +1,21 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using NekoApplicationWeb.Models;
 
-namespace NekoApplicationWeb.Models
+namespace NekoApplicationWeb.ViewModels.Page.Finances
 {
-    public enum DebtType
-    {
-        StudentLoan,
-        Overdraft,
-        CarLoan,
-        PropertyLoan,
-        Other
-    }
-
-    public class ApplicantFinancesDebt
+    public class DebtViewModel
     {
         private string _debtTypeString;
 
-        public ApplicantFinancesDebt()
-        {
-            Id = Guid.NewGuid().ToString();
-        }
-
         public string Id { get; set; }
-        public ApplicationUser User { get; set; }
-
         public DebtType DebtType { get; set; }
         public string Lender { get; set; }
         public int LoanRemains { get; set; }
         public int MonthlyPayment { get; set; }
 
-        [NotMapped]
         public string DebtTypeString
         {
             get
@@ -57,6 +42,5 @@ namespace NekoApplicationWeb.Models
             }
             set { _debtTypeString = value; }
         }
-
     }
 }

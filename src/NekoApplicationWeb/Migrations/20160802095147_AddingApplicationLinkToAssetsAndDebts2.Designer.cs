@@ -8,9 +8,10 @@ using NekoApplicationWeb.Models;
 namespace NekoApplicationWeb.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20160802095147_AddingApplicationLinkToAssetsAndDebts2")]
+    partial class AddingApplicationLinkToAssetsAndDebts2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
@@ -161,7 +162,7 @@ namespace NekoApplicationWeb.Migrations
                     b.ToTable("ApplicantEmployments");
                 });
 
-            modelBuilder.Entity("NekoApplicationWeb.Models.ApplicantIncome", b =>
+            modelBuilder.Entity("NekoApplicationWeb.Models.ApplicantFinancesIncome", b =>
                 {
                     b.Property<string>("Id");
 
@@ -175,7 +176,7 @@ namespace NekoApplicationWeb.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ApplicantIncomes");
+                    b.ToTable("ApplicantFinancesIncomes");
                 });
 
             modelBuilder.Entity("NekoApplicationWeb.Models.Application", b =>
@@ -269,7 +270,24 @@ namespace NekoApplicationWeb.Migrations
                     b.ToTable("ApplicationUserConnections");
                 });
 
-            modelBuilder.Entity("NekoApplicationWeb.Models.Asset", b =>
+            modelBuilder.Entity("NekoApplicationWeb.Models.ExternalLoanDetails", b =>
+                {
+                    b.Property<string>("Id");
+
+                    b.Property<string>("ApplicationId");
+
+                    b.Property<string>("LenderId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationId");
+
+                    b.HasIndex("LenderId");
+
+                    b.ToTable("LoanDetails");
+                });
+
+            modelBuilder.Entity("NekoApplicationWeb.Models.FinancesAsset", b =>
                 {
                     b.Property<string>("Id");
 
@@ -279,16 +297,18 @@ namespace NekoApplicationWeb.Migrations
 
                     b.Property<int>("AssetType");
 
+                    b.Property<string>("AssetTypeString");
+
                     b.Property<bool>("AssetWillBeSold");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationId");
 
-                    b.ToTable("Assets");
+                    b.ToTable("FinancesAssets");
                 });
 
-            modelBuilder.Entity("NekoApplicationWeb.Models.Debt", b =>
+            modelBuilder.Entity("NekoApplicationWeb.Models.FinancesDebt", b =>
                 {
                     b.Property<string>("Id");
 
@@ -306,24 +326,7 @@ namespace NekoApplicationWeb.Migrations
 
                     b.HasIndex("ApplicationId");
 
-                    b.ToTable("Debts");
-                });
-
-            modelBuilder.Entity("NekoApplicationWeb.Models.ExternalLoanDetails", b =>
-                {
-                    b.Property<string>("Id");
-
-                    b.Property<string>("ApplicationId");
-
-                    b.Property<string>("LenderId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicationId");
-
-                    b.HasIndex("LenderId");
-
-                    b.ToTable("LoanDetails");
+                    b.ToTable("FinancesDebts");
                 });
 
             modelBuilder.Entity("NekoApplicationWeb.Models.InterestsEntry", b =>
@@ -509,7 +512,7 @@ namespace NekoApplicationWeb.Migrations
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("NekoApplicationWeb.Models.ApplicantIncome", b =>
+            modelBuilder.Entity("NekoApplicationWeb.Models.ApplicantFinancesIncome", b =>
                 {
                     b.HasOne("NekoApplicationWeb.Models.ApplicationUser", "User")
                         .WithMany()
@@ -534,20 +537,6 @@ namespace NekoApplicationWeb.Migrations
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("NekoApplicationWeb.Models.Asset", b =>
-                {
-                    b.HasOne("NekoApplicationWeb.Models.Application", "Application")
-                        .WithMany()
-                        .HasForeignKey("ApplicationId");
-                });
-
-            modelBuilder.Entity("NekoApplicationWeb.Models.Debt", b =>
-                {
-                    b.HasOne("NekoApplicationWeb.Models.Application", "Application")
-                        .WithMany()
-                        .HasForeignKey("ApplicationId");
-                });
-
             modelBuilder.Entity("NekoApplicationWeb.Models.ExternalLoanDetails", b =>
                 {
                     b.HasOne("NekoApplicationWeb.Models.Application", "Application")
@@ -557,6 +546,20 @@ namespace NekoApplicationWeb.Migrations
                     b.HasOne("NekoApplicationWeb.Models.Lender", "Lender")
                         .WithMany()
                         .HasForeignKey("LenderId");
+                });
+
+            modelBuilder.Entity("NekoApplicationWeb.Models.FinancesAsset", b =>
+                {
+                    b.HasOne("NekoApplicationWeb.Models.Application", "Application")
+                        .WithMany()
+                        .HasForeignKey("ApplicationId");
+                });
+
+            modelBuilder.Entity("NekoApplicationWeb.Models.FinancesDebt", b =>
+                {
+                    b.HasOne("NekoApplicationWeb.Models.Application", "Application")
+                        .WithMany()
+                        .HasForeignKey("ApplicationId");
                 });
 
             modelBuilder.Entity("NekoApplicationWeb.Models.InterestsEntry", b =>

@@ -212,7 +212,7 @@
     function financesPageController($http) {
         var vm = this;
 
-        vm.applicantsFinances = [];
+        vm.FinancesViewModel = [];
         vm.pageModified = false;
 
         function init() {
@@ -234,16 +234,16 @@
         }
 
         vm.initData = function (data) {
-            angular.copy(data, vm.applicantsFinances);
+            vm.FinancesViewModel = data;
         };
 
-        vm.addOtherIncome = function (applicantFinances) {
-            var selectIdString = "#otherIncomeSelect-" + applicantFinances.ApplicantSsn;
+        vm.addOtherIncome = function (financesViewModel) {
+            var selectIdString = "#otherIncomeSelect-" + financesViewModel.ApplicantSsn;
             var selectedOtherIncomeValue = $(selectIdString).val();
             var selectedOtherIncomeString = $(selectIdString + " option:selected").text();
 
             if (selectedOtherIncomeString !== "") {
-                applicantFinances.OtherIcome.push({
+                financesViewModel.OtherIcome.push({
                     MonthlyAmount: 0,
                     IncomeType: selectedOtherIncomeValue,
                     IncomeTypeString: selectedOtherIncomeString
@@ -263,9 +263,8 @@
         };
 
         vm.addAsset = function (applicantFinances) {
-            var selectIdString = "#assetsTypeSelect-" + applicantFinances.ApplicantSsn;
-            var selectedAssetValue = $(selectIdString).val();
-            var selectedAssetString = $(selectIdString + " option:selected").text();
+            var selectedAssetValue = $("assetSelectId").val();
+            var selectedAssetString = $("assetSelectId option:selected").text();
 
             var isProperty = selectedAssetValue === "0";
             var assetPlaceHolderString = "";
@@ -296,9 +295,8 @@
         };
 
         vm.addDebt = function (applicantFinances) {
-            var selectIdString = "#debtTypeSelect-" + applicantFinances.ApplicantSsn;
-            var selectedDebtValue = $(selectIdString).val();
-            var selectedDebtString = $(selectIdString + " option:selected").text();
+            var selectedDebtValue = $("debtSelectId").val();
+            var selectedDebtString = $("debtSelectId option:selected").text();
 
             if (selectedDebtString !== "") {
                 applicantFinances.Debts.push({
@@ -321,7 +319,9 @@
 
         vm.continue = function () {
             vm.pageModified = false;
-            $http.post('/api/finances/list', vm.applicantsFinances)
+
+            var param = JSON.stringify(vm.FinancesViewModel);
+            $http.post('/api/finances/list', param)
                 .then(function (response) {
                     window.location.href = 'Lanveiting';
                 }, function (error) {

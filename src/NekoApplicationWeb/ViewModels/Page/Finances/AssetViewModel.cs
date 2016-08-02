@@ -1,25 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using NekoApplicationWeb.Models;
 
-namespace NekoApplicationWeb.Models
+namespace NekoApplicationWeb.ViewModels.Page.Finances
 {
-    public enum AssetType
-    {
-        Property,
-        Vehicle
-    }
-
-    public class ApplicantFinancesAsset
+    public class AssetViewModel
     {
         private string _assetTypeString;
 
-        public ApplicantFinancesAsset()
-        {
-            Id = Guid.NewGuid().ToString();
-        }
-
         public string Id { get; set; }
-        public ApplicationUser User { get; set; }
-
         public AssetType AssetType { get; set; }
         public string AssetNumber { get; set; }
         public bool AssetWillBeSold { get; set; }
