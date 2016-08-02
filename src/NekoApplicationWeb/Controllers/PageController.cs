@@ -16,7 +16,6 @@ using NekoApplicationWeb.ViewModels.Page.Education;
 using NekoApplicationWeb.ViewModels.Page.Finances;
 using NekoApplicationWeb.ViewModels.Page.Loan;
 using NekoApplicationWeb.ViewModels.Page.Personal;
-using NekoApplicationWeb.ViewModels.Page.Start;
 using ApplicantEmploymentViewModel = NekoApplicationWeb.ViewModels.Page.Employment.ApplicantEmploymentViewModel;
 
 namespace NekoApplicationWeb.Controllers
@@ -36,27 +35,6 @@ namespace NekoApplicationWeb.Controllers
             _thjodskraService = thjodskraService;
             _dbContext = dbContext;
             _userManager = userManager;
-        }
-
-        [Route("Start")]
-        public async Task<IActionResult> Start()
-        {
-            var loggedInUser = await _userManager.GetUserAsync(User);
-            if (loggedInUser == null) return View("Error");
-
-            var userApplicationConnection = _dbContext.ApplicationUserConnections.FirstOrDefault(auc => auc.User == loggedInUser);
-            if (userApplicationConnection == null) return View("Error");
-
-            var vm = new StartPageViewModel
-            {
-                ShowEula = !userApplicationConnection.UserHasAgreedToEula,
-                EulaUser = loggedInUser
-            };
-
-            ViewData["ContentHeader"] = "Umsókn um Neko fasteignalán";
-            ViewData["selectedNavPillId"] = "navPillFrontPage";
-            ViewData["vm"] = vm;
-            return View("BasePage", "Start");
         }
 
         /// <summary>
@@ -83,11 +61,9 @@ namespace NekoApplicationWeb.Controllers
                 viewModelUsers.Add(vmUser);
             }
 
-            var application = allApplicantsConnections.First().Application;
             var verifyingUser = _dbContext.Users.FirstOrDefault(u => u.Id == verifyingUserId);
             var verifyingUserHasConfirmedEula = verifyingUser != null &&
-                !_dbContext.ApplicationUserConnections.FirstOrDefault(
-                    con => con.Application == application && con.User == verifyingUser).UserHasAgreedToEula;
+                !allApplicantsConnections.First(con => con.User == verifyingUser).UserHasAgreedToEula;
 
             ViewData["ContentHeader"] = "Umsækjendur";
             ViewData["selectedNavPillId"] = "navPillApplicant";

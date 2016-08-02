@@ -243,15 +243,9 @@ namespace NekoApplicationWeb.Controllers
                 {
                     await _signInManager.SignInAsync(user, true);
                 }
-                else
-                {
-                    // The user logging in is an extra user that is being verified
-                    return RedirectToAction(nameof(PageController.Personal), "Page", new {verifyingUserId = user.Id});
-
-                }
             }
 
-            return RedirectToAction(nameof(PageController.Start), "Page");
+            return RedirectToAction(nameof(PageController.Personal), "Page", new { verifyingUserId = user.Id });
         }
 
         private async Task<ApplicationUser> CreateNewApplication(string ssn)
