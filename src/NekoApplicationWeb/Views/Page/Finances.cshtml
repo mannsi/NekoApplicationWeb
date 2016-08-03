@@ -14,7 +14,7 @@
         <div asp-validation-summary="ModelOnly" class="text-primary"></div>
         <div class="form-group required">
             <div class="col-xs-4 control-label">
-                <label>Launatekjur eftir skatt</label> <i class="fa fa-question-circle" data-toggle="tooltip" title="Einhver lýsing"></i>
+                <label>Launatekjur eftir skatt</label> <i class="fa fa-question-circle" data-toggle="tooltip" title="Það sem dettur inn á bankareikninginn þinn um hver mánaðarmót"></i>
             </div>
             <div class="col-xs-8">
                 <input type="text" class="form-control" ng-model="incomeViewmodel.SalaryIncome.MonthlyAmount" ui-number-mask="0" required ng-change="vm.pageModified = true"/>

@@ -52,7 +52,7 @@ namespace NekoApplicationWeb
 
             if (!dbContext.Lenders.Any(lender => lender.Id == Shared.Constants.IslandsbankiId))
             {
-                dbContext.Lenders.Add(new Lender { Id = Shared.Constants.IslandsbankiId, Name = "Íslandsbank", LoanPaymentServiceFee = 595 });
+                dbContext.Lenders.Add(new Lender { Id = Shared.Constants.IslandsbankiId, Name = "Íslandsbanki", LoanPaymentServiceFee = 595 });
                 lenderAdded = true;
             }
             

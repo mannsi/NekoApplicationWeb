@@ -10,6 +10,23 @@
     #nekoLoanTable, #bankLoanTable {
         margin: 0;
     }
+
+    .panel-danger {
+      border-color: #f5d400;
+    }
+    .panel-danger > .panel-heading {
+      background-color: #f5d400;
+      border-color: #f5d400;
+    }
+    .panel-danger > .panel-heading + .panel-collapse > .panel-body {
+      border-top-color: #f5d400;
+    }
+    .panel-danger > .panel-heading .badge {
+      color: #f5d400;
+    }
+    .panel-danger > .panel-footer + .panel-collapse > .panel-body {
+      border-bottom-color: #f5d400;
+    }
 </style>
 
 <div class="row" ng-app="app-neko" ng-controller="loanPageController as vm" ng-init="vm.initData(@JsonConvert.SerializeObject(Model))" ng-cloak>
@@ -32,7 +49,7 @@
             </div>
             <div class="form-group required">
                 <div class="col-sm-4 col-xs-offset-4 col-sm-offset-0 control-label">
-                    <label>Fastanúmer eignar</label>
+                    <label>Fastanúmer eignar</label> <i class="fa fa-question-circle" data-toggle="tooltip" title="Hægt að finna númerið með því að leita að eigninni á vef Þjóðskrá Íslands undir Fasteignaskrá"></i>
                 </div>
                 <div class="col-sm-8 col-xs-offset-4 col-sm-offset-0">
                     <input class="form-control" ng-model="vm.loanViewModel.PropertyNumber" required ng-change="vm.pageModified = true" mask="999-9999" />
@@ -40,7 +57,7 @@
             </div>
             <div class="form-group required">
                 <div class="col-sm-4 col-xs-offset-4 col-sm-offset-0 control-label">
-                    <label>Eigið fé</label>
+                    <label>Eigið fé</label> <i class="fa fa-question-circle" data-toggle="tooltip" title="Hvað þú/þið ætlið að setja mikið af ykkar pening í kaupin"></i>
                 </div>
                 <div class="col-sm-8 col-xs-offset-4 col-sm-offset-0">
                     <input class="form-control" ng-model="vm.loanViewModel.OwnCapital" required ng-change="vm.pageModified = true" ui-number-mask="0" />
@@ -55,14 +72,14 @@
                 <em>Veldu þinn lánveitanda. Við setjum upp lán sem uppfylla allar kröfur og lágmarkar greiðslubyrði</em>
             </div>
             <div class="form-group">
-                <label class="col-sm-4 col-xs-offset-4 col-sm-offset-0 control-label">Lánveitandi</label>
+                <label class="col-sm-4 col-xs-offset-4 col-sm-offset-0 control-label">Lánveitandi</label> 
                 <div class="col-sm-8 col-xs-offset-4 col-sm-offset-0">
                     <div class="input-group">
                         <select id="lenderSelect" class="form-control" ng-model="vm.loanViewModel.Lender"
                                 ng-disabled="vm.loanViewModel.BuyingPrice == 0 || vm.loanViewModel.BuyingPrice == ''
                                             || vm.loanViewModel.OwnCapital == '' || vm.loanViewModel.OwnCapital == 0"
                                 ng-change="vm.lenderChange()">
-                            <option ng-repeat="lender in vm.lenders | orderBy: 'name'" value="{{lender.id}}">{{lender.name}}</option>
+                            <option ng-repeat="lender in vm.lenders | orderBy: 'name'" value="{{lender.Id}}">{{lender.Name}}</option>
                         </select>
                         <span class="input-group-btn">
                             <a href="" class="btn btn-success" ng-click="vm.lenderChange()"
@@ -77,7 +94,6 @@
                 <ul>
                     <li><em>Leyfa option að velja lánstíma efstu 2 lána</em></li>
                     <li><em>Hinir 2 bankarnir leyfa range á 3 láni 15-25</em></li>
-                    <li><em>Litur bankanns og icon bankans</em></li>
                 </ul>
 
             </div>
@@ -112,14 +128,14 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="bankLoan in vm.loanViewModel.BankLoans | filter: {isNekoLoan : false}">
-                                        <th class="text-right">{{bankLoan.principal | number}} kr</th>
-                                        <th class="text-center">{{bankLoan.interestInfo.indexed ? 'Já': 'Nei'}}</th>
-                                        <th class="text-center">{{bankLoan.interestsFormString}}</th>
-                                        <th class="text-center">{{bankLoan.interestInfo.interestPercentage}} %</th>
-                                        <th>{{bankLoan.paymentTypeString}}</th>
-                                        <th class="text-center">{{bankLoan.loanDurationYears}} ár</th>
-                                        <th class="text-right">{{bankLoan.monthlyPayment | number}} kr</th>
+                                    <tr ng-repeat="bankLoan in vm.loanViewModel.BankLoans | filter: {IsNekoLoan : false}">
+                                        <th class="text-right">{{bankLoan.Principal | number}} kr</th>
+                                        <th class="text-center">{{bankLoan.InterestInfo.Indexed ? 'Já': 'Nei'}}</th>
+                                        <th class="text-center">{{bankLoan.InterestsFormString}}</th>
+                                        <th class="text-center">{{bankLoan.InterestInfo.InterestPercentage}} %</th>
+                                        <th>{{bankLoan.PaymentTypeString}}</th>
+                                        <th class="text-center">{{bankLoan.LoanDurationYears}} ár</th>
+                                        <th class="text-right">{{bankLoan.MonthlyPayment | number}} kr</th>
                                     </tr>
                                 </tbody>
                                 <tfoot>
@@ -141,10 +157,11 @@
 
 
             <div class="col-xs-10 col-xs-offset-1" ng-show="vm.showBankLoansSection">
-                <div class="panel panel-info">
+                <div class="panel panel-danger">
                     <div class="panel-heading">
-                        <div class="panel-title">Lán frá Neko</div><em>Setja gula neko litinn og neko icon h'erna</em>
 
+                        <img class="pull-right" height="25" src="~/images/favicon.png"/>
+                        <div class="panel-title">Lán frá Neko</div>
                     </div>
 
                     <div class="panel-body">
@@ -162,14 +179,14 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="bankLoan in vm.loanViewModel.BankLoans | filter: {isNekoLoan : true}">
-                                        <th class="text-right">{{bankLoan.principal | number}} kr</th>
-                                        <th class="text-center">{{bankLoan.interestsFormString}}</th>
-                                        <th class="text-center">{{bankLoan.interestInfo.interestPercentage}} %</th>
-                                        <th>{{bankLoan.paymentTypeString}}</th>
-                                        <th class="text-center">{{bankLoan.loanDurationYears}} ár</th>
-                                        <th class="text-right">{{bankLoan.monthlyPayment | number}} kr</th>
-                                        <th class="text-right">{{bankLoan.monthlyPayment | number}} kr</th>
+                                    <tr ng-repeat="bankLoan in vm.loanViewModel.BankLoans | filter: {IsNekoLoan : true}">
+                                        <th class="text-right">{{bankLoan.Principal | number}} kr</th>
+                                        <th class="text-center">{{bankLoan.InterestsFormString}}</th>
+                                        <th class="text-center">{{bankLoan.InterestInfo.InterestPercentage}} %</th>
+                                        <th>{{bankLoan.PaymentTypeString}}</th>
+                                        <th class="text-center">{{bankLoan.LoanDurationYears}} ár</th>
+                                        <th class="text-right">{{bankLoan.MonthlyPayment | number}} kr</th>
+                                        <th class="text-right">{{bankLoan.MonthlyPayment | number}} kr</th>
                                     </tr>
                                 </tbody>
                                 @*<tfoot>

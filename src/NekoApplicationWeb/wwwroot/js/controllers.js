@@ -354,7 +354,7 @@
 
         function init() {
             $(document).ready(function () {
-                $('[data-toggle="popover"]').popover({ trigger: 'hover focus' });
+                $('[data-toggle="tooltip"]').tooltip();
             });
 
             $(window).on('beforeunload', function () {
@@ -400,7 +400,7 @@
         };
 
         vm.initData = function (data) {
-            angular.copy(data, vm.loanViewModel);
+            vm.loanViewModel = data;
         };
 
         vm.addBankLoan = function () {
@@ -477,8 +477,8 @@
             for (var i = 0; i < vm.loanViewModel.BankLoans.length; i++) {
                 var bankLoan = vm.loanViewModel.BankLoans[i];
 
-                if (bankLoan.isNekoLoan === isNekoLoan) {
-                    totalPrincipal += bankLoan.principal;
+                if (bankLoan.IsNekoLoan === isNekoLoan) {
+                    totalPrincipal += bankLoan.Principal;
                 }
             }
 
@@ -490,8 +490,8 @@
 
             for (var i = 0; i < vm.loanViewModel.BankLoans.length; i++) {
                 var bankLoan = vm.loanViewModel.BankLoans[i];
-                if (bankLoan.isNekoLoan === isNekoLoan) {
-                    totalMonthlyPayment += bankLoan.monthlyPayment;
+                if (bankLoan.IsNekoLoan === isNekoLoan) {
+                    totalMonthlyPayment += bankLoan.MonthlyPayment;
                 }
             }
 
