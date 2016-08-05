@@ -243,32 +243,18 @@ namespace NekoApplicationWeb.Controllers
 
             if (propertyDetails == null) return View("Error");
 
+            //vm.BuyingPrice = 25000000;
             vm.BuyingPrice = propertyDetails.BuyingPrice;
+            //vm.OwnCapital = 1000000;
             vm.OwnCapital = propertyDetails.OwnCapital;
+            //vm.PropertyNumber = "111-2222";
             vm.PropertyNumber = propertyDetails.PropertyNumber;
 
             // Populate lender and loan info
             var lender = application.Lender;
             if (lender != null)
             {
-                var interestsForLender = _interestsService.GetInterestsMatrix(lender);
-
-                // TODO fetch these values from some service based on the property number
-                int realEstateValuation = 25000000;
-                int newFireInsuranceValuation = 23000000;
-                int plotAssessmentValue = 3500000;
-
-                var loans =  _loanService.GetDefaultLoansForLender(
-                    lender,
-                    vm.BuyingPrice,
-                    vm.OwnCapital,
-                    interestsForLender,
-                    realEstateValuation,
-                    newFireInsuranceValuation,
-                    plotAssessmentValue);
-
-                vm.BankLoans = loans;
-                vm.Lender = lender;
+                vm.LenderName = lender.Name;
             }
 
             ViewData["vm"] = vm;
@@ -290,7 +276,7 @@ namespace NekoApplicationWeb.Controllers
             return View("BasePage", "documents");
         } 
 
-        [Route("Samatekt")]
+        [Route("Samantekt")]
         public IActionResult Summary()
         {
             ViewData["ContentHeader"] = "Samatekt";

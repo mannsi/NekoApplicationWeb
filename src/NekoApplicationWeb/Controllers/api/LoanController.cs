@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NekoApplicationWeb.Models;
 using NekoApplicationWeb.ServiceInterfaces;
@@ -15,22 +17,48 @@ namespace NekoApplicationWeb.Controllers.api
         private readonly ApplicationDbContext _dbContext;
         private readonly ILoanService _loanService;
         private readonly IInterestsService _interestsService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public LoanController(
             ApplicationDbContext dbContext,
             ILoanService loanService,
-            IInterestsService interestsService)
+            IInterestsService interestsService,
+            UserManager<ApplicationUser> userManager)
         {
             _dbContext = dbContext;
             _loanService = loanService;
             _interestsService = interestsService;
+            _userManager = userManager;
         }
 
         [Route("")]
         [HttpPost]
-        public void Save([FromBody]LoanViewModel vm)
+        public async Task Save([FromBody]LoanViewModel vm)
         {
-            // TODO save the vm
+            var loggedInUser = await _userManager.GetUserAsync(User);
+            var application = PageController.GetApplicationForUser(loggedInUser, _dbContext);
+            var propertyDetails = _dbContext.PropertyDetails.FirstOrDefault(detail => detail.Application == application);
+
+            if (propertyDetails == null) return;
+
+            _dbContext.Update(propertyDetails);
+            propertyDetails.BuyingPrice = vm.BuyingPrice;
+            propertyDetails.OwnCapital = vm.OwnCapital;
+            propertyDetails.PropertyNumber = vm.PropertyNumber;
+
+            if (!string.IsNullOrEmpty(vm.LenderName))
+            {
+                var lender = _dbContext.Lenders.FirstOrDefault(l => l.Name == vm.LenderName);
+                if (lender == null) return;
+
+                if (application.Lender != lender)
+                {
+                    _dbContext.Update(application);
+                    application.Lender = lender;
+                }
+            }
+        
+            _dbContext.SaveChanges();
         }
 
         [Route("new")]
@@ -49,9 +77,9 @@ namespace NekoApplicationWeb.Controllers.api
 
         [Route("defaultLoans")]
         [HttpGet]
-        public List<BankLoanViewModel> GetDefaultLoans(string lenderId, string propertyNumber, int buyingPrice, int ownCapital)
+        public List<BankLoanViewModel> GetDefaultLoans(string lenderName, string propertyNumber, int buyingPrice, int ownCapital)
         {
-            var lender = _dbContext.Lenders.FirstOrDefault(l => l.Id == lenderId);
+            var lender = _dbContext.Lenders.FirstOrDefault(l => l.Name == lenderName);
             if (lender == null) return null;
 
             var interestsForLender = _interestsService.GetInterestsMatrix(lender);

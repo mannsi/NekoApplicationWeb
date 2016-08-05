@@ -342,6 +342,7 @@
 
         vm.lenders = [];
         vm.loanViewModel = {};
+        vm.bankLoans = [];
         vm.pageModified = false;
         vm.showBankLoansSection = false;
 
@@ -351,6 +352,8 @@
 
         vm.greidslubyrdarhlutfall_Ok = false;
         vm.skuldahlutfall_Ok = false;
+
+        vm.refreshButtonDisabled = false;
 
         function init() {
             $(document).ready(function () {
@@ -399,28 +402,46 @@
             vm.skuldahlutfall_Ok = true;
         };
 
+        function populateLoans() {
+            vm.showBankLoansSection = false;
+
+            if (!needsNekoLoan()) {
+                $("#toMuchOwnCapitalId").removeClass("hidden");
+                return;
+            } else {
+                if (!$("#toMuchOwnCapitalId").hasClass("hidden")) {
+                    $("#toMuchOwnCapitalId").addClass("hidden");
+                }
+            }
+
+            //var lenderValue = $("#lenderSelect").val();
+            //vm.loanViewModel.NewLenderId = lenderValue;
+            //var lenderString = $("#lenderSelect" + " option:selected").text();
+            //vm.loanViewModel.LenderName = lenderString;
+
+            $http({
+                url: '/api/loan/defaultLoans',
+                method: "GET",
+                params: {
+                    lenderName: vm.loanViewModel.LenderName,
+                    buyingPrice: vm.loanViewModel.BuyingPrice,
+                    ownCapital: vm.loanViewModel.OwnCapital
+                }
+            }).then(function (response) {
+                vm.bankLoans = response.data;
+                if (response.data !== "") {
+                    vm.showBankLoansSection = true;
+                }
+                calculateRatios();
+            }, function (error) {
+
+            });
+        };
+
         vm.initData = function (data) {
             vm.loanViewModel = data;
-        };
-
-        vm.addBankLoan = function () {
-            $http.get('/api/loan/new')
-                .then(function (response) {
-                    vm.loanViewModel.BankLoans.push(response.data);
-                    vm.pageModified = true;
-                    },
-                    function (error) {
-
-                    });
-        };
-
-        vm.removeBankLoan = function (bankLoan) {
-            for (var i = 0; i < vm.loanViewModel.BankLoans.length; i++) {
-                if (bankLoan === vm.loanViewModel.BankLoans[i]) {
-                    vm.loanViewModel.BankLoans.splice(i, 1);
-                    vm.pageModified = true;
-                    break;
-                }
+            if (vm.loanViewModel.LenderName) {
+                populateLoans();
             }
         };
 
@@ -436,46 +457,14 @@
         };
 
         vm.lenderChange = function () {
-            vm.showBankLoansSection = false;
-
-            if (!needsNekoLoan()) {
-                $("#toMuchOwnCapitalId").removeClass("hidden");
-                return;
-            } else {
-                if (!$("#toMuchOwnCapitalId").hasClass("hidden")) {
-                    $("#toMuchOwnCapitalId").addClass("hidden");
-                }
-            }
-
-            var lenderValue = $("#lenderSelect").val();
-            vm.loanViewModel.lenderId = lenderValue;
-            var lenderString = $("#lenderSelect" + " option:selected").text();
-            vm.loanViewModel.lenderName = lenderString;
-
-            $http({
-                url: '/api/loan/defaultLoans',
-                method: "GET",
-                params: {
-                    lenderId: lenderValue,
-                    buyingPrice: vm.loanViewModel.BuyingPrice,
-                    ownCapital: vm.loanViewModel.OwnCapital
-                }
-            }).then(function(response) {
-                vm.loanViewModel.BankLoans = response.data;
-                if (response.data !== "") {
-                    vm.showBankLoansSection = true;
-                }
-                calculateRatios();
-            }, function(error) {
-                
-            });
+            populateLoans();
         };
 
         vm.loansTotalPrincipal = function(isNekoLoan) {
             var totalPrincipal = 0;
 
-            for (var i = 0; i < vm.loanViewModel.BankLoans.length; i++) {
-                var bankLoan = vm.loanViewModel.BankLoans[i];
+            for (var i = 0; i < vm.bankLoans.length; i++) {
+                var bankLoan = vm.bankLoans[i];
 
                 if (bankLoan.IsNekoLoan === isNekoLoan) {
                     totalPrincipal += bankLoan.Principal;
@@ -488,8 +477,8 @@
         vm.loansTotalMonthlyPayments = function (isNekoLoan) {
             var totalMonthlyPayment = 0;
 
-            for (var i = 0; i < vm.loanViewModel.BankLoans.length; i++) {
-                var bankLoan = vm.loanViewModel.BankLoans[i];
+            for (var i = 0; i < vm.bankLoans.length; i++) {
+                var bankLoan = vm.bankLoans[i];
                 if (bankLoan.IsNekoLoan === isNekoLoan) {
                     totalMonthlyPayment += bankLoan.MonthlyPayment;
                 }

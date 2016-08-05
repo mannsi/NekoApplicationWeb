@@ -9,11 +9,6 @@ namespace NekoApplicationWeb.ViewModels.Page.Loan
 {
     public class LoanViewModel
     {
-        public LoanViewModel()
-        {
-            BankLoans = new List<BankLoanViewModel>();
-        }
-
         [Required]
         public int BuyingPrice { get; set; }
         [Required]
@@ -21,9 +16,8 @@ namespace NekoApplicationWeb.ViewModels.Page.Loan
         [Required]
         public int OwnCapital { get; set; }
     
-        public Lender Lender { get; set; }
+        public string LenderName{ get; set; }
 
-        public List<BankLoanViewModel> BankLoans { get; set; }
 
     }
 }

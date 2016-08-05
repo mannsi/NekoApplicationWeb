@@ -75,16 +75,23 @@
                 <label class="col-sm-4 col-xs-offset-4 col-sm-offset-0 control-label">Lánveitandi</label> 
                 <div class="col-sm-8 col-xs-offset-4 col-sm-offset-0">
                     <div class="input-group">
-                        <select id="lenderSelect" class="form-control" ng-model="vm.loanViewModel.Lender"
+                        <select id="lenderSelect" class="form-control" ng-model="vm.loanViewModel.LenderName"
                                 ng-disabled="vm.loanViewModel.BuyingPrice == 0 || vm.loanViewModel.BuyingPrice == ''
                                             || vm.loanViewModel.OwnCapital == '' || vm.loanViewModel.OwnCapital == 0"
                                 ng-change="vm.lenderChange()">
                             <option ng-repeat="lender in vm.lenders | orderBy: 'name'" value="{{lender.Id}}">{{lender.Name}}</option>
                         </select>
                         <span class="input-group-btn">
-                            <a href="" class="btn btn-success" ng-click="vm.lenderChange()"
-                               ng-disabled="!vm.loanViewModel.lenderId || vm.loanViewModel.BuyingPrice == 0 || vm.loanViewModel.BuyingPrice == ''
-                                            || vm.loanViewModel.OwnCapital == '' || vm.loanViewModel.OwnCapital == 0"><i class="fa fa-refresh"></i></a>
+                            <a href="" class="btn btn-success" ng-click="!vm.loanViewModel.LenderName ||
+            vm.loanViewModel.BuyingPrice === 0 ||
+            vm.loanViewModel.BuyingPrice === undefined ||
+            vm.loanViewModel.OwnCapital === undefined ||
+            vm.loanViewModel.OwnCapital === 0 || vm.lenderChange()"
+                               ng-disabled="!vm.loanViewModel.LenderName ||
+            vm.loanViewModel.BuyingPrice === 0 ||
+            vm.loanViewModel.BuyingPrice === undefined ||
+            vm.loanViewModel.OwnCapital === undefined ||
+            vm.loanViewModel.OwnCapital === 0"><i class="fa fa-refresh"></i></a>
                         </span>
                     </div>
                 </div>
@@ -128,7 +135,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="bankLoan in vm.loanViewModel.BankLoans | filter: {IsNekoLoan : false}">
+                                    <tr ng-repeat="bankLoan in vm.bankLoans | filter: {IsNekoLoan : false}">
                                         <th class="text-right">{{bankLoan.Principal | number}} kr</th>
                                         <th class="text-center">{{bankLoan.InterestInfo.Indexed ? 'Já': 'Nei'}}</th>
                                         <th class="text-center">{{bankLoan.InterestsFormString}}</th>
@@ -179,7 +186,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="bankLoan in vm.loanViewModel.BankLoans | filter: {IsNekoLoan : true}">
+                                    <tr ng-repeat="bankLoan in vm.bankLoans | filter: {IsNekoLoan : true}">
                                         <th class="text-right">{{bankLoan.Principal | number}} kr</th>
                                         <th class="text-center">{{bankLoan.InterestsFormString}}</th>
                                         <th class="text-center">{{bankLoan.InterestInfo.InterestPercentage}} %</th>
@@ -206,10 +213,7 @@
                 </div>
             </div>
 
-            <div class="col-xs-10 col-xs-offset-1" ng-show="vm.showBankLoansSection">
-                Ákvað að prófa aðra útgáfu af upplýsingum um greiðslubyrðarhlutfall, skuldahlutfall og veðsetningarhlutfall. Held að það sé
-                vont að koma 3x pie graphs fyrir á þessari síðu
-                <br />
+            @*<div class="col-xs-10 col-xs-offset-1" ng-show="vm.showBankLoansSection">
 
                 <strong>Önnur vandamál/ákvarðanir</strong>
                 <ul>
@@ -261,7 +265,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>*@
         </fieldset>
         <div class="col-lg-12">
             <div class="btn btn-info pull-right" ng-click="loanForm.$invalid || vm.continue()" ng-disabled="loanForm.$invalid">
