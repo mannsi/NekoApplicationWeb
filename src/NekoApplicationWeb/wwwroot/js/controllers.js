@@ -38,22 +38,22 @@
             }
         };
 
-        vm.addApplicant = function () {
-            $http.post("/api/applicant/create", JSON.stringify(vm.newSsn))
-                .then(
-                function (response) {
-                    if (response.data) {
-                        vm.personalViewModel.Applicants.push(response.data);
-                    }
-                    vm.newSsn = "";
-                    $("#newUserModal").modal('hide');
+        //vm.addApplicant = function () {
+        //    $http.post("/api/applicant/create", JSON.stringify(vm.newSsn))
+        //        .then(
+        //        function (response) {
+        //            if (response.data) {
+        //                vm.personalViewModel.Applicants.push(response.data);
+        //            }
+        //            vm.newSsn = "";
+        //            $("#newUserModal").modal('hide');
 
-                    vm.pageModified = true;
-                },
-                function (error) {
+        //            vm.pageModified = true;
+        //        },
+        //        function (error) {
 
-                });
-        };
+        //        });
+        //};
 
         vm.removeApplicant = function (applicant) {
             $http.post("/api/applicant/delete", applicant.Id)

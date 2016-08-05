@@ -56,33 +56,33 @@ namespace NekoApplicationWeb.Controllers.api
             }
         }
 
-        [Route("create")]
-        [HttpPost]
-        public async Task<UserViewModel> Create([FromBody]string ssn)
-        {
-            // Check if thjodskra entry exists in database
-            var thjodskraPerson = _dbContext.ThjodskraPersons.FirstOrDefault(p => p.Id == ssn);
+        //[Route("create")]
+        //[HttpPost]
+        //public async Task<UserViewModel> Create([FromBody]string ssn)
+        //{
+        //    // Check if thjodskra entry exists in database
+        //    var thjodskraPerson = _dbContext.ThjodskraPersons.FirstOrDefault(p => p.Id == ssn);
 
-            if (thjodskraPerson == null)
-            {
-                thjodskraPerson = _thjodskraService.GetUserEntity(ssn);
-                if (thjodskraPerson == null) return null;
+        //    if (thjodskraPerson == null)
+        //    {
+        //        thjodskraPerson = _thjodskraService.GetUserEntity(ssn);
+        //        if (thjodskraPerson == null) return null;
 
-                _dbContext.ThjodskraPersons.Add(thjodskraPerson);
-                _dbContext.SaveChanges();
-            }
+        //        _dbContext.ThjodskraPersons.Add(thjodskraPerson);
+        //        _dbContext.SaveChanges();
+        //    }
 
-            var user = await _userService.CreateUser(ssn, thjodskraPerson.Name, true);
+        //    var user = await _userService.CreateUser(ssn, thjodskraPerson.Name, true);
 
-            if (user == null)
-            {
-                return null;
-            }
+        //    if (user == null)
+        //    {
+        //        return null;
+        //    }
 
-            var vmUser = new UserViewModel(user, false);
+        //    var vmUser = new UserViewModel(user, false);
 
-            return vmUser;
-        }
+        //    return vmUser;
+        //}
 
         [Route("delete")]
         [HttpPost]
