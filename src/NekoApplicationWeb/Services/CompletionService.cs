@@ -24,7 +24,7 @@ namespace NekoApplicationWeb.Services
         private Application ActiveApplication(ClaimsPrincipal loggedInUserPrincipal)
         {
             var loggedInUserId = _userManager.GetUserId(loggedInUserPrincipal);
-            var userConnection = _dbContext.ApplicationUserConnections.Include(con => con.Application).FirstOrDefault(con => con.User.Id == loggedInUserId);
+            var userConnection = _dbContext.ApplicationUserConnections.Include(con => con.Application).ThenInclude(application => application.Lender).FirstOrDefault(con => con.User.Id == loggedInUserId);
 
             return userConnection?.Application;
         }
