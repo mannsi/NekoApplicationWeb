@@ -129,7 +129,7 @@ namespace NekoApplicationWeb
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Account}/{action=FakeSignIn}/{id?}");
+                    template: "{controller=Account}/{action=MyFakeSignIn}/{id?}");
             });
 
             InitialData.CreateLenders(app.ApplicationServices);

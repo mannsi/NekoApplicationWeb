@@ -49,12 +49,12 @@ namespace NekoApplicationWeb.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("StartPage");
+            return RedirectToAction(nameof(AccountController.MyFakeSignIn), "Account");
         }
 
         [HttpGet]
         [Route("")]
-        public IActionResult FakeSignIn()
+        public IActionResult MyFakeSignIn()
         {
             return View();
         }
