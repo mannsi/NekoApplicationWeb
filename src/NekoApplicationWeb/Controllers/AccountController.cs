@@ -112,6 +112,9 @@ namespace NekoApplicationWeb.Controllers
 
             _dbContext.Applications.Add(application);
 
+            var emptyPropertyDetailsForApplication = new PropertyDetail {Application = application, BuyingPrice = 0, OwnCapital = 0, PropertyNumber = ""};
+            _dbContext.PropertyDetails.Add(emptyPropertyDetailsForApplication);
+
             var applicationUserConnection = new ApplicationUserConnection
             {
                 Application = application,

@@ -30,7 +30,6 @@ namespace NekoApplicationWeb.Models
         public DbSet<ApplicantIncome> ApplicantIncomes { get; set; }
         public DbSet<PropertyDetail> PropertyDetails { get; set; } 
         public DbSet<PropertyValuation> PropertyValuations { get; set; }
-        public DbSet<ExternalLoanDetails> LoanDetails { get; set; }
         public DbSet<ThjodskraPerson> ThjodskraPersons { get; set; }
         public DbSet<ThjodskraFamilyEntry> ThjodskraFamilyEntries { get; set; }    
     }

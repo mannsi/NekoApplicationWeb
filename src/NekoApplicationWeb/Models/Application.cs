@@ -15,5 +15,6 @@ namespace NekoApplicationWeb.Models
         public string Id { get; set; }
         public DateTime TimeCreated { get; set; }
         public ApplicationUser CreatedByUser { get; set; }
+        public Lender Lender { get; set; }
     }
 }

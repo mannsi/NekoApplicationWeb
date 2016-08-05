@@ -3,17 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using NekoApplicationWeb.Models;
 
 namespace NekoApplicationWeb.ViewModels.Page.Loan
 {
-    public enum Lenders
-    {
-        Landsbanki,
-        ArionBanki,
-        IslandsBanki,
-        FrjalsiLifeyrissjodurinn
-    }
-
     public class LoanViewModel
     {
         public LoanViewModel()
@@ -27,9 +20,8 @@ namespace NekoApplicationWeb.ViewModels.Page.Loan
         public string PropertyNumber { get; set; }
         [Required]
         public int OwnCapital { get; set; }
-
-        public string LenderId { get; set; }
-        public string LenderName { get; set; }
+    
+        public Lender Lender { get; set; }
 
         public List<BankLoanViewModel> BankLoans { get; set; }
 

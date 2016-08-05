@@ -115,9 +115,17 @@ namespace NekoApplicationWeb.Services
 
         public bool LoanCompleted(ClaimsPrincipal loggedInUserPrincipal)
         {
-            // TODO
+            var application = ActiveApplication(loggedInUserPrincipal);
 
-            return false;
+            if (application.Lender == null) return false;
+
+            var propertyDetails =_dbContext.PropertyDetails.FirstOrDefault(detail => detail.Application == application);
+            if (propertyDetails == null) return false;
+
+            if (propertyDetails.BuyingPrice == 0) return false;
+            if (string.IsNullOrEmpty(propertyDetails.PropertyNumber)) return false;
+
+            return true;
         }
 
         public bool DocumentsCompleted(ClaimsPrincipal loggedInUserPrincipal)

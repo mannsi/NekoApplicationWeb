@@ -24,17 +24,20 @@ namespace NekoApplicationWeb.Controllers
     [Authorize]
     public class PageController : Controller
     {
-        private readonly IThjodskraService _thjodskraService;
         private readonly ApplicationDbContext _dbContext;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IInterestsService _interestsService;
+        private readonly ILoanService _loanService;
 
-        public PageController(IThjodskraService thjodskraService,
-            ApplicationDbContext dbContext,
-            UserManager<ApplicationUser> userManager)
+        public PageController(ApplicationDbContext dbContext,
+            UserManager<ApplicationUser> userManager,
+            IInterestsService interestsService,
+            ILoanService loanService)
         {
-            _thjodskraService = thjodskraService;
             _dbContext = dbContext;
             _userManager = userManager;
+            _interestsService = interestsService;
+            _loanService = loanService;
         }
 
         /// <summary>
@@ -225,17 +228,48 @@ namespace NekoApplicationWeb.Controllers
         }
 
         [Route("Lanveiting")]
-        public IActionResult Loan()
+        public async Task<IActionResult> Loan()
         {
             ViewData["ContentHeader"] = "Lánveiting";
             ViewData["selectedNavPillId"] = "navPillLoan";
 
-            var vm = new LoanViewModel
+            var loggedInUser = await _userManager.GetUserAsync(User);
+            var application = GetApplicationForUser(loggedInUser, _dbContext);
+
+            var vm = new LoanViewModel();
+
+            // Populate property details
+            var propertyDetails = _dbContext.PropertyDetails.FirstOrDefault(detail => detail.Application == application);
+
+            if (propertyDetails == null) return View("Error");
+
+            vm.BuyingPrice = propertyDetails.BuyingPrice;
+            vm.OwnCapital = propertyDetails.OwnCapital;
+            vm.PropertyNumber = propertyDetails.PropertyNumber;
+
+            // Populate lender and loan info
+            var lender = application.Lender;
+            if (lender != null)
             {
-                BuyingPrice = 25000000,
-                OwnCapital = 1000000,
-                BankLoans = new List<BankLoanViewModel>()
-            };
+                var interestsForLender = _interestsService.GetInterestsMatrix(lender);
+
+                // TODO fetch these values from some service based on the property number
+                int realEstateValuation = 25000000;
+                int newFireInsuranceValuation = 23000000;
+                int plotAssessmentValue = 3500000;
+
+                var loans =  _loanService.GetDefaultLoansForLender(
+                    lender,
+                    vm.BuyingPrice,
+                    vm.OwnCapital,
+                    interestsForLender,
+                    realEstateValuation,
+                    newFireInsuranceValuation,
+                    plotAssessmentValue);
+
+                vm.BankLoans = loans;
+                vm.Lender = lender;
+            }
 
             ViewData["vm"] = vm;
             return View("BasePage", "Loan");
@@ -298,6 +332,19 @@ namespace NekoApplicationWeb.Controllers
             var allApplicantsConnections = dbContext.ApplicationUserConnections.Include(con => con.User).Where(auc => auc.Application == application).OrderBy(con => con.User.UserName).ToList();
 
             return allApplicantsConnections;
+        }
+
+        public static Application GetApplicationForUser(ApplicationUser user, ApplicationDbContext dbContext)
+        {
+            if (user == null) return null;
+
+            var loggedInUserApplicationConnection = 
+                dbContext.ApplicationUserConnections.
+                Include(connection => connection.Application).
+                ThenInclude(application => application.Lender).
+                FirstOrDefault(auc => auc.User == user);
+
+            return loggedInUserApplicationConnection?.Application;
         }
     }
 }
