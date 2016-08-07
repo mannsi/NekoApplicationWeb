@@ -77,6 +77,8 @@ namespace NekoApplicationWeb
             services.AddTransient<ILoanService, LoanService>();
             services.AddTransient<IThjodskraService, ThjodskraService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ILenderService, LenderService>();
+            services.AddTransient<ICostOfLivingService, CostOfLivingService>();
 
             services.Configure<MailOptions>(myOptions =>
             {
@@ -134,6 +136,7 @@ namespace NekoApplicationWeb
 
             InitialData.CreateLenders(app.ApplicationServices);
             InitialData.CreateInterestInfo(app.ApplicationServices);
+            InitialData.CreateCostOfLivingEntries(app.ApplicationServices);
         }
     }
 }

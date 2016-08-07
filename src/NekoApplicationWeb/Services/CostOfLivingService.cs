@@ -13,6 +13,9 @@ namespace NekoApplicationWeb.Services
 {
     public class CostOfLivingService : ICostOfLivingService
     {
+        private const int CostPerCar = 62052;
+        private const double HousingCostRatio = 0.02/12;
+
         public int GetCostOfLivingWithoutLoans(
             List<CostOfLivingEntry> costOfLivingEntries, 
             int numberOfAdults, 
@@ -65,12 +68,12 @@ namespace NekoApplicationWeb.Services
             }
             else
             {
-                transportationCost = 62052*numberOfCars;
+                transportationCost = CostPerCar*numberOfCars;
             }
 
             costOfLiving += transportationCost;
 
-            int housingCost = (int)(buyingPriceOfProperty * 0.02) / 12;
+            int housingCost = (int)(buyingPriceOfProperty*HousingCostRatio);
             costOfLiving += housingCost;
 
             return costOfLiving;

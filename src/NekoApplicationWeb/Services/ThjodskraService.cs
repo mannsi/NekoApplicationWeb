@@ -52,7 +52,7 @@ namespace NekoApplicationWeb.Services
                 return null;
             }
 
-            return ThjodskraFamilyEntry.FromXml(webServerResponse);
+            return ThjodskraFamilyEntry.FromXml(webServerResponse, familyNumber);
         }
 
         private string GetWebServerResponse(string requestUrl)

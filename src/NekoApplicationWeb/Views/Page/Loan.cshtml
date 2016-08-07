@@ -75,19 +75,19 @@
                 <label class="col-sm-4 col-xs-offset-4 col-sm-offset-0 control-label">Lánveitandi</label> 
                 <div class="col-sm-8 col-xs-offset-4 col-sm-offset-0">
                     <div class="input-group">
-                        <select id="lenderSelect" class="form-control" ng-model="vm.loanViewModel.LenderName"
+                        <select id="lenderSelect" class="form-control" ng-model="vm.loanViewModel.LenderId"
                                 ng-disabled="vm.loanViewModel.BuyingPrice == 0 || vm.loanViewModel.BuyingPrice == ''
                                             || vm.loanViewModel.OwnCapital == '' || vm.loanViewModel.OwnCapital == 0"
                                 ng-change="vm.lenderChange()">
                             <option ng-repeat="lender in vm.lenders | orderBy: 'name'" value="{{lender.Id}}">{{lender.Name}}</option>
                         </select>
                         <span class="input-group-btn">
-                            <a href="" class="btn btn-success" ng-click="!vm.loanViewModel.LenderName ||
+                            <a href="" class="btn btn-success" ng-click="!vm.loanViewModel.LenderId ||
             vm.loanViewModel.BuyingPrice === 0 ||
             vm.loanViewModel.BuyingPrice === undefined ||
             vm.loanViewModel.OwnCapital === undefined ||
             vm.loanViewModel.OwnCapital === 0 || vm.lenderChange()"
-                               ng-disabled="!vm.loanViewModel.LenderName ||
+                               ng-disabled="!vm.loanViewModel.LenderId ||
             vm.loanViewModel.BuyingPrice === 0 ||
             vm.loanViewModel.BuyingPrice === undefined ||
             vm.loanViewModel.OwnCapital === undefined ||
@@ -114,53 +114,57 @@
                 </div>
             </div>
 
-            <div class="col-xs-10 col-xs-offset-1" ng-show="vm.showBankLoansSection">
-                <div class="panel panel-info">
-                    <div class="panel-heading">
-                        <div class="panel-title">Lán frá Landsbankanum</div>
-                    </div>
+        <div class="col-xs-10 col-xs-offset-1" ng-show="vm.showBankLoansSection">
 
-                    <div class="panel-body">
-                        <div class="table-responsive">
-                            <table class="table table-sm" id="bankLoanTable">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">Upphæð</th>
-                                        <th class="text-center">Verðtryggt</th>
-                                        <th class="text-center">Vaxtaform</th>
-                                        <th class="text-center">Vextir</th>
-                                        <th class="text-center">Afborganir</th>
-                                        <th class="text-center">Lánstími</th>
-                                        <th class="text-center">Greiðslubyrði</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr ng-repeat="bankLoan in vm.bankLoans | filter: {IsNekoLoan : false}">
-                                        <th class="text-right">{{bankLoan.Principal | number}} kr</th>
-                                        <th class="text-center">{{bankLoan.InterestInfo.Indexed ? 'Já': 'Nei'}}</th>
-                                        <th class="text-center">{{bankLoan.InterestsFormString}}</th>
-                                        <th class="text-center">{{bankLoan.InterestInfo.InterestPercentage}} %</th>
-                                        <th>{{bankLoan.PaymentTypeString}}</th>
-                                        <th class="text-center">{{bankLoan.LoanDurationYears}} ár</th>
-                                        <th class="text-right">{{bankLoan.MonthlyPayment | number}} kr</th>
-                                    </tr>
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th class="text-right">{{vm.loansTotalPrincipal(false) | number}} kr</th>
-                                        <th class="text-center"></th>
-                                        <th class="text-center"></th>
-                                        <th class="text-center"></th>
-                                        <th class="text-center"></th>
-                                        <th class="text-center"></th>
-                                        <th class="text-right">{{vm.loansTotalMonthlyPayments(false) | number}} kr</th>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
+            <div id="lenderRuleBrokenId" class="alert alert-warning hidden" role="alert">
+                
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <div class="panel-title">Lán frá Landsbankanum</div>
+                </div>
+
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm" id="bankLoanTable">
+                            <thead>
+                            <tr>
+                                <th class="text-center">Upphæð</th>
+                                <th class="text-center">Verðtryggt</th>
+                                <th class="text-center">Vaxtaform</th>
+                                <th class="text-center">Vextir</th>
+                                <th class="text-center">Afborganir</th>
+                                <th class="text-center">Lánstími</th>
+                                <th class="text-center">Greiðslubyrði</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="bankLoan in vm.bankLoans | filter: {IsNekoLoan : false}">
+                                <th class="text-right">{{bankLoan.Principal | number}} kr</th>
+                                <th class="text-center">{{bankLoan.InterestInfo.Indexed ? 'Já': 'Nei'}}</th>
+                                <th class="text-center">{{bankLoan.InterestsFormString}}</th>
+                                <th class="text-center">{{bankLoan.InterestInfo.InterestPercentage}} %</th>
+                                <th>{{bankLoan.PaymentTypeString}}</th>
+                                <th class="text-center">{{bankLoan.LoanDurationYears}} ár</th>
+                                <th class="text-right">{{bankLoan.MonthlyPayment | number}} kr</th>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <th class="text-right">{{vm.loansTotalPrincipal(false) | number}} kr</th>
+                                <th class="text-center"></th>
+                                <th class="text-center"></th>
+                                <th class="text-center"></th>
+                                <th class="text-center"></th>
+                                <th class="text-center"></th>
+                                <th class="text-right">{{vm.loansTotalMonthlyPayments(false) | number}} kr</th>
+                            </tr>
+                            </tfoot>
+                        </table>
                     </div>
                 </div>
             </div>
+        </div>
 
 
             <div class="col-xs-10 col-xs-offset-1" ng-show="vm.showBankLoansSection">
@@ -196,76 +200,39 @@
                                         <th class="text-right">{{bankLoan.MonthlyPayment | number}} kr</th>
                                     </tr>
                                 </tbody>
-                                @*<tfoot>
-                                    <tr>
-                                        <th class="text-right">{{vm.loansTotalPrincipal(true) | number}} kr</th>
-                                        <th class="text-center"></th>
-                                        <th class="text-center"></th>
-                                        <th class="text-center"></th>
-                                        <th class="text-center"></th>
-                                        <th class="text-center"></th>
-                                        <th class="text-right">{{vm.loansTotalMonthlyPayments(true) | number}} kr</th>
-                                    </tr>
-                                </tfoot>*@
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
 
-            @*<div class="col-xs-10 col-xs-offset-1" ng-show="vm.showBankLoansSection">
-
-                <strong>Önnur vandamál/ákvarðanir</strong>
-                <ul>
-                    <li>Gögn fyrir sumar af þessum tölum eru fengin frá öðrum síðum sem getur verið að sé ekki búið að fylla út</li>
-                    <ul>
-                        <li>Lita svæðið gult/orange og segja að tölur vanti fyrr úr</li>
-                    </ul>
-                    <li>Hvaða gögn á ég að vista frá þessari síðu ? Nóg að vista lánastofnun eða þarf að vista öll lánin líka ?</li>
-                    <ul>
-                        <li>Ekki lán sjálf. Lánveitanda og lánstíma</li>
-                    </ul>
-                </ul>
-            </div>
             <div ng-show="vm.showBankLoansSection">
-                <div class="col-sm-4 col-xs-12">
-                    <div ng-class="vm.greidslubyrdarhlutfall_Ok ? 'panel panel-success' : 'panel panel-primary'">
+                <div class="col-xs-5 col-xs-offset-1">
+                    <div ng-class="vm.isGreidslugetaOk ? 'panel panel-success' : 'panel panel-primary'">
                         <div class="panel-heading">
                             <div class="panel-title text-center">
-                                Greiðslubyrðarhlutfall
-                                <i class="fa fa-question-circle pull-right" data-toggle="popover" data-html="true" data-placement="top" title="Greiðslubyrðarhlutfall" data-content="Hér verður lýsing og jafnvel líka graf"></i>
+                                Greiðslugeta
+                                <i class="fa fa-question-circle pull-right" data-toggle="tooltip" data-placement="top" title="Hvað á að standa hér ?"></i>
                             </div>
                         </div>
                         <div class="panel-body">
-                            <h1 class="text-center">{{vm.greidslubyrdarhlutfall}}%</h1>
-                            <h4 class="text-center">{{vm.greidslubyrdarhlutfall_Ok ? 'Vel gert' : 'Of há greiðslubyrði'}}</h4>
+                            <h1 class="text-center">{{vm.greidslugeta | number}} kr</h1>
+                            <h4 class="text-center">{{vm.isGreidslugetaOk ? 'Vel gert' : 'Þú ræður ekki við þetta'}}</h4>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-4 col-xs-12">
-                    <div ng-class="vm.skuldahlutfall_Ok ? 'panel panel-success' : 'panel panel-primary'">
-                        <div class="panel-heading">
-                            <div class="panel-title text-center">Greiðslugeta <i class="fa fa-question-circle pull-right" data-toggle="popover" data-html="true" data-placement="top" title="Greiðslugeta" data-content="Hér verður lýsing og jafnvel líka graf"></i></div>
-                        </div>
-                        <div class="panel-body">
-                            Þessi greiðslugeta verður talan eftir 5 ár
-                            <h1 class="text-center">{{vm.skuldahlutfall}} kr</h1>
-                            <h4 class="text-center">{{vm.skuldahlutfall_Ok ? 'Vel gert' : 'Þú skuldar of mikið'}}</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4 col-xs-12">
+                <div class="col-xs-5">
                     <div class="panel panel-success">
                         <div class="panel-heading">
-                            <div class="panel-title text-center">Veðsetningarhlutfall <i class="fa fa-question-circle pull-right" data-toggle="popover" data-html="true" data-placement="top" title="Veðsetningarhlutfall" data-content="Hér verður lýsing og jafnvel líka graf"></i></div>
+                            <div class="panel-title text-center">Veðsetningarhlutfall <i class="fa fa-question-circle pull-right" data-toggle="tooltip" data-placement="top" title="Hvað á að standa hér ?"></i></div>
                         </div>
                         <div class="panel-body">
-                            <h1 class="text-center">{{vm.vedsetningarhlutfall}}%</h1>
-                            <h4>&nbsp;</h4>
+                            <h1 class="text-center">{{vm.vedsetningarhlutfall | number:2}}%</h1>
+                            <h4 class="text-center">Á eitthvað að vera hérna ?</h4>
                         </div>
                     </div>
                 </div>
-            </div>*@
+            </div>
         </fieldset>
         <div class="col-lg-12">
             <div class="btn btn-info pull-right" ng-click="loanForm.$invalid || vm.continue()" ng-disabled="loanForm.$invalid">

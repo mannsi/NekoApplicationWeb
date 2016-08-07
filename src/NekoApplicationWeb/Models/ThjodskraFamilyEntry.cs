@@ -22,7 +22,7 @@ namespace NekoApplicationWeb.Models
         public string Name { get; set; }
         public GenderCode GenderCode { get; set; }
 
-        public static List<ThjodskraFamilyEntry> FromXml(string xmlString)
+        public static List<ThjodskraFamilyEntry> FromXml(string xmlString, string familyNumber)
         {
             XNamespace xmlNameSpace = "http://tempuri.org/";
 
@@ -53,7 +53,8 @@ namespace NekoApplicationWeb.Models
                         {
                             Ssn = ssn,
                             Name = name,
-                            GenderCode = genderCode
+                            GenderCode = genderCode,
+                            FamilyNumber = familyNumber
                         };
 
                         familyMembers.Add(member);

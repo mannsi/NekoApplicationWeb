@@ -16,7 +16,7 @@ namespace NekoApplicationWeb.ViewModels.Page.Loan
         [Required]
         public int OwnCapital { get; set; }
     
-        public string LenderName{ get; set; }
+        public string LenderId{ get; set; }
 
 
     }

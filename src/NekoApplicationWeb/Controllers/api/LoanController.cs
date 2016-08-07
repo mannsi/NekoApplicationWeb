@@ -20,17 +20,23 @@ namespace NekoApplicationWeb.Controllers.api
         private readonly ILoanService _loanService;
         private readonly IInterestsService _interestsService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ICostOfLivingService _costOfLivingService;
+        private readonly ILenderService _lenderService;
 
         public LoanController(
             ApplicationDbContext dbContext,
             ILoanService loanService,
             IInterestsService interestsService,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            ICostOfLivingService costOfLivingService,
+            ILenderService lenderService)
         {
             _dbContext = dbContext;
             _loanService = loanService;
             _interestsService = interestsService;
             _userManager = userManager;
+            _costOfLivingService = costOfLivingService;
+            _lenderService = lenderService;
         }
 
         [Route("")]
@@ -48,9 +54,9 @@ namespace NekoApplicationWeb.Controllers.api
             propertyDetails.OwnCapital = vm.OwnCapital;
             propertyDetails.PropertyNumber = vm.PropertyNumber;
 
-            if (!string.IsNullOrEmpty(vm.LenderName))
+            if (!string.IsNullOrEmpty(vm.LenderId))
             {
-                var lender = _dbContext.Lenders.FirstOrDefault(l => l.Name == vm.LenderName);
+                var lender = _dbContext.Lenders.FirstOrDefault(l => l.Id == vm.LenderId);
                 if (lender == null) return;
 
                 if (application.Lender != lender)
@@ -79,12 +85,50 @@ namespace NekoApplicationWeb.Controllers.api
 
         [Route("defaultLoans")]
         [HttpGet]
-        public List<BankLoanViewModel> GetDefaultLoans(string lenderName, string propertyNumber, int buyingPrice, int ownCapital)
+        public async Task<DefaultLoansViewModel> GetDefaultLoans(string lenderId, string propertyNumber, int buyingPrice, int ownCapital)
         {
-            var lender = _dbContext.Lenders.FirstOrDefault(l => l.Name == lenderName);
+            var loggedInUser = await _userManager.GetUserAsync(User);
+            var thjodskraUser = _dbContext.ThjodskraPersons.First(person => person.Id == loggedInUser.Id);
+            var application = PageController.GetApplicationForUser(loggedInUser, _dbContext);
+            var lender = _dbContext.Lenders.FirstOrDefault(l => l.Id == lenderId);
             if (lender == null) return null;
+            var loans = GetLoans(lender, buyingPrice, ownCapital);
+            var loansTotalAmount = loans.Sum(loan => loan.Principal);
 
-            var interestsForLender = _interestsService.GetInterestsMatrix(lender);
+            // Ratios
+            double vedsetningarHlutfall = 100.0*(loansTotalAmount - ownCapital)/loansTotalAmount;
+            var totalIncome = application.TotalMonthlyIncomeForAllApplicant;
+            var totalLoanPayments = loans.Sum(loan => loan.MonthlyPayment);
+            var estimatedCostOfLiving = GetCostOfLivingWithoutLoans(thjodskraUser.FamilyNumber, application, buyingPrice);
+            var greidslugeta = totalIncome - totalLoanPayments - estimatedCostOfLiving;
+
+            // Lender rules
+            var lenderRule = _lenderService.VerifyLenderRules(lender, totalIncome, totalLoanPayments);
+            
+            // Neko minimum loan
+            bool needsNekoLoan = ownCapital < buyingPrice * 0.15;
+
+            var vm = new DefaultLoansViewModel
+            {
+                DefaultLoans = loans,
+                Vedsetningarhlutfall = vedsetningarHlutfall,
+                IsVedsetningarhlutfallOk = true,
+                Greidslugeta = greidslugeta,
+                IsGreidslugetaOk = 0 < greidslugeta,
+                Skuldahlutfall = 0,
+                IsSkuldahlutfallOk = true,
+                LenderLendingRulesBroken = lenderRule.RulesBroken,
+                LenderLendingRulesBrokenText = lenderRule.RulesBrokenText,
+                NeedsNekoLoan = needsNekoLoan
+            };
+
+            return vm;
+        }
+
+
+        private List<BankLoanViewModel> GetLoans(Lender lender, int buyingPrice, int ownCapital)
+        {
+           var interestsForLender = _interestsService.GetInterestsMatrix(lender);
 
             // TODO fetch these values from some service
             int realEstateValuation = 25000000;
@@ -92,24 +136,30 @@ namespace NekoApplicationWeb.Controllers.api
             int plotAssessmentValue = 3500000;
 
             return _loanService.GetDefaultLoansForLender(
-                lender, 
-                buyingPrice, 
-                ownCapital, 
-                interestsForLender, 
-                realEstateValuation, 
-                newFireInsuranceValuation, 
+                lender,
+                buyingPrice,
+                ownCapital,
+                interestsForLender,
+                realEstateValuation,
+                newFireInsuranceValuation,
                 plotAssessmentValue);
         }
 
-
-        // TODO
-        private int GetCostOfLivingWithoutLoans(string familyNumber)
+        private int GetCostOfLivingWithoutLoans(string familyNumber, Application application, int buyingPrice)
         {
-            var familyMembers = _dbContext.ThjodskraFamilyEntries.Where(entry => entry.FamilyNumber == familyNumber);
+            var numberOfCars =
+                _dbContext.Assets.Count(
+                    asset =>
+                        !asset.AssetWillBeSold && asset.AssetType == AssetType.Vehicle &&
+                        asset.Application == application);
+
+            var costOfLivingEntries = _dbContext.CostOfLivingEntries.ToList();
+
+            var familyMembers = _dbContext.ThjodskraFamilyEntries.Where(entry => entry.FamilyNumber == familyNumber).ToList();
             int numberOfAdults = familyMembers.Count(member => 17 < member.Ssn.SsnToAge(DateTime.Now));
             int numberOfPreSchoolKids = familyMembers.Count(member => 0 < member.Ssn.SsnToAge(DateTime.Now) && member.Ssn.SsnToAge(DateTime.Now) < 6);
             int numberOfElementarySchoolKids = familyMembers.Count(member => 6 <= member.Ssn.SsnToAge(DateTime.Now) && member.Ssn.SsnToAge(DateTime.Now) <= 17);
-            return 0;
+            return _costOfLivingService.GetCostOfLivingWithoutLoans(costOfLivingEntries, numberOfAdults, numberOfPreSchoolKids, numberOfElementarySchoolKids, numberOfCars, buyingPrice);
         }
     }
 }

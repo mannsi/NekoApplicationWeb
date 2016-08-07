@@ -11,6 +11,7 @@ using NekoApplicationWeb.ViewModels.Page.Employment;
 using NekoApplicationWeb.ViewModels.Page.Finances;
 using NekoApplicationWeb.ViewModels.Page.Personal;
 using System.Linq;
+using System.ServiceModel.Syndication;
 using Microsoft.EntityFrameworkCore;
 
 namespace NekoApplicationWeb.Controllers.api
@@ -38,15 +39,17 @@ namespace NekoApplicationWeb.Controllers.api
 
             using (var transaction = _dbContext.Database.BeginTransaction())
             {
-                UpdateIncome(vm.IncomesViewModel);
+                _dbContext.Update(application);
+                UpdateIncome(vm.IncomesViewModel, application);
                 UpdateAssets(vm.AssetsViewModel, application);
                 UpdateDebts(vm.DebtsViewModel, application);
                 transaction.Commit();
             }
         }
 
-        private void UpdateIncome(List<IncomeViewModel> incomesViewModel)
+        private void UpdateIncome(List<IncomeViewModel> incomesViewModel, Application application)
         {
+            int totalIncome = 0;
             foreach (var incomeViewModel in incomesViewModel)
             {
                 var user = _dbContext.Users.First(u => u.Id == incomeViewModel.Applicant.Id);
@@ -59,6 +62,7 @@ namespace NekoApplicationWeb.Controllers.api
                     IncomeType = IncomeType.Salary,
                     MonthlyAmount = incomeViewModel.SalaryIncome.MonthlyAmount
                 });
+                totalIncome += incomeViewModel.SalaryIncome.MonthlyAmount;
 
                 foreach (var otherIncome in incomeViewModel.OtherIncomes)
                 {
@@ -68,8 +72,11 @@ namespace NekoApplicationWeb.Controllers.api
                         IncomeType = otherIncome.IncomeType,
                         MonthlyAmount = otherIncome.MonthlyAmount
                     });
+                    totalIncome += otherIncome.MonthlyAmount;
                 }
             }
+
+            application.TotalMonthlyIncomeForAllApplicant = totalIncome;
 
             _dbContext.SaveChanges();
         }
@@ -95,6 +102,8 @@ namespace NekoApplicationWeb.Controllers.api
 
         private void UpdateDebts(List<DebtViewModel> debtsViewModel, Application application)
         {
+            int totalDebt = 0;
+
             var debtsInDb = _dbContext.Debts.Where(debt => debt.Application == application);
             _dbContext.RemoveRange(debtsInDb);
 
@@ -108,7 +117,12 @@ namespace NekoApplicationWeb.Controllers.api
                     LoanRemains = debtViewModel.LoanRemains,
                     MonthlyPayment = debtViewModel.MonthlyPayment
                 });
+
+                totalDebt += debtViewModel.LoanRemains;
             }
+
+            application.TotalDebtAmountForAllApplicants = totalDebt;
+
             _dbContext.SaveChanges();
         }
     }

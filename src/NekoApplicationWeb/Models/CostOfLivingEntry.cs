@@ -16,7 +16,7 @@ namespace NekoApplicationWeb.Models
             int numberOfKidsInKindergarten, 
             int numberOfKidsInElementarySchool, 
             int costOfLivingWithoutTransportationAndHousing, 
-            int transportationCostIfNoCar)
+            int transportationCostIfNoCar): this()
         {
             NumberOfAdults = numberOfAdults;
             NumberOfKidsInKindergarten = numberOfKidsInKindergarten;

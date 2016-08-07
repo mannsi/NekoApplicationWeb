@@ -357,7 +357,8 @@
 
         function init() {
             $(document).ready(function () {
-                $('[data-toggle="tooltip"]').tooltip();
+                $("[data-toggle=tooltip]").tooltip();
+                
             });
 
             $(window).on('beforeunload', function () {
@@ -388,20 +389,6 @@
             return true;
         };
 
-        function calculateRatios() {
-            var bankLoansPrincipal = vm.loansTotalPrincipal(false);
-            var nekoLoansPrincipal = vm.loansTotalPrincipal(true);
-            var ownCapital = vm.loanViewModel.OwnCapital;
-            var totalFunding = bankLoansPrincipal + nekoLoansPrincipal + ownCapital;
-
-            vm.greidslubyrdarhlutfall = 0;
-            vm.skuldahlutfall = 0;
-            vm.vedsetningarhlutfall = 100 * (totalFunding - ownCapital) / totalFunding ;
-
-            vm.greidslubyrdarhlutfall_Ok = false;
-            vm.skuldahlutfall_Ok = true;
-        };
-
         function populateLoans() {
             vm.showBankLoansSection = false;
 
@@ -423,16 +410,46 @@
                 url: '/api/loan/defaultLoans',
                 method: "GET",
                 params: {
-                    lenderName: vm.loanViewModel.LenderName,
+                    lenderId: vm.loanViewModel.LenderId,
                     buyingPrice: vm.loanViewModel.BuyingPrice,
                     ownCapital: vm.loanViewModel.OwnCapital
                 }
             }).then(function (response) {
-                vm.bankLoans = response.data;
-                if (response.data !== "") {
-                    vm.showBankLoansSection = true;
+                if (!response.data.NeedsNekoLoan) {
+                    $("#toMuchOwnCapitalId").removeClass("hidden");
+                    return;
+                } else {
+                    if (!$("#toMuchOwnCapitalId").hasClass("hidden")) {
+                        $("#toMuchOwnCapitalId").addClass("hidden");
+                    }
+
+                    vm.bankLoans = response.data.DefaultLoans;
+                    if (response.data !== "") {
+                        vm.showBankLoansSection = true;
+                    }
+
+                    vm.greidslugeta = response.data.Greidslugeta;
+                    vm.skuldahlutfall = response.data.Skuldahlutfall;
+                    vm.vedsetningarhlutfall = response.data.Vedsetningarhlutfall;
+
+                    vm.isGreidslugetaOk = response.data.IsGreidslugetaOk;
+                    vm.isSkuldahlutfallOk = response.data.IsSkuldahlutfallOk;
+
+                    vm.lenderLendingRulesBroken = response.data.LenderLendingRulesBroken;
+                    vm.lenderLendingRulesBrokenText = response.data.LenderLendingRulesBrokenText;
+
+                    if (vm.lenderLendingRulesBroken) {
+                        $("#lenderRuleBrokenId").text(vm.lenderLendingRulesBrokenText);
+                        $("#lenderRuleBrokenId").removeClass("hidden");
+                    } else {
+                        if (!$("#lenderRuleBrokenId").hasClass("hidden")) {
+                            $("#lenderRuleBrokenId").addClass("hidden");
+                        }
+                    }
+
+                    // TODO deal with if ratios are ok. Maybe this is already working but who knows
                 }
-                calculateRatios();
+                
             }, function (error) {
 
             });
@@ -440,7 +457,7 @@
 
         vm.initData = function (data) {
             vm.loanViewModel = data;
-            if (vm.loanViewModel.LenderName) {
+            if (vm.loanViewModel.LenderId) {
                 populateLoans();
             }
         };

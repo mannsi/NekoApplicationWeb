@@ -255,7 +255,7 @@ namespace NekoApplicationWeb.Controllers
             var lender = application.Lender;
             if (lender != null)
             {
-                vm.LenderName = lender.Name;
+                vm.LenderId = lender.Id;
             }
 
             ViewData["vm"] = vm;
