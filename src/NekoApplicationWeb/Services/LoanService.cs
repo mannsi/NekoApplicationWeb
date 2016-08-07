@@ -62,7 +62,7 @@ namespace NekoApplicationWeb.Services
         {
             int loanPrincipal = buyingPrice - totalBankLoansPrincipal - ownCapital;
             var interest = nekoInteresEntry.InterestPercentage/100;
-            int monthlyPayment = (int) Math.Round(interest * loanPrincipal / 12);
+            int monthlyPayment = (int)(loanPrincipal * (interest / 12) / (1 - Math.Pow(1 + interest / 12, -12 * 10)));
 
             var nekoLoan = new BankLoanViewModel
             {
@@ -71,7 +71,7 @@ namespace NekoApplicationWeb.Services
                 LoanDurationMaxYears = 15,
                 LoanDurationMinYears = 15,
                 Principal = loanPrincipal,
-                MonthlyPayment = monthlyPayment
+                MonthlyPayment = monthlyPayment,
             };
 
             return nekoLoan;
