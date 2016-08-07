@@ -32,5 +32,6 @@ namespace NekoApplicationWeb.Models
         public DbSet<PropertyValuation> PropertyValuations { get; set; }
         public DbSet<ThjodskraPerson> ThjodskraPersons { get; set; }
         public DbSet<ThjodskraFamilyEntry> ThjodskraFamilyEntries { get; set; }    
+        public DbSet<CostOfLivingEntry> CostOfLivingEntries { get; set; }
     }
 }

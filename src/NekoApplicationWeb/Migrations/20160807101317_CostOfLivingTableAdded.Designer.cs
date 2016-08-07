@@ -8,9 +8,10 @@ using NekoApplicationWeb.Models;
 namespace NekoApplicationWeb.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20160807101317_CostOfLivingTableAdded")]
+    partial class CostOfLivingTableAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
@@ -296,6 +297,8 @@ namespace NekoApplicationWeb.Migrations
                 {
                     b.Property<string>("Id");
 
+                    b.Property<string>("ApplicationId");
+
                     b.Property<int>("CostOfLivingWithoutTransportationAndHousing");
 
                     b.Property<int>("NumberOfAdults");
@@ -307,6 +310,8 @@ namespace NekoApplicationWeb.Migrations
                     b.Property<int>("TransportationCostIfNoCar");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationId");
 
                     b.ToTable("CostOfLivingEntries");
                 });
@@ -545,6 +550,13 @@ namespace NekoApplicationWeb.Migrations
                 });
 
             modelBuilder.Entity("NekoApplicationWeb.Models.Asset", b =>
+                {
+                    b.HasOne("NekoApplicationWeb.Models.Application", "Application")
+                        .WithMany()
+                        .HasForeignKey("ApplicationId");
+                });
+
+            modelBuilder.Entity("NekoApplicationWeb.Models.CostOfLivingEntry", b =>
                 {
                     b.HasOne("NekoApplicationWeb.Models.Application", "Application")
                         .WithMany()

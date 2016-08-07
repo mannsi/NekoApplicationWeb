@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NekoApplicationWeb.Models;
 using NekoApplicationWeb.ServiceInterfaces;
+using NekoApplicationWeb.Shared;
 using NekoApplicationWeb.ViewModels.Page.Loan;
 
 namespace NekoApplicationWeb.Controllers.api
@@ -99,5 +101,15 @@ namespace NekoApplicationWeb.Controllers.api
                 plotAssessmentValue);
         }
 
+
+        // TODO
+        private int GetCostOfLivingWithoutLoans(string familyNumber)
+        {
+            var familyMembers = _dbContext.ThjodskraFamilyEntries.Where(entry => entry.FamilyNumber == familyNumber);
+            int numberOfAdults = familyMembers.Count(member => 17 < member.Ssn.SsnToAge(DateTime.Now));
+            int numberOfPreSchoolKids = familyMembers.Count(member => 0 < member.Ssn.SsnToAge(DateTime.Now) && member.Ssn.SsnToAge(DateTime.Now) < 6);
+            int numberOfElementarySchoolKids = familyMembers.Count(member => 6 <= member.Ssn.SsnToAge(DateTime.Now) && member.Ssn.SsnToAge(DateTime.Now) <= 17);
+            return 0;
+        }
     }
 }

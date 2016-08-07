@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NekoApplicationWeb.Models;
 using NekoApplicationWeb.ServiceInterfaces;
+using NekoApplicationWeb.Shared;
 using NekoApplicationWeb.ViewModels;
 using NekoApplicationWeb.ViewModels.Page;
 using NekoApplicationWeb.ViewModels.Page.Education;
@@ -332,5 +333,6 @@ namespace NekoApplicationWeb.Controllers
 
             return loggedInUserApplicationConnection?.Application;
         }
+
     }
 }

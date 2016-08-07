@@ -80,7 +80,46 @@ namespace NekoApplicationWeb
             }
         }
 
-        // TODO add other lenders
+        public static void CreateCostOfLivingEntries(IServiceProvider applicationServices)
+        {
+            var dbContext = (ApplicationDbContext) applicationServices.GetService(typeof (ApplicationDbContext));
+
+            if (dbContext.CostOfLivingEntries.Any()) return;
+
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(1, 0, 0, 91766, 10900));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(1, 0, 1, 160825, 21800));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(1, 1, 0, 158758, 21800));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(1, 0, 2, 216479, 32700));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(1, 4, 1, 221308, 32700));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(1, 2, 0, 213940, 32700));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(1, 0, 3, 259259, 43600));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(1, 1, 2, 270453, 43600));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(1, 2, 1, 269981, 43600));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(1, 3, 0, 259960, 43600));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(1, 0, 4, 283734, 54500));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(1, 1, 3, 301490, 54500));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(1, 2, 2, 307383, 54500));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(1, 3, 1, 304259, 54500));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(1, 4, 0, 284436, 54500));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(2, 0, 0, 157840, 21800));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(2, 0, 1, 226899, 32700));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(2, 1, 0, 233536, 32700));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(2, 0, 2, 282555, 43600));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(2, 1, 1, 296088, 43600));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(2, 2, 0, 292254, 43600));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(2, 0, 3, 325334, 54500));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(2, 1, 2, 345233, 54500));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(2, 2, 1, 348295, 54500));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(2, 3, 0, 338200, 54500));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(2, 0, 4, 349808, 65400));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(2, 1, 3, 376268, 65400));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(2, 2, 2, 385695, 65400));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(2, 3, 1, 382496, 65400));
+            dbContext.CostOfLivingEntries.Add(new CostOfLivingEntry(2, 4, 0, 362673, 65400));
+
+            dbContext.SaveChanges();
+        }
+
         public static void CreateInterestInfo(IServiceProvider applicationServices)
         {
             var dbContext = (ApplicationDbContext)applicationServices.GetService(typeof(ApplicationDbContext));
