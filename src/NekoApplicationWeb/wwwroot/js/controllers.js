@@ -428,6 +428,8 @@
                         vm.showBankLoansSection = true;
                     }
 
+                    vm.lenderNameThagufall = response.data.LenderNameThagufall;
+
                     vm.greidslugeta = response.data.Greidslugeta;
                     vm.skuldahlutfall = response.data.Skuldahlutfall;
                     vm.vedsetningarhlutfall = response.data.Vedsetningarhlutfall;

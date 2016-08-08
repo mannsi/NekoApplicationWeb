@@ -24,5 +24,6 @@ namespace NekoApplicationWeb.ViewModels.Page.Loan
         public bool LenderLendingRulesBroken { get; set; }
         public string LenderLendingRulesBrokenText { get; set; }
         public bool NeedsNekoLoan { get; set; }
+        public string LenderNameThagufall { get; set; }
     }
 }

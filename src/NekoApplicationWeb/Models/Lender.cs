@@ -14,6 +14,7 @@ namespace NekoApplicationWeb.Models
 
         public string Id { get; set; }
         public string Name { get; set; }
+        public string NameThagufall { get; set; }
         public int LoanPaymentServiceFee { get; set; }
     }
 }

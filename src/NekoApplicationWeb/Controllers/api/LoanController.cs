@@ -119,7 +119,8 @@ namespace NekoApplicationWeb.Controllers.api
                 IsSkuldahlutfallOk = true,
                 LenderLendingRulesBroken = lenderRule.RulesBroken,
                 LenderLendingRulesBrokenText = lenderRule.RulesBrokenText,
-                NeedsNekoLoan = needsNekoLoan
+                NeedsNekoLoan = needsNekoLoan,
+                LenderNameThagufall = lender.NameThagufall
             };
 
             return vm;
