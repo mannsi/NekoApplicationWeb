@@ -282,7 +282,8 @@
                 assetsViewModel.push({
                     AssetType: selectedAssetValue,
                     AssetTypeString: selectedAssetString,
-                    AssetPlaceholderText: assetPlaceHolderString
+                    AssetPlaceholderText: assetPlaceHolderString,
+                    AssetWillBeSold: true
                 });
             }
             vm.pageModified = true;
