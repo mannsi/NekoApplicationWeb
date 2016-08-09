@@ -79,6 +79,7 @@ namespace NekoApplicationWeb
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ILenderService, LenderService>();
             services.AddTransient<ICostOfLivingService, CostOfLivingService>();
+            services.AddTransient<ICreditScoreService, CreditScoreService>();
 
             services.Configure<MailOptions>(myOptions =>
             {

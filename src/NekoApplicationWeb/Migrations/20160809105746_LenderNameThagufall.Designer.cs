@@ -8,9 +8,10 @@ using NekoApplicationWeb.Models;
 namespace NekoApplicationWeb.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20160809105746_LenderNameThagufall")]
+    partial class LenderNameThagufall
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
@@ -315,45 +316,6 @@ namespace NekoApplicationWeb.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CostOfLivingEntries");
-                });
-
-            modelBuilder.Entity("NekoApplicationWeb.Models.CreditScoreEntry", b =>
-                {
-                    b.Property<string>("Id");
-
-                    b.Property<int>("AgeGrp");
-
-                    b.Property<bool>("CompanyRelation");
-
-                    b.Property<string>("Name");
-
-                    b.Property<double>("PD");
-
-                    b.Property<int>("Points");
-
-                    b.Property<float?>("RatioBelowAgeGrp");
-
-                    b.Property<float?>("RatioBelowAll");
-
-                    b.Property<float?>("RatioBelowLocation");
-
-                    b.Property<string>("RegionCode");
-
-                    b.Property<string>("Regno");
-
-                    b.Property<string>("Scoreband");
-
-                    b.Property<string>("Scorestatusdescription");
-
-                    b.Property<string>("ScorestatusdescriptionEN");
-
-                    b.Property<int>("Scorestatusid");
-
-                    b.Property<DateTime>("TimeOfData");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CreditScoreEntries");
                 });
 
             modelBuilder.Entity("NekoApplicationWeb.Models.Debt", b =>

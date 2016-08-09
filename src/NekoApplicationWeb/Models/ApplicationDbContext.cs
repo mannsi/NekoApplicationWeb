@@ -33,5 +33,6 @@ namespace NekoApplicationWeb.Models
         public DbSet<ThjodskraPerson> ThjodskraPersons { get; set; }
         public DbSet<ThjodskraFamilyEntry> ThjodskraFamilyEntries { get; set; }    
         public DbSet<CostOfLivingEntry> CostOfLivingEntries { get; set; }
+        public DbSet<CreditScoreEntry> CreditScoreEntries { get; set; }
     }
 }
