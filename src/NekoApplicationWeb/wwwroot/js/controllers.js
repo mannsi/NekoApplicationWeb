@@ -432,11 +432,11 @@
                     vm.lenderNameThagufall = response.data.LenderNameThagufall;
 
                     vm.greidslugeta = response.data.Greidslugeta;
-                    vm.skuldahlutfall = response.data.Skuldahlutfall;
+                    vm.greidslubyrdarhlutfall = response.data.Greidslubyrdarhlutfall;
                     vm.vedsetningarhlutfall = response.data.Vedsetningarhlutfall;
 
                     vm.isGreidslugetaOk = response.data.IsGreidslugetaOk;
-                    vm.isSkuldahlutfallOk = response.data.IsSkuldahlutfallOk;
+                    vm.isGreidslubyrdarhlutfall = response.data.IsGreidslubyrdarhlutfall;
 
                     vm.lenderLendingRulesBroken = response.data.LenderLendingRulesBroken;
                     vm.lenderLendingRulesBrokenText = response.data.LenderLendingRulesBrokenText;

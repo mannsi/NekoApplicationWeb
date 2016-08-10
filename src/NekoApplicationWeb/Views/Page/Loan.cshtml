@@ -203,28 +203,39 @@
             </div>
 
             <div ng-show="vm.showBankLoansSection">
-                <div class="col-xs-5 col-xs-offset-1">
+                <div class="col-xs-4">
                     <div ng-class="vm.isGreidslugetaOk ? 'panel panel-success' : 'panel panel-primary'">
                         <div class="panel-heading">
                             <div class="panel-title text-center">
                                 Greiðslugeta
-                                <i class="fa fa-question-circle pull-right" data-toggle="tooltip" data-placement="top" title="Hvað á að standa hér ?"></i>
+                                <i class="fa fa-question-circle pull-right" data-toggle="tooltip" data-placement="top" title="Formúlan er (Tekjur - Afborganir af lánum - Framfærsla). Því hærra því betra"></i>
                             </div>
                         </div>
                         <div class="panel-body">
                             <h1 class="text-center">{{vm.greidslugeta | number}} kr</h1>
-                            <h4 class="text-center">{{vm.isGreidslugetaOk ? 'Vel gert' : 'Þú ræður ekki við þetta'}}</h4>
                         </div>
                     </div>
                 </div>
-                <div class="col-xs-5">
+                <div class="col-xs-4">
+                    <div ng-class="vm.isGreidslubyrdarhlutfall ? 'panel panel-success' : 'panel panel-primary'">
+                        <div class="panel-heading">
+                            <div class="panel-title text-center">
+                                Greiðslubyrðarhlutfall
+                                <i class="fa fa-question-circle pull-right" data-toggle="tooltip" data-placement="top" title="Formúlan er (Afborganir af lánum / Tekjur). Því lægra því betra"></i>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <h1 class="text-center">{{vm.greidslubyrdarhlutfall | number:2}} %</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
                     <div class="panel panel-success">
                         <div class="panel-heading">
-                            <div class="panel-title text-center">Veðsetningarhlutfall <i class="fa fa-question-circle pull-right" data-toggle="tooltip" data-placement="top" title="Hvað á að standa hér ?"></i></div>
+                            <div class="panel-title text-center">Veðsetningarhlutfall <i class="fa fa-question-circle pull-right" data-toggle="tooltip" data-placement="top" title="Formúlan er (Eigið fé / Lán). Því lægra því betra"></i></div>
                         </div>
                         <div class="panel-body">
                             <h1 class="text-center">{{vm.vedsetningarhlutfall | number:2}}%</h1>
-                            <h4 class="text-center">Á eitthvað að vera hérna ?</h4>
                         </div>
                     </div>
                 </div>

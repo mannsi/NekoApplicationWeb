@@ -16,6 +16,8 @@ namespace NekoApplicationWeb.Controllers.api
     [Authorize]
     public class LoanController : Controller
     {
+        private const double MaxGreidslubyrdarhlutfall = 35;
+
         private readonly ApplicationDbContext _dbContext;
         private readonly ILoanService _loanService;
         private readonly IInterestsService _interestsService;
@@ -101,6 +103,7 @@ namespace NekoApplicationWeb.Controllers.api
             var totalLoanPayments = loans.Sum(loan => loan.MonthlyPayment);
             var estimatedCostOfLiving = GetCostOfLivingWithoutLoans(thjodskraUser.FamilyNumber, application, buyingPrice);
             var greidslugeta = totalIncome - totalLoanPayments - estimatedCostOfLiving;
+            var greidslubyrdarhlutfall = (100.0 *totalLoanPayments)/totalIncome;
 
             // Lender rules
             var lenderRule = _lenderService.VerifyLenderRules(lender, totalIncome, totalLoanPayments);
@@ -115,8 +118,8 @@ namespace NekoApplicationWeb.Controllers.api
                 IsVedsetningarhlutfallOk = true,
                 Greidslugeta = greidslugeta,
                 IsGreidslugetaOk = 0 < greidslugeta,
-                Skuldahlutfall = 0,
-                IsSkuldahlutfallOk = true,
+                Greidslubyrdarhlutfall = greidslubyrdarhlutfall,
+                IsGreidslubyrdarhlutfall = greidslubyrdarhlutfall < MaxGreidslubyrdarhlutfall,
                 LenderLendingRulesBroken = lenderRule.RulesBroken,
                 LenderLendingRulesBrokenText = lenderRule.RulesBrokenText,
                 NeedsNekoLoan = needsNekoLoan,
@@ -125,7 +128,6 @@ namespace NekoApplicationWeb.Controllers.api
 
             return vm;
         }
-
 
         private List<BankLoanViewModel> GetLoans(Lender lender, int buyingPrice, int ownCapital)
         {

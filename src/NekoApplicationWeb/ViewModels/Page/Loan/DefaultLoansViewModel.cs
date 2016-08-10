@@ -14,11 +14,11 @@ namespace NekoApplicationWeb.ViewModels.Page.Loan
 
         public List<BankLoanViewModel> DefaultLoans { get; set; }
         public int Greidslugeta { get; set; }
-        public double Skuldahlutfall { get; set; }
+        public double Greidslubyrdarhlutfall{ get; set; }
         public double Vedsetningarhlutfall { get; set; }
 
         public bool IsGreidslugetaOk { get; set; }
-        public bool IsSkuldahlutfallOk { get; set; }
+        public bool IsGreidslubyrdarhlutfall { get; set; }
         public bool IsVedsetningarhlutfallOk { get; set; }
 
         public bool LenderLendingRulesBroken { get; set; }
