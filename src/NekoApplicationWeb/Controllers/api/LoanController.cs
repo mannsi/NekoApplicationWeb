@@ -16,29 +16,24 @@ namespace NekoApplicationWeb.Controllers.api
     [Authorize]
     public class LoanController : Controller
     {
-        private const double MaxGreidslubyrdarhlutfall = 35;
-
         private readonly ApplicationDbContext _dbContext;
         private readonly ILoanService _loanService;
         private readonly IInterestsService _interestsService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ICostOfLivingService _costOfLivingService;
-        private readonly ILenderService _lenderService;
 
         public LoanController(
             ApplicationDbContext dbContext,
             ILoanService loanService,
             IInterestsService interestsService,
             UserManager<ApplicationUser> userManager,
-            ICostOfLivingService costOfLivingService,
-            ILenderService lenderService)
+            ICostOfLivingService costOfLivingService)
         {
             _dbContext = dbContext;
             _loanService = loanService;
             _interestsService = interestsService;
             _userManager = userManager;
             _costOfLivingService = costOfLivingService;
-            _lenderService = lenderService;
         }
 
         [Route("")]
@@ -106,8 +101,18 @@ namespace NekoApplicationWeb.Controllers.api
             var greidslubyrdarhlutfall = (100.0 *totalLoanPayments)/totalIncome;
 
             // Lender rules
-            var lenderRule = _lenderService.VerifyLenderRules(lender, totalIncome, totalLoanPayments);
-            
+            bool greidslubyrdarhlutfallOk = true;
+            bool lenderRulesBroken = false;
+            string lenderRulesBrokenText = "";
+            var maxGreidslubyrdarhlutfall = lender.MaxDebtServiceToIncome;
+            if (maxGreidslubyrdarhlutfall < greidslubyrdarhlutfall)
+            {
+                greidslubyrdarhlutfallOk = false;
+                lenderRulesBroken = true;
+                lenderRulesBrokenText =
+                    $"{lender.Name} veitir ekki lán ef greiðslur af lánum eru yfir {lender.MaxDebtServiceToIncome}% af tekjum";
+            }
+
             // Neko minimum loan
             bool needsNekoLoan = ownCapital < buyingPrice * 0.15;
 
@@ -119,9 +124,9 @@ namespace NekoApplicationWeb.Controllers.api
                 Greidslugeta = greidslugeta,
                 IsGreidslugetaOk = 0 < greidslugeta,
                 Greidslubyrdarhlutfall = greidslubyrdarhlutfall,
-                IsGreidslubyrdarhlutfall = greidslubyrdarhlutfall < MaxGreidslubyrdarhlutfall,
-                LenderLendingRulesBroken = lenderRule.RulesBroken,
-                LenderLendingRulesBrokenText = lenderRule.RulesBrokenText,
+                IsGreidslubyrdarhlutfallOk = greidslubyrdarhlutfallOk,
+                LenderLendingRulesBroken = lenderRulesBroken,
+                LenderLendingRulesBrokenText = lenderRulesBrokenText,
                 NeedsNekoLoan = needsNekoLoan,
                 LenderNameThagufall = lender.NameThagufall
             };

@@ -38,23 +38,6 @@
             }
         };
 
-        //vm.addApplicant = function () {
-        //    $http.post("/api/applicant/create", JSON.stringify(vm.newSsn))
-        //        .then(
-        //        function (response) {
-        //            if (response.data) {
-        //                vm.personalViewModel.Applicants.push(response.data);
-        //            }
-        //            vm.newSsn = "";
-        //            $("#newUserModal").modal('hide');
-
-        //            vm.pageModified = true;
-        //        },
-        //        function (error) {
-
-        //        });
-        //};
-
         vm.removeApplicant = function (applicant) {
             $http.post("/api/applicant/delete", applicant.Id)
                 .then(
@@ -346,6 +329,7 @@
         vm.bankLoans = [];
         vm.pageModified = false;
         vm.showBankLoansSection = false;
+        vm.showRatioNumbers = false;
 
         vm.greidslubyrdarhlutfall = 0;
         vm.skuldahlutfall = 0;
@@ -402,11 +386,6 @@
                 }
             }
 
-            //var lenderValue = $("#lenderSelect").val();
-            //vm.loanViewModel.NewLenderId = lenderValue;
-            //var lenderString = $("#lenderSelect" + " option:selected").text();
-            //vm.loanViewModel.LenderName = lenderString;
-
             $http({
                 url: '/api/loan/defaultLoans',
                 method: "GET",
@@ -425,9 +404,6 @@
                     }
 
                     vm.bankLoans = response.data.DefaultLoans;
-                    if (response.data !== "") {
-                        vm.showBankLoansSection = true;
-                    }
 
                     vm.lenderNameThagufall = response.data.LenderNameThagufall;
 
@@ -436,10 +412,19 @@
                     vm.vedsetningarhlutfall = response.data.Vedsetningarhlutfall;
 
                     vm.isGreidslugetaOk = response.data.IsGreidslugetaOk;
-                    vm.isGreidslubyrdarhlutfall = response.data.IsGreidslubyrdarhlutfall;
+                    vm.isGreidslubyrdarhlutfallOk = response.data.IsGreidslubyrdarhlutfallOk;
 
                     vm.lenderLendingRulesBroken = response.data.LenderLendingRulesBroken;
                     vm.lenderLendingRulesBrokenText = response.data.LenderLendingRulesBrokenText;
+
+                    if (response.data !== "") {
+                        vm.showRatioNumbers = true;
+                        if (!vm.lenderLendingRulesBroken) {
+                            vm.showBankLoansSection = true;
+                        }
+                    }
+
+                    
 
                     if (vm.lenderLendingRulesBroken) {
                         $("#lenderRuleBrokenId").text(vm.lenderLendingRulesBrokenText);
@@ -449,8 +434,6 @@
                             $("#lenderRuleBrokenId").addClass("hidden");
                         }
                     }
-
-                    // TODO deal with if ratios are ok. Maybe this is already working but who knows
                 }
                 
             }, function (error) {

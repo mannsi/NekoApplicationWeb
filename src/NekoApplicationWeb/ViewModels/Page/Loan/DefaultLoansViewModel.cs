@@ -18,7 +18,7 @@ namespace NekoApplicationWeb.ViewModels.Page.Loan
         public double Vedsetningarhlutfall { get; set; }
 
         public bool IsGreidslugetaOk { get; set; }
-        public bool IsGreidslubyrdarhlutfall { get; set; }
+        public bool IsGreidslubyrdarhlutfallOk { get; set; }
         public bool IsVedsetningarhlutfallOk { get; set; }
 
         public bool LenderLendingRulesBroken { get; set; }

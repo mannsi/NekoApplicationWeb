@@ -94,27 +94,20 @@
             </div>
 
             <div class="col-xs-10 col-xs-offset-1">
-                <ul>
-                    <li><em>Leyfa option að velja lánstíma efstu 2 lána</em></li>
-                    <li><em>Hinir 2 bankarnir leyfa range á 3 láni 15-25</em></li>
-                </ul>
-
-            </div>
-
-
-
-            <div class="col-xs-10 col-xs-offset-1">
                 <div id="toMuchOwnCapitalId" class="alert alert-warning hidden" role="alert">
                     Þú átt meira en 15% af útborgun og þarft því ekki Neko lán.
                     Neko lán eru dýrari en venjuleg bankalán og því eru þau aðeins tekinn ef annað býðst ekki
                 </div>
             </div>
 
-        <div class="col-xs-10 col-xs-offset-1" ng-show="vm.showBankLoansSection">
+            <div  class="col-xs-10 col-xs-offset-1">
+                <div id="lenderRuleBrokenId" class="alert alert-danger hidden text-center" role="alert">
 
-            <div id="lenderRuleBrokenId" class="alert alert-warning hidden" role="alert">
-                
+                </div>
             </div>
+        <div class="col-xs-12" ng-show="vm.showBankLoansSection">
+
+            
             <div class="panel panel-info">
                 <div class="panel-heading">
                     <div class="panel-title">Lán frá {{vm.lenderNameThagufall}}</div>
@@ -131,15 +124,15 @@
                                 <th class="text-center">Vextir</th>
                                 <th class="text-center">Afborganir</th>
                                 <th class="text-center">Lánstími</th>
-                                <th class="text-center">Greiðslubyrði</th>
+                                <th class="text-right">Greiðslubyrði</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr ng-repeat="bankLoan in vm.bankLoans | filter: {IsNekoLoan : false}">
                                 <th class="text-right">{{bankLoan.Principal | number}} kr</th>
-                                <th class="text-center">{{bankLoan.InterestInfo.Indexed ? 'Já': 'Nei'}}</th>
+                                <th class="text-center">{{bankLoan.InterestEntry.Indexed ? 'Já': 'Nei'}}</th>
                                 <th class="text-center">{{bankLoan.InterestsFormString}}</th>
-                                <th class="text-center">{{bankLoan.InterestInfo.InterestPercentage}} %</th>
+                                <th class="text-center">{{bankLoan.InterestEntry.InterestPercentage}} %</th>
                                 <th>{{bankLoan.PaymentTypeString}}</th>
                                 <th class="text-center">{{bankLoan.LoanDurationYears}} ár</th>
                                 <th class="text-right">{{bankLoan.MonthlyPayment | number}} kr</th>
@@ -163,7 +156,7 @@
         </div>
 
 
-            <div class="col-xs-10 col-xs-offset-1" ng-show="vm.showBankLoansSection">
+            <div class="col-xs-12" ng-show="vm.showBankLoansSection">
                 <div class="panel panel-danger">
                     <div class="panel-heading">
 
@@ -182,18 +175,18 @@
                                         <th class="text-center">Afborganir</th>
                                         <th class="text-center">Lánstími</th>
                                         <th class="text-center">Greiðslubyrði</th>
-                                        <th class="text-center">Greiðslubyrði e. 5 ár</th>
+                                        <th class="text-right">Greiðslubyrði e. 5 ár</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="bankLoan in vm.bankLoans | filter: {IsNekoLoan : true}">
                                         <th class="text-right">{{bankLoan.Principal | number}} kr</th>
                                         <th class="text-center">{{bankLoan.InterestsFormString}}</th>
-                                        <th class="text-center">{{bankLoan.InterestInfo.InterestPercentage}} %</th>
+                                        <th class="text-center">{{bankLoan.InterestEntry.InterestPercentage}} %</th>
                                         <th>{{bankLoan.PaymentTypeString}}</th>
                                         <th class="text-center">{{bankLoan.LoanDurationYears}} ár</th>
                                         <th class="text-right">{{bankLoan.MonthlyPayment | number}} kr</th>
-                                        <th class="text-right">{{bankLoan.MonthlyPayment | number}} kr</th>
+                                        <th class="text-right">{{bankLoan.MonthlyPaymentIn5Years | number}} kr</th>
                                     </tr>
                                 </tbody>
                             </table>
@@ -202,13 +195,14 @@
                 </div>
             </div>
 
-            <div ng-show="vm.showBankLoansSection">
+            <div ng-show="vm.showRatioNumbers">
                 <div class="col-xs-4">
                     <div ng-class="vm.isGreidslugetaOk ? 'panel panel-success' : 'panel panel-primary'">
                         <div class="panel-heading">
                             <div class="panel-title text-center">
                                 Greiðslugeta
-                                <i class="fa fa-question-circle pull-right" data-toggle="tooltip" data-placement="top" title="Formúlan er (Tekjur - Afborganir af lánum - Framfærsla). Því hærra því betra"></i>
+                                <i class="fa fa-question-circle pull-right" data-toggle="tooltip" data-placement="top" 
+                                   title="Hversu mikinn pening áttu eftir þegar þú ert búinn að borga af öllum lánum og lifa. Við þurfum auðvitað að giska hvað það kostar þig að 'lifa'"></i>
                             </div>
                         </div>
                         <div class="panel-body">
@@ -217,25 +211,25 @@
                     </div>
                 </div>
                 <div class="col-xs-4">
-                    <div ng-class="vm.isGreidslubyrdarhlutfall ? 'panel panel-success' : 'panel panel-primary'">
+                    <div ng-class="vm.isGreidslubyrdarhlutfallOk ? 'panel panel-success' : 'panel panel-primary'">
                         <div class="panel-heading">
                             <div class="panel-title text-center">
                                 Greiðslubyrðarhlutfall
-                                <i class="fa fa-question-circle pull-right" data-toggle="tooltip" data-placement="top" title="Formúlan er (Afborganir af lánum / Tekjur). Því lægra því betra"></i>
+                                <i class="fa fa-question-circle pull-right" data-toggle="tooltip" data-placement="top" title="Hversu stór hluti af tekjunum þínum fer í að borga af lánum"></i>
                             </div>
                         </div>
                         <div class="panel-body">
-                            <h1 class="text-center">{{vm.greidslubyrdarhlutfall | number:2}} %</h1>
+                            <h1 class="text-center">{{vm.greidslubyrdarhlutfall | number:1}} %</h1>
                         </div>
                     </div>
                 </div>
                 <div class="col-xs-4">
                     <div class="panel panel-success">
                         <div class="panel-heading">
-                            <div class="panel-title text-center">Veðsetningarhlutfall <i class="fa fa-question-circle pull-right" data-toggle="tooltip" data-placement="top" title="Formúlan er (Eigið fé / Lán). Því lægra því betra"></i></div>
+                            <div class="panel-title text-center">Veðsetningarhlutfall <i class="fa fa-question-circle pull-right" data-toggle="tooltip" data-placement="top" title="Hversu stór hluti af kaupverðinu verður skuld"></i></div>
                         </div>
                         <div class="panel-body">
-                            <h1 class="text-center">{{vm.vedsetningarhlutfall | number:2}}%</h1>
+                            <h1 class="text-center">{{vm.vedsetningarhlutfall | number:1}}%</h1>
                         </div>
                     </div>
                 </div>

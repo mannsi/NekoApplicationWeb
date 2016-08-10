@@ -46,7 +46,7 @@ namespace NekoApplicationWeb.Services
                     break;
             }
 
-            if (bankLoans == null) return null;
+            if (bankLoans == null) return new List<BankLoanViewModel>();
 
             var nekoInteresInfo = interestLinesForLender.FirstOrDefault(interest => interest.LoanType == LoanType.Neko);
             if (nekoInteresInfo == null) return null;
@@ -62,7 +62,8 @@ namespace NekoApplicationWeb.Services
         {
             int loanPrincipal = buyingPrice - totalBankLoansPrincipal - ownCapital;
             var interest = nekoInteresEntry.InterestPercentage/100;
-            int monthlyPayment = (int)(loanPrincipal * (interest / 12) / (1 - Math.Pow(1 + interest / 12, -12 * 10)));
+            int monthlyPaymentIn5Years = (int)(loanPrincipal * (interest / 12) / (1 - Math.Pow(1 + interest / 12, -12 * 10)));
+            int monthlyPayment = (int)Math.Round(interest * loanPrincipal / 12);
 
             var nekoLoan = new BankLoanViewModel
             {
@@ -72,6 +73,7 @@ namespace NekoApplicationWeb.Services
                 LoanDurationMinYears = 15,
                 Principal = loanPrincipal,
                 MonthlyPayment = monthlyPayment,
+                MonthlyPaymentIn5Years = monthlyPaymentIn5Years
             };
 
             return nekoLoan;

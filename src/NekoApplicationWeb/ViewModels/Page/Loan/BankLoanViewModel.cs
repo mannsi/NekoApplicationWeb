@@ -14,6 +14,7 @@ namespace NekoApplicationWeb.ViewModels.Page.Loan
         public int LoanDurationMinYears { get; set; }
         public InterestsEntry InterestEntry { get; set; }
         public int MonthlyPayment { get; set; }
+        public int MonthlyPaymentIn5Years { get; set; }
 
         public string InterestsFormString
         {
@@ -40,6 +41,8 @@ namespace NekoApplicationWeb.ViewModels.Page.Loan
                     case LoanPaymentType.Annuitet:
                         return "Jafnar greiðslur";
                     case LoanPaymentType.EvenPayments:
+                        return "Jafnar afborganir";
+                    case LoanPaymentType.Neko:
                         return "Jafnar afborganir";
                     default:
                         return "";

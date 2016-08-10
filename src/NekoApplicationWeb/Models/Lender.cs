@@ -16,5 +16,6 @@ namespace NekoApplicationWeb.Models
         public string Name { get; set; }
         public string NameThagufall { get; set; }
         public int LoanPaymentServiceFee { get; set; }
+        public int MaxDebtServiceToIncome { get; set; } // Greiðslubyrðarhlutfall. 0-100
     }
 }

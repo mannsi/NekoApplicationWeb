@@ -77,7 +77,6 @@ namespace NekoApplicationWeb
             services.AddTransient<ILoanService, LoanService>();
             services.AddTransient<IThjodskraService, ThjodskraService>();
             services.AddTransient<IUserService, UserService>();
-            services.AddTransient<ILenderService, LenderService>();
             services.AddTransient<ICostOfLivingService, CostOfLivingService>();
             services.AddTransient<ICreditScoreService, CreditScoreService>();
 
@@ -87,15 +86,6 @@ namespace NekoApplicationWeb
             });
 
             services.AddSingleton(Configuration);
-
-            //services.AddSingleton<Serilog.ILogger>(
-            //    x => new LoggerConfiguration().WriteTo.MSSqlServer(c, Configuration["Serilog:TableName"], autoCreateSqlTable: true).CreateLogger()
-            //);
-
-            //services.Configure<MvcOptions>(options =>
-            //{
-            //    options.Filters.Add(new RequireHttpsAttribute());
-            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
