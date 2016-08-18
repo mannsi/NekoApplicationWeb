@@ -21,19 +21,22 @@ namespace NekoApplicationWeb.Controllers.api
         private readonly IInterestsService _interestsService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ICostOfLivingService _costOfLivingService;
+        private readonly IPropertyValuationService _propertyValuationService;
 
         public LoanController(
             ApplicationDbContext dbContext,
             ILoanService loanService,
             IInterestsService interestsService,
             UserManager<ApplicationUser> userManager,
-            ICostOfLivingService costOfLivingService)
+            ICostOfLivingService costOfLivingService,
+            IPropertyValuationService propertyValuationService)
         {
             _dbContext = dbContext;
             _loanService = loanService;
             _interestsService = interestsService;
             _userManager = userManager;
             _costOfLivingService = costOfLivingService;
+            _propertyValuationService = propertyValuationService;
         }
 
         [Route("")]
@@ -80,6 +83,31 @@ namespace NekoApplicationWeb.Controllers.api
             return _dbContext.Lenders.Where(lender => lender.Id != Shared.Constants.NekoLenderId).ToList();
         }
 
+        [Route("propertyValid")]
+        [HttpGet]
+        public PropertyNumberViewModel PropertyValid(string propertyNumber)
+        {
+            var vm = new PropertyNumberViewModel();
+            vm.PropertyNumberOk = true;
+
+            var propertyValuation = _propertyValuationService.GetPropertyValuation(propertyNumber);
+
+            if (propertyValuation == null)
+            {
+                vm.PropertyNumberOk = false;
+                vm.PropertyNumberProblem = "Þessi eign er ekki á skrá hjá okkur. Við lánum eingöngu fyrir eignum undir 150 fm í fjölbýli.";
+            }
+            else if (propertyValuation.NewFireInsuranceValuation == 0 || 
+                propertyValuation.PlotAssessmentValue == 0 ||
+                propertyValuation.RealEstateValuation2017 == 0)
+            {
+                vm.PropertyNumberOk = false;
+                vm.PropertyNumberProblem = "Ónóg gögn um eignina fundust hjá Þjóðskrá";
+            }
+
+            return vm;
+        }
+
         [Route("defaultLoans")]
         [HttpGet]
         public async Task<DefaultLoansViewModel> GetDefaultLoans(string lenderId, string propertyNumber, int buyingPrice, int ownCapital)
@@ -89,7 +117,7 @@ namespace NekoApplicationWeb.Controllers.api
             var application = PageController.GetApplicationForUser(loggedInUser, _dbContext);
             var lender = _dbContext.Lenders.FirstOrDefault(l => l.Id == lenderId);
             if (lender == null) return null;
-            var loans = GetLoans(lender, buyingPrice, ownCapital);
+            var loans = GetLoans(lender, buyingPrice, ownCapital, propertyNumber);
             var loansTotalAmount = loans.Sum(loan => loan.Principal);
 
             // Ratios
@@ -134,23 +162,24 @@ namespace NekoApplicationWeb.Controllers.api
             return vm;
         }
 
-        private List<BankLoanViewModel> GetLoans(Lender lender, int buyingPrice, int ownCapital)
+        private List<BankLoanViewModel> GetLoans(Lender lender, int buyingPrice, int ownCapital, string propertyNumber)
         {
            var interestsForLender = _interestsService.GetInterestsMatrix(lender);
 
-            // TODO fetch these values from some service
-            int realEstateValuation = 25000000;
-            int newFireInsuranceValuation = 23000000;
-            int plotAssessmentValue = 3500000;
+            var propertyValuation = _propertyValuationService.GetPropertyValuation(propertyNumber);
+            if (propertyValuation == null)
+            {
+                return null;
+            }
 
             return _loanService.GetDefaultLoansForLender(
                 lender,
                 buyingPrice,
                 ownCapital,
                 interestsForLender,
-                realEstateValuation,
-                newFireInsuranceValuation,
-                plotAssessmentValue);
+                propertyValuation.RealEstateValuation2017,
+                propertyValuation.NewFireInsuranceValuation,
+                propertyValuation.PlotAssessmentValue);
         }
 
         private int GetCostOfLivingWithoutLoans(string familyNumber, Application application, int buyingPrice)

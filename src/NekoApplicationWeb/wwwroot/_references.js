@@ -1,5 +1,4 @@
 ﻿/// <autosync enabled="true" />
-/// <reference path="_references (mannsi-lap's conflicted copy 2016-08-02).js" />
 /// <reference path="js/angular-input-masks-standalone.js" />
 /// <reference path="js/angular-locale_is-is.js" />
 /// <reference path="js/app-neko.js" />

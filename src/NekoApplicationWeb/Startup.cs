@@ -10,6 +10,7 @@ using NekoApplicationWeb.Models;
 using NekoApplicationWeb.Services;
 using NekoApplicationWeb.ServiceInterfaces;
 using Microsoft.EntityFrameworkCore;
+using NekoApplicationWeb.Data;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Serilog;
@@ -79,6 +80,7 @@ namespace NekoApplicationWeb
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ICostOfLivingService, CostOfLivingService>();
             services.AddTransient<ICreditScoreService, CreditScoreService>();
+            services.AddTransient<IPropertyValuationService, PropertyValuationService>();
 
             services.Configure<MailOptions>(myOptions =>
             {
@@ -128,6 +130,7 @@ namespace NekoApplicationWeb
             InitialData.CreateLenders(app.ApplicationServices);
             InitialData.CreateInterestInfo(app.ApplicationServices);
             InitialData.CreateCostOfLivingEntries(app.ApplicationServices);
+            InitialData.ImportPropertyValuationData(app.ApplicationServices);
         }
     }
 }

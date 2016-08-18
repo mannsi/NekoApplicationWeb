@@ -1,39 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using CsvHelper;
 using Microsoft.AspNetCore.Identity;
 using NekoApplicationWeb.Models;
 
-namespace NekoApplicationWeb
+namespace NekoApplicationWeb.Data
 {
     public class InitialData
     {
-        private const string DemoUserSsn = "1111119999";
-        private const string DemoUserEmail = "Hans ";
-        private const string DemoUserPassword = "123456";
-
-        public static async Task CreateDemoUser(IServiceProvider applicationServices)
-        {
-            // Create super user if he does not exist and add super user role to him
-            var userManager = (UserManager<ApplicationUser>)applicationServices.GetService(typeof(UserManager<ApplicationUser>));
-            var demoUser = await userManager.FindByIdAsync(DemoUserSsn);
-
-            if (demoUser == null)
-            {
-                demoUser = new ApplicationUser
-                {
-                    UserName =  DemoUserSsn,
-                    Email = DemoUserEmail,
-                    EmailConfirmed = true,
-                    //UserDisplayName = "Hans Jón Sigurðsson"
-                };
-
-                await userManager.CreateAsync(demoUser);
-                await userManager.AddPasswordAsync(demoUser, DemoUserPassword);
-            }
-        }
-
         public static void CreateLenders(IServiceProvider applicationServices)
         {
             var dbContext = (ApplicationDbContext) applicationServices.GetService(typeof (ApplicationDbContext));
@@ -109,6 +86,16 @@ namespace NekoApplicationWeb
             }
         }
 
+        public static void ImportPropertyValuationData(IServiceProvider applicationServices)
+        {
+            var dbContext = (ApplicationDbContext)applicationServices.GetService(typeof(ApplicationDbContext));
+            if (dbContext.PropertyValuations.Any()) return;
+
+            var propertyValuationList = ReadPropertyValuationDataCsv();
+            dbContext.PropertyValuations.AddRange(propertyValuationList);
+            dbContext.SaveChanges();
+        }
+        
         public static void CreateCostOfLivingEntries(IServiceProvider applicationServices)
         {
             var dbContext = (ApplicationDbContext) applicationServices.GetService(typeof (ApplicationDbContext));
@@ -220,6 +207,59 @@ namespace NekoApplicationWeb
 
             dbContext.InterestsEntries.Add(interestsEntry);
             dbContext.SaveChanges();
+        }
+
+        private static List<PropertyValuation> ReadPropertyValuationDataCsv()
+        {
+            var propertyValuationList = new List<PropertyValuation>();
+
+            var streamReader = File.OpenText(@"Data\ibudalisti.csv");
+            var csv = new CsvReader(streamReader);
+            csv.Configuration.Delimiter = ";";
+
+            //int brunabotaMatCounter = 0;
+            //int lodamatCounter = 0;
+            //int fastMat2016Counter = 0;
+            //int fastMat2017Counter = 0;
+            while (csv.Read())
+            {
+                var propertyNumber = csv.GetField<string>(0);
+                var area = csv.GetField<string>(1);
+                var newFireInsuranceValuationString = csv.GetField<string>(2);
+                var plotAssessmentValueString = csv.GetField<string>(3);
+                var realEstateValuation2016String = csv.GetField<string>(4);
+                var realEstateValuation2017String = csv.GetField<string>(5);
+
+                var propertyValuation = new PropertyValuation()
+                {
+                    PropertyNumber = propertyNumber,
+                };
+
+                int newFireInsuranceValuation;
+                int plotAssessmentValue;
+                int realEstateValuation2016;
+                int realEstateValuation2017;
+
+                bool brunabotaMatOk = Int32.TryParse(newFireInsuranceValuationString, out newFireInsuranceValuation);
+                bool lodamatOk = Int32.TryParse(plotAssessmentValueString, out plotAssessmentValue);
+                bool fastMat2016Ok = Int32.TryParse(realEstateValuation2016String, out realEstateValuation2016);
+                bool fastMat2017Ok = Int32.TryParse(realEstateValuation2017String, out realEstateValuation2017);
+
+                propertyValuation.NewFireInsuranceValuation = newFireInsuranceValuation;
+                propertyValuation.PlotAssessmentValue = plotAssessmentValue;
+                propertyValuation.RealEstateValuation2016 = realEstateValuation2016;
+                propertyValuation.RealEstateValuation2017 = realEstateValuation2017;
+
+                //if (!success) throw new Exception($"Error converting property valuation line for property number {propertyNumber}");
+                //if (!brunabotaMatOk) brunabotaMatCounter++;
+                //if (!lodamatOk) lodamatCounter++; 
+                //if (!fastMat2016Ok) fastMat2016Counter++; 
+                //if (!fastMat2017Ok) fastMat2017Counter++; 
+
+
+                propertyValuationList.Add(propertyValuation);
+            }
+            return propertyValuationList;
         }
     }
 }

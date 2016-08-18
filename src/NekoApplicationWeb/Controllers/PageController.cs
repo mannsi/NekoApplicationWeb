@@ -244,11 +244,8 @@ namespace NekoApplicationWeb.Controllers
 
             if (propertyDetails == null) return View("Error");
 
-            //vm.BuyingPrice = 25000000;
             vm.BuyingPrice = propertyDetails.BuyingPrice;
-            //vm.OwnCapital = 1000000;
             vm.OwnCapital = propertyDetails.OwnCapital;
-            //vm.PropertyNumber = "111-2222";
             vm.PropertyNumber = propertyDetails.PropertyNumber;
 
             // Populate lender and loan info

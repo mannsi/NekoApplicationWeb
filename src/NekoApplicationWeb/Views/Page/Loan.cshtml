@@ -27,6 +27,9 @@
     .panel-danger > .panel-footer + .panel-collapse > .panel-body {
       border-bottom-color: #f5d400;
     }
+    #propertyNumberAddon {
+        background-color: white;
+    }
 </style>
 
 <div class="row" ng-app="app-neko" ng-controller="loanPageController as vm" ng-init="vm.initData(@JsonConvert.SerializeObject(Model))" ng-cloak>
@@ -38,7 +41,6 @@
             </div>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <div class="col-xs-offset-2"><em>COMMENT: fasteignamati 25M, brunabótamati 23M, lóðarmati 3.5M</em></div>
             <div class="form-group required">
                 <div class="col-sm-4 col-xs-offset-4 col-sm-offset-0 control-label">
                     <label>Kaupverð</label>
@@ -47,14 +49,24 @@
                     <input class="form-control" ng-model="vm.loanViewModel.BuyingPrice" required ng-change="vm.pageModified = true" ui-number-mask="0" />
                 </div>
             </div>
-            <div class="form-group required">
+        <div id="propertyNumberFormGroup" class="form-group required">
                 <div class="col-sm-4 col-xs-offset-4 col-sm-offset-0 control-label">
                     <label>Fastanúmer eignar</label> <i class="fa fa-question-circle" data-toggle="tooltip" title="Hægt að finna númerið með því að leita að eigninni á vef Þjóðskrá Íslands undir Fasteignaskrá"></i>
                 </div>
                 <div class="col-sm-8 col-xs-offset-4 col-sm-offset-0">
-                    <input class="form-control" ng-model="vm.loanViewModel.PropertyNumber" required ng-change="vm.pageModified = true" mask="999-9999" />
+                    <div class="input-group">
+                        <input id="propertyNumberInput" class="form-control" ng-model="vm.loanViewModel.PropertyNumber" required ng-change="vm.propertyNumberChanged()" mask="999-9999" />
+                        <span id="propertyNumberAddon" class="input-group-addon">
+                            <i id="propertyNumberStatusId" class="fa fa-circle" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    
+
+                    <div id="propertyNumberErrorMessageId" class="help-block with-errors hidden"></div>
                 </div>
-            </div>
+
+            
+        </div>
             <div class="form-group required">
                 <div class="col-sm-4 col-xs-offset-4 col-sm-offset-0 control-label">
                     <label>Eigið fé</label> <i class="fa fa-question-circle" data-toggle="tooltip" title="Hvað þú/þið ætlið að setja mikið af ykkar pening í kaupin"></i>

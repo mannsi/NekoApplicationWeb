@@ -374,6 +374,40 @@
             return true;
         };
 
+        function showPropertyNumberState(showError, showProgress, showDefault, errorMessage) {
+            // Clear the status icon
+            $("#propertyNumberStatusId").removeClass();
+
+            if (showProgress) {
+                $("#propertyNumberStatusId").addClass("fa fa-spinner fa-spin");
+            }
+
+            if (showError) {
+                $("#propertyNumberStatusId").addClass("fa fa-times");
+
+                $("#propertyNumberFormGroup").addClass("has-error");
+                $("#propertyNumberFormGroup").addClass("has-danger");
+                $("#propertyNumberErrorMessageId").text(errorMessage);
+                $("#propertyNumberErrorMessageId").removeClass("hidden");
+            } else {
+                if (showDefault) {
+                    $("#propertyNumberStatusId").addClass("fa fa-circle");
+                } else {
+                    $("#propertyNumberStatusId").addClass("fa fa-check text-success");
+                }
+
+                if (!$("#propertyNumberErrorMessageId").hasClass("hidden")) {
+                    $("#propertyNumberErrorMessageId").addClass("hidden");
+                }
+                if ($("#propertyNumberFormGroup").hasClass("has-error")) {
+                    $("#propertyNumberFormGroup").removeClass("has-error");
+                }
+                if ($("#propertyNumberFormGroup").hasClass("has-danger")) {
+                    $("#propertyNumberFormGroup").removeClass("has-danger");
+                }
+            }
+        };
+
         function populateLoans() {
             vm.showBankLoansSection = false;
 
@@ -392,7 +426,8 @@
                 params: {
                     lenderId: vm.loanViewModel.LenderId,
                     buyingPrice: vm.loanViewModel.BuyingPrice,
-                    ownCapital: vm.loanViewModel.OwnCapital
+                    ownCapital: vm.loanViewModel.OwnCapital,
+                    propertyNumber: vm.loanViewModel.PropertyNumber
                 }
             }).then(function (response) {
                 if (!response.data.NeedsNekoLoan) {
@@ -424,8 +459,6 @@
                         }
                     }
 
-                    
-
                     if (vm.lenderLendingRulesBroken) {
                         $("#lenderRuleBrokenId").text(vm.lenderLendingRulesBrokenText);
                         $("#lenderRuleBrokenId").removeClass("hidden");
@@ -446,6 +479,7 @@
             if (vm.loanViewModel.LenderId) {
                 populateLoans();
             }
+            vm.propertyNumberChanged();
         };
 
         vm.continue = function () {
@@ -462,6 +496,34 @@
         vm.lenderChange = function () {
             populateLoans();
         };
+
+        vm.propertyNumberChanged = function () {
+            if (vm.loanViewModel.PropertyNumber.length === 8) {
+
+                showPropertyNumberState(false, true, false, "");
+
+                $http({
+                        url: '/api/loan/propertyValid',
+                        method: "GET",
+                        params: {
+                            propertyNumber: vm.loanViewModel.PropertyNumber
+                        }
+                    })
+                    .then(function (response) {
+                        if (!response.data.PropertyNumberOk) {
+                            showPropertyNumberState(true, false, false, response.data.PropertyNumberProblem);
+                        } else {
+                            showPropertyNumberState(false, false, false, "");
+                        }
+                },
+                function (error) {
+                    // TODO 
+                });
+            } else {
+                showPropertyNumberState(false, false, true, "");
+            }
+            vm.pageModified = true;
+        }
 
         vm.loansTotalPrincipal = function(isNekoLoan) {
             var totalPrincipal = 0;

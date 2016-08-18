@@ -8,9 +8,10 @@ using NekoApplicationWeb.Models;
 namespace NekoApplicationWeb.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20160818173148_MissingPropertyValuationColumns")]
+    partial class MissingPropertyValuationColumns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
@@ -451,14 +452,6 @@ namespace NekoApplicationWeb.Migrations
             modelBuilder.Entity("NekoApplicationWeb.Models.PropertyValuation", b =>
                 {
                     b.Property<string>("PropertyNumber");
-
-                    b.Property<int>("NewFireInsuranceValuation");
-
-                    b.Property<int>("PlotAssessmentValue");
-
-                    b.Property<int>("RealEstateValuation2016");
-
-                    b.Property<int>("RealEstateValuation2017");
 
                     b.HasKey("PropertyNumber");
 

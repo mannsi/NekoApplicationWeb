@@ -8,9 +8,10 @@ using NekoApplicationWeb.Models;
 namespace NekoApplicationWeb.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20160816092355_UpdatePropertyValuationTable")]
+    partial class UpdatePropertyValuationTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
@@ -450,17 +451,15 @@ namespace NekoApplicationWeb.Migrations
 
             modelBuilder.Entity("NekoApplicationWeb.Models.PropertyValuation", b =>
                 {
-                    b.Property<string>("PropertyNumber");
+                    b.Property<string>("Id");
 
-                    b.Property<int>("NewFireInsuranceValuation");
+                    b.Property<string>("ApplicationId");
 
-                    b.Property<int>("PlotAssessmentValue");
+                    b.Property<DateTime>("TimeOfData");
 
-                    b.Property<int>("RealEstateValuation2016");
+                    b.HasKey("Id");
 
-                    b.Property<int>("RealEstateValuation2017");
-
-                    b.HasKey("PropertyNumber");
+                    b.HasIndex("ApplicationId");
 
                     b.ToTable("PropertyValuations");
                 });
@@ -617,6 +616,13 @@ namespace NekoApplicationWeb.Migrations
                 });
 
             modelBuilder.Entity("NekoApplicationWeb.Models.PropertyDetail", b =>
+                {
+                    b.HasOne("NekoApplicationWeb.Models.Application", "Application")
+                        .WithMany()
+                        .HasForeignKey("ApplicationId");
+                });
+
+            modelBuilder.Entity("NekoApplicationWeb.Models.PropertyValuation", b =>
                 {
                     b.HasOne("NekoApplicationWeb.Models.Application", "Application")
                         .WithMany()
