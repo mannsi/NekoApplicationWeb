@@ -512,11 +512,10 @@
                     })
                     .then(function (response) {
                         if (!response.data.PropertyNumberOk) {
-                            vm.propertyNumberConfirmedOk = true;
+                            vm.propertyNumberConfirmedOk = false;
                             showPropertyNumberState(true, false, false, response.data.PropertyNumberProblem);
                         } else {
-                            vm.propertyNumberConfirmedOk = false;
-
+                            vm.propertyNumberConfirmedOk = true;
                             showPropertyNumberState(false, false, false, "");
                         }
                 },
