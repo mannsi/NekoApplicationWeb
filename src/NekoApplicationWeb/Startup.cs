@@ -130,7 +130,7 @@ namespace NekoApplicationWeb
             InitialData.CreateLenders(app.ApplicationServices);
             InitialData.CreateInterestInfo(app.ApplicationServices);
             InitialData.CreateCostOfLivingEntries(app.ApplicationServices);
-            InitialData.ImportPropertyValuationData(app.ApplicationServices);
+            //InitialData.ImportPropertyValuationData(app.ApplicationServices);
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using NekoApplicationWeb.Models;
 using NekoApplicationWeb.ServiceInterfaces;
 using NekoApplicationWeb.Shared;
@@ -22,6 +23,7 @@ namespace NekoApplicationWeb.Controllers.api
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ICostOfLivingService _costOfLivingService;
         private readonly IPropertyValuationService _propertyValuationService;
+        private readonly ILogger<LoanController> _logger;
 
         public LoanController(
             ApplicationDbContext dbContext,
@@ -29,7 +31,8 @@ namespace NekoApplicationWeb.Controllers.api
             IInterestsService interestsService,
             UserManager<ApplicationUser> userManager,
             ICostOfLivingService costOfLivingService,
-            IPropertyValuationService propertyValuationService)
+            IPropertyValuationService propertyValuationService,
+            ILogger<LoanController> logger)
         {
             _dbContext = dbContext;
             _loanService = loanService;
@@ -37,6 +40,7 @@ namespace NekoApplicationWeb.Controllers.api
             _userManager = userManager;
             _costOfLivingService = costOfLivingService;
             _propertyValuationService = propertyValuationService;
+            _logger = logger;
         }
 
         [Route("")]
@@ -191,8 +195,13 @@ namespace NekoApplicationWeb.Controllers.api
                         asset.Application == application);
 
             var costOfLivingEntries = _dbContext.CostOfLivingEntries.ToList();
-
             var familyMembers = _dbContext.ThjodskraFamilyEntries.Where(entry => entry.FamilyNumber == familyNumber).ToList();
+
+            foreach (var thjodskraFamilyEntry in familyMembers)
+            {
+                _logger.LogWarning($"{thjodskraFamilyEntry.Name}: SSN is '{thjodskraFamilyEntry.Ssn}' and I think the age is '{thjodskraFamilyEntry.Ssn.SsnToAge(DateTime.Now)}'");
+            }
+
             int numberOfAdults = familyMembers.Count(member => 17 < member.Ssn.SsnToAge(DateTime.Now));
             int numberOfPreSchoolKids = familyMembers.Count(member => 0 < member.Ssn.SsnToAge(DateTime.Now) && member.Ssn.SsnToAge(DateTime.Now) < 6);
             int numberOfElementarySchoolKids = familyMembers.Count(member => 6 <= member.Ssn.SsnToAge(DateTime.Now) && member.Ssn.SsnToAge(DateTime.Now) <= 17);

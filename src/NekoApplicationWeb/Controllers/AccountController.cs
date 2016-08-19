@@ -169,6 +169,12 @@ namespace NekoApplicationWeb.Controllers
             {
                 foreach (var thjodskraFamilyEntry in thjodskraFamilyEntries)
                 {
+                    if (_dbContext.ThjodskraFamilyEntries.Any(entry => entry.Ssn == thjodskraFamilyEntry.Ssn))
+                    {
+                        // Don't want to save multiple entries of the same person
+                        continue;
+                    }
+
                     thjodskraFamilyEntry.TimeOfData = DateTime.Now;
                     _dbContext.ThjodskraFamilyEntries.Add(thjodskraFamilyEntry);
                 }

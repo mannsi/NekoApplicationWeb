@@ -339,6 +339,7 @@
         vm.skuldahlutfall_Ok = false;
 
         vm.refreshButtonDisabled = false;
+        vm.propertyNumberConfirmedOk = false;
 
         function init() {
             $(document).ready(function () {
@@ -511,15 +512,19 @@
                     })
                     .then(function (response) {
                         if (!response.data.PropertyNumberOk) {
+                            vm.propertyNumberConfirmedOk = true;
                             showPropertyNumberState(true, false, false, response.data.PropertyNumberProblem);
                         } else {
+                            vm.propertyNumberConfirmedOk = false;
+
                             showPropertyNumberState(false, false, false, "");
                         }
                 },
                 function (error) {
-                    // TODO 
+                    vm.propertyNumberConfirmedOk = false;
                 });
             } else {
+                vm.propertyNumberConfirmedOk = false;
                 showPropertyNumberState(false, false, true, "");
             }
             vm.pageModified = true;

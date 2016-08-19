@@ -65,7 +65,8 @@ namespace NekoApplicationWeb.Shared
                 return -1;
             }
 
-            bool legalDateOfBirth = DateTime.TryParse($"{day}.{month}.{yearPrefix}{year}", out dateOfBirth);
+            IFormatProvider culture = new System.Globalization.CultureInfo("is-IS", true);
+            bool legalDateOfBirth = DateTime.TryParse($"{day}.{month}.{yearPrefix}{year}", culture, DateTimeStyles.None, out dateOfBirth);
 
             if (!legalDateOfBirth){ return -1;}
 

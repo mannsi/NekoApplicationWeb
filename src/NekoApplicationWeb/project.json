@@ -70,7 +70,8 @@
       "wwwroot",
       "Views",
       "appsettings.json",
-      "web.config"
+      "web.config",
+      "Data/ibudalisti.csv"
     ]
   },
 

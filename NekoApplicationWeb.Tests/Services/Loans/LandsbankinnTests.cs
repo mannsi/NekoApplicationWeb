@@ -131,7 +131,7 @@ namespace NekoApplicationWeb.Tests.Loans
             interests.Clear();
 
             var loans = _loanService.GetDefaultLoansForLender(lender, 0, 0, interests, 0, 0, 0);
-            Assert.Null(loans);
+            Assert.Equal(0, loans.Count);
         }
 
         [Fact]
@@ -149,7 +149,7 @@ namespace NekoApplicationWeb.Tests.Loans
 
             var loans = _loanService.GetDefaultLoansForLender(lender, buyingPrice, ownCapital, interests, realEstateValuation,
                 newFireInsuranceValuation, plotAssessmentValue);
-            Assert.Null(loans);
+            Assert.Equal(0, loans.Count);
         }
 
 
