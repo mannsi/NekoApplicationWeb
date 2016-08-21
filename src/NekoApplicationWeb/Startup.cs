@@ -1,8 +1,6 @@
-﻿using System;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -10,11 +8,8 @@ using NekoApplicationWeb.Models;
 using NekoApplicationWeb.Services;
 using NekoApplicationWeb.ServiceInterfaces;
 using Microsoft.EntityFrameworkCore;
-using NekoApplicationWeb.Data;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Serilog;
-using Serilog.Events;
 
 namespace NekoApplicationWeb
 {
@@ -127,9 +122,9 @@ namespace NekoApplicationWeb
                     template: "{controller=Account}/{action=MyFakeSignIn}/{id?}");
             });
 
-            InitialData.CreateLenders(app.ApplicationServices);
-            InitialData.CreateInterestInfo(app.ApplicationServices);
-            InitialData.CreateCostOfLivingEntries(app.ApplicationServices);
+            //InitialData.CreateLenders(app.ApplicationServices);
+            //InitialData.CreateInterestInfo(app.ApplicationServices);
+            //InitialData.CreateCostOfLivingEntries(app.ApplicationServices);
             //InitialData.ImportPropertyValuationData(app.ApplicationServices);
         }
     }
