@@ -340,6 +340,7 @@
 
         vm.refreshButtonDisabled = false;
         vm.propertyNumberConfirmedOk = false;
+        vm.dataIsInitialized = false;
 
         function init() {
             $(document).ready(function () {
@@ -481,6 +482,7 @@
                 populateLoans();
             }
             vm.propertyNumberChanged();
+            vm.dataIsInitialized = true;
         };
 
         vm.continue = function () {
@@ -526,7 +528,9 @@
                 vm.propertyNumberConfirmedOk = false;
                 showPropertyNumberState(false, false, true, "");
             }
-            vm.pageModified = true;
+            if (vm.dataIsInitialized) {
+                vm.pageModified = true;
+            }
         }
 
         vm.loansTotalPrincipal = function(isNekoLoan) {

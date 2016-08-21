@@ -88,8 +88,7 @@
                 <div class="col-sm-8 col-xs-offset-4 col-sm-offset-0">
                     <div class="input-group">
                         <select id="lenderSelect" class="form-control" ng-model="vm.loanViewModel.LenderId"
-                                ng-disabled="vm.loanViewModel.BuyingPrice == 0 || vm.loanViewModel.BuyingPrice == ''
-                                            || vm.loanViewModel.OwnCapital == '' || vm.loanViewModel.OwnCapital == 0"
+                                ng-disabled="vm.loanViewModel.BuyingPrice == 0 || vm.loanViewModel.BuyingPrice == ''"
                                 ng-change="vm.lenderChange()" required>
                             <option ng-repeat="lender in vm.lenders | orderBy: 'name'" value="{{lender.Id}}">{{lender.Name}}</option>
                         </select>
