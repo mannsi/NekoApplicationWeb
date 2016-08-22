@@ -489,7 +489,7 @@
             vm.pageModified = false;
             $http.post('/api/loan', vm.loanViewModel)
                 .then(function (response) {
-                    window.location.href = 'Samantekt';
+                    window.location.href = 'Nidurstodur';
                 }, function (error) {
                     vm.pageModified = true;
                     alert("Ekki tókst að vista. Villa: " + error);

@@ -17,6 +17,7 @@ using NekoApplicationWeb.ViewModels.Page.Education;
 using NekoApplicationWeb.ViewModels.Page.Finances;
 using NekoApplicationWeb.ViewModels.Page.Loan;
 using NekoApplicationWeb.ViewModels.Page.Personal;
+using NekoApplicationWeb.ViewModels.Page.Summary;
 using ApplicantEmploymentViewModel = NekoApplicationWeb.ViewModels.Page.Employment.ApplicantEmploymentViewModel;
 
 namespace NekoApplicationWeb.Controllers
@@ -274,22 +275,30 @@ namespace NekoApplicationWeb.Controllers
             return View("BasePage", "documents");
         } 
 
-        [Route("Samantekt")]
+        [Route("Nidurstodur")]
         public IActionResult Summary()
         {
-            ViewData["ContentHeader"] = "Samatekt";
+            ViewData["ContentHeader"] = "Bráðabirgðarniðurstaða";
             ViewData["selectedNavPillId"] = "navPillSummary";
 
-            ViewData["vm"] = null;
-            return View("BasePage", "summary");
+            // TODO actually get the errors
+            // List of possible errors
+            // - Nav pill not filled
+            // - Lender loan rules broken
+            // - Neko loan rules broken
+            ViewData["vm"] = new SummaryPageViewModel {ListOfErrorMessage = new List<string> {"Eitthvað problem", "Problem með lengri texta. Spurning hversu langur textinn má vera áður en allt fer í fokk á mobile ???"} };
+            return View("BasePage", "Summary");
         }
 
-        //[Route("SummaryBackwards")]
-        //[HttpPost]
-        //public IActionResult SummaryBackwards(PersonalViewModel vm)
-        //{
-        //    return RedirectToAction("Documents");
-        //}
+        [Route("SaekjaUm")]
+        [HttpPost]
+        public IActionResult SaekjaUm()
+        {
+            // TODO call the applyForLoanService
+            // TODO display the 'Umsókn móttekin. Glæsilegt ...' page
+
+            return View("BasePage", "summary");
+        }
 
         [Route("Error")]
         public IActionResult Error()
