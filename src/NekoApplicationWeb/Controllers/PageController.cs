@@ -359,7 +359,7 @@ namespace NekoApplicationWeb.Controllers
             // TODO call the applyForLoanService
             // TODO display the 'Umsókn móttekin. Glæsilegt ...' page
 
-            return View("BasePage", "summary");
+            return View("BasePage", "Congratulations");
         }
 
         [Route("Error")]
