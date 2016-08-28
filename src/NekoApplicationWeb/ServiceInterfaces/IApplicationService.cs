@@ -10,5 +10,6 @@ namespace NekoApplicationWeb.ServiceInterfaces
     public interface IApplicationService
     {
         Application ActiveApplication(ClaimsPrincipal loggedInUserPrincipal);
+        void ApplyForNekoLoan(ClaimsPrincipal loggedInUserPrincipal);
     }
 }

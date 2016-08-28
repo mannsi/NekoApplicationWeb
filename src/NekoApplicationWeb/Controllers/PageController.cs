@@ -301,6 +301,11 @@ namespace NekoApplicationWeb.Controllers
             var vm = new SummaryPageViewModel();
 
             var application = _applicationService.ActiveApplication(User);
+            if (application.HasApplied)
+            {
+                vm.ListOfErrorMessage.Add("Þú hefur þegar sótt um. Við munum hafa samband við þig fljótlega í gegnum tölvupóst");
+            }
+
             if (!application.EducationPageCompleted)
             {
                 vm.ListOfErrorMessage.Add("Menntun síðan er ekki útfyllt");
@@ -356,8 +361,7 @@ namespace NekoApplicationWeb.Controllers
         [HttpPost]
         public IActionResult SaekjaUm()
         {
-            // TODO call the applyForLoanService
-            // TODO display the 'Umsókn móttekin. Glæsilegt ...' page
+            _applicationService.ApplyForNekoLoan(User);
 
             return View("BasePage", "Congratulations");
         }

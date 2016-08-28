@@ -26,5 +26,7 @@ namespace NekoApplicationWeb.Models
         public bool EducationPageCompleted { get; set; }
         public bool FinancesPageCompleted { get; set; }
         public bool LoanPageCompleted { get; set; }
+
+        public bool HasApplied { get; set; }
     }
 }

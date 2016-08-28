@@ -29,5 +29,22 @@ namespace NekoApplicationWeb.Services
             return userConnection?.Application;
         }
 
+        public void ApplyForNekoLoan(ClaimsPrincipal loggedInUserPrincipal)
+        {
+            var application = ActiveApplication(loggedInUserPrincipal);
+
+            if (application.HasApplied) return;
+
+            // TODO verify application just like is done in summary page
+            // TODO Get lanshaefismat
+            // TODO if lanshaefismat sucks, send email to user informing 
+            // TODO Get greidslumat (if needed)
+            // TODO if greislumat sucks, send email to user informing 
+            // TODO we got here, applicants appear to be solid. Send them email asking for documents 
+
+            application.HasApplied = true;
+            _dbContext.Update(application);
+            _dbContext.SaveChanges();
+        }
     }
 }
