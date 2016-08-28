@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using NekoApplicationWeb.Models;
 using NekoApplicationWeb.ServiceInterfaces;
@@ -17,14 +18,17 @@ namespace NekoApplicationWeb.Controllers.api
         private readonly ApplicationDbContext _dbContext;
         private readonly ICreditScoreService _creditScoreService;
         private readonly ILogger<ApplicationController> _logger;
+        private readonly ICompletionService _completionService;
 
         public ApplicationController(ApplicationDbContext dbContext,
             ICreditScoreService creditScoreService,
-            ILogger<ApplicationController> logger)
+            ILogger<ApplicationController> logger,
+            ICompletionService completionService)
         {
             _dbContext = dbContext;
             _creditScoreService = creditScoreService;
             _logger = logger;
+            _completionService = completionService;
         }
 
         [Route("readEula")]
@@ -49,7 +53,7 @@ namespace NekoApplicationWeb.Controllers.api
             }
 
             var userApplicationConnection =
-                _dbContext.ApplicationUserConnections.FirstOrDefault(auc => auc.User.Id == eulaUser.Id);
+                _dbContext.ApplicationUserConnections.Include(con => con.Application).FirstOrDefault(auc => auc.User.Id == eulaUser.Id);
             if (userApplicationConnection == null)
             {
                 return;
@@ -57,6 +61,12 @@ namespace NekoApplicationWeb.Controllers.api
 
             userApplicationConnection.UserHasAgreedToEula = true;
             _dbContext.Update(userApplicationConnection);
+            _dbContext.SaveChanges();
+
+            // Update the completion status of the application
+            var application = userApplicationConnection.Application;
+            application.PersonalPageCompleted = _completionService.PersonalCompleted(User);
+            _dbContext.Update(application);
             _dbContext.SaveChanges();
         }
 

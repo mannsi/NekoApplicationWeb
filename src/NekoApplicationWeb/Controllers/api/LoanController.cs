@@ -125,20 +125,26 @@ namespace NekoApplicationWeb.Controllers.api
         public async Task<DefaultLoansViewModel> GetDefaultLoans(string lenderId, string propertyNumber, int buyingPrice, int ownCapital)
         {
             var loggedInUser = await _userManager.GetUserAsync(User);
-            var thjodskraUser = _dbContext.ThjodskraPersons.First(person => person.Id == loggedInUser.Id);
-            var application = PageController.GetApplicationForUser(loggedInUser, _dbContext);
+            return GetDefaultLoans(lenderId, propertyNumber, buyingPrice, ownCapital, loggedInUser);
+        }
+
+        public DefaultLoansViewModel GetDefaultLoans(string lenderId, string propertyNumber, int buyingPrice,
+            int ownCapital, ApplicationUser user)
+        {
+            var thjodskraUser = _dbContext.ThjodskraPersons.First(person => person.Id == user.Id);
+            var application = PageController.GetApplicationForUser(user, _dbContext);
             var lender = _dbContext.Lenders.FirstOrDefault(l => l.Id == lenderId);
             if (lender == null) return null;
             var loans = GetLoans(lender, buyingPrice, ownCapital, propertyNumber);
             var loansTotalAmount = loans.Sum(loan => loan.Principal);
 
             // Ratios
-            double vedsetningarHlutfall = 100.0*(loansTotalAmount - ownCapital)/loansTotalAmount;
+            double vedsetningarHlutfall = 100.0 * (loansTotalAmount - ownCapital) / loansTotalAmount;
             var totalIncome = application.TotalMonthlyIncomeForAllApplicant;
             var totalLoanPayments = loans.Sum(loan => loan.MonthlyPayment);
             var estimatedCostOfLiving = GetCostOfLivingWithoutLoans(thjodskraUser.FamilyNumber, application, buyingPrice);
             var greidslugeta = totalIncome - totalLoanPayments - estimatedCostOfLiving;
-            var greidslubyrdarhlutfall = (100.0 *totalLoanPayments)/totalIncome;
+            var greidslubyrdarhlutfall = (100.0 * totalLoanPayments) / totalIncome;
 
             // Lender rules
             bool greidslubyrdarhlutfallOk = true;
@@ -173,6 +179,8 @@ namespace NekoApplicationWeb.Controllers.api
 
             return vm;
         }
+
+        
 
         private List<BankLoanViewModel> GetLoans(Lender lender, int buyingPrice, int ownCapital, string propertyNumber)
         {

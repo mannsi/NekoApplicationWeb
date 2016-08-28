@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Http.Features.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using NekoApplicationWeb.Controllers.api;
 using NekoApplicationWeb.Models;
 using NekoApplicationWeb.ServiceInterfaces;
 using NekoApplicationWeb.Shared;
@@ -30,16 +32,31 @@ namespace NekoApplicationWeb.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IInterestsService _interestsService;
         private readonly ILoanService _loanService;
+        private readonly IApplicationService _applicationService;
+        private readonly ICostOfLivingService _costOfLivingService;
+        private readonly IPropertyValuationService _propertyValuationService;
+        private readonly ILogger<LoanController> _logger;
+        private readonly ICompletionService _completionService;
 
         public PageController(ApplicationDbContext dbContext,
             UserManager<ApplicationUser> userManager,
             IInterestsService interestsService,
-            ILoanService loanService)
+            ILoanService loanService,
+            IApplicationService applicationService,
+            ICostOfLivingService costOfLivingService,
+            IPropertyValuationService propertyValuationService,
+            ILogger<LoanController> logger,
+            ICompletionService completionService)
         {
             _dbContext = dbContext;
             _userManager = userManager;
             _interestsService = interestsService;
             _loanService = loanService;
+            _applicationService = applicationService;
+            _costOfLivingService = costOfLivingService;
+            _propertyValuationService = propertyValuationService;
+            _logger = logger;
+            _completionService = completionService;
         }
 
         /// <summary>
@@ -276,17 +293,62 @@ namespace NekoApplicationWeb.Controllers
         } 
 
         [Route("Nidurstodur")]
-        public IActionResult Summary()
+        public async Task<IActionResult> Summary()
         {
             ViewData["ContentHeader"] = "Bráðabirgðarniðurstaða";
             ViewData["selectedNavPillId"] = "navPillSummary";
 
-            // TODO actually get the errors
-            // List of possible errors
-            // - Nav pill not filled
-            // - Lender loan rules broken
-            // - Neko loan rules broken
-            ViewData["vm"] = new SummaryPageViewModel {ListOfErrorMessage = new List<string> {"Eitthvað problem", "Problem með lengri texta. Spurning hversu langur textinn má vera áður en allt fer í fokk á mobile ???"} };
+            var vm = new SummaryPageViewModel();
+
+            var application = _applicationService.ActiveApplication(User);
+            if (!application.EducationPageCompleted)
+            {
+                vm.ListOfErrorMessage.Add("Menntun síðan er ekki útfyllt");
+            }
+            if (!application.PersonalPageCompleted)
+            {
+                vm.ListOfErrorMessage.Add("Umsækjendur síðan er ekki útfyllt");
+            }
+            if (!application.EmploymentPageCompleted)
+            {
+                vm.ListOfErrorMessage.Add("Starfsferill síðan er ekki útfyllt");
+            }
+            if (!application.FinancesPageCompleted)
+            {
+                vm.ListOfErrorMessage.Add("Fjármál síðan er ekki útfyllt");
+            }
+            if (!application.LoanPageCompleted)
+            {
+                vm.ListOfErrorMessage.Add("Lánveiting síðan er ekki útfyllt");
+            }
+
+            if (!vm.ListOfErrorMessage.Any())
+            {
+                var lender = application.Lender;
+                var propertyDetails = _dbContext.PropertyDetails.FirstOrDefault(detail => detail.Application == application);
+
+                var loggedInUser = await _userManager.GetUserAsync(User);
+
+                var loanController = new LoanController(_dbContext, _loanService, _interestsService, _userManager, _costOfLivingService, _propertyValuationService, _logger, _completionService);
+                var loanInfo = loanController.GetDefaultLoans(lender.Id, propertyDetails.PropertyNumber, propertyDetails.BuyingPrice,
+                    propertyDetails.OwnCapital, loggedInUser);
+
+                if (loanInfo.LenderLendingRulesBroken)
+                {
+                    vm.ListOfErrorMessage.Add(loanInfo.LenderLendingRulesBrokenText);
+                }
+                if (!loanInfo.IsGreidslugetaOk)
+                {
+                    vm.ListOfErrorMessage.Add("Þú hefur því miður ekki greiðslugetu fyrir lánunum");
+                }
+                if (!loanInfo.NeedsNekoLoan)
+                {
+                    vm.ListOfErrorMessage.Add("Þú átt svo mikið eigið fé að þú þarft ekki á Neko láni að halda !");
+                }
+            }
+
+            ViewData["vm"] = vm;
+
             return View("BasePage", "Summary");
         }
 

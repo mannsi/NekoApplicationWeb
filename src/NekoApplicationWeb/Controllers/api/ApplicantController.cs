@@ -71,33 +71,6 @@ namespace NekoApplicationWeb.Controllers.api
             _dbContext.SaveChanges();
         }
 
-        //[Route("create")]
-        //[HttpPost]
-        //public async Task<UserViewModel> Create([FromBody]string ssn)
-        //{
-        //    // Check if thjodskra entry exists in database
-        //    var thjodskraPerson = _dbContext.ThjodskraPersons.FirstOrDefault(p => p.Id == ssn);
-
-        //    if (thjodskraPerson == null)
-        //    {
-        //        thjodskraPerson = _thjodskraService.GetUserEntity(ssn);
-        //        if (thjodskraPerson == null) return null;
-
-        //        _dbContext.ThjodskraPersons.Add(thjodskraPerson);
-        //        _dbContext.SaveChanges();
-        //    }
-
-        //    var user = await _userService.CreateUser(ssn, thjodskraPerson.Name, true);
-
-        //    if (user == null)
-        //    {
-        //        return null;
-        //    }
-
-        //    var vmUser = new UserViewModel(user, false);
-
-        //    return vmUser;
-        //}
 
         [Route("delete")]
         [HttpPost]
