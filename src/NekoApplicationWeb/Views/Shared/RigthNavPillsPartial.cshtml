@@ -1,18 +1,21 @@
 ﻿@using System.Threading.Tasks
 @using NekoApplicationWeb.ServiceInterfaces
 @using NekoApplicationWeb.Services
-@inject ICompletionService CompletionService
+@inject IApplicationService ApplicationService
 
+@{
+    var application = ApplicationService.ActiveApplication(User);
+}
 
 <div class="hidden-xs hidden-sm col-md-2 col-md-offset-1">
     <div id="selectedNavPillId" class="hidden" selectedNavPillId="@ViewData["selectedNavPillId"]"></div>
     <div class="tabbable">
         <ul class="nav nav-pills nav-stacked">
-            <li id="navPillApplicant"><a asp-controller="Page" asp-action="Personal">Umsækjendur <i class="fa fa-@(CompletionService.PersonalCompleted(User) ? "check" : "minus")-circle pull-right"></i></a></li>
-            <li id="navPillEducation"><a asp-controller="Page" asp-action="Education">Menntun <i class="fa fa-@(CompletionService.EducationCompleted(User) ? "check" : "minus")-circle pull-right"></i></a></li>
-            <li id="navPillEmployment"><a asp-controller="Page" asp-action="Employment">Starfsferill <i class="fa fa-@(CompletionService.EmploymentCompleted(User) ? "check" : "minus")-circle pull-right"></i></a></li>
-            <li id="navPillFinances"><a asp-controller="Page" asp-action="Finances">Fjármál <i class="fa fa-@(CompletionService.FinancesCompleted(User) ? "check" : "minus")-circle pull-right"></i></a></li>
-            <li id="navPillLoan"><a asp-controller="Page" asp-action="Loan">Lánveiting <i class="fa fa-@(CompletionService.LoanCompleted(User) ? "check" : "minus")-circle pull-right"></i></a></li>
+            <li id="navPillApplicant"><a asp-controller="Page" asp-action="Personal">Umsækjendur <i class="fa fa-@(application.PersonalPageCompleted ? "check" : "minus")-circle pull-right"></i></a></li>
+            <li id="navPillEducation"><a asp-controller="Page" asp-action="Education">Menntun <i class="fa fa-@(application.EducationPageCompleted ? "check" : "minus")-circle pull-right"></i></a></li>
+            <li id="navPillEmployment"><a asp-controller="Page" asp-action="Employment">Starfsferill <i class="fa fa-@(application.EmploymentPageCompleted ? "check" : "minus")-circle pull-right"></i></a></li>
+            <li id="navPillFinances"><a asp-controller="Page" asp-action="Finances">Fjármál <i class="fa fa-@(application.FinancesPageCompleted ? "check" : "minus")-circle pull-right"></i></a></li>
+            <li id="navPillLoan"><a asp-controller="Page" asp-action="Loan">Lánveiting <i class="fa fa-@(application.LoanPageCompleted ? "check" : "minus")-circle pull-right"></i></a></li>
             <li id="navPillDocuments">@*<a asp-controller="Page" asp-action="Documents">Fylgiskjöl <i class="fa fa-@(CompletionService.DocumentsCompleted() ? "check" : "minus")-circle pull-right"></i></a>*@</li>
             <li id="navPillSummary"><a asp-controller="Page" asp-action="Summary">Niðurstaða</a></li>
         </ul>

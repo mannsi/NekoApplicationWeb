@@ -20,5 +20,11 @@ namespace NekoApplicationWeb.Models
         public int TotalMonthlyIncomeForAllApplicant { get; set; }
         public int TotalDebtAmountForAllApplicants { get; set; }
         public int TotalAssetAmountForAllApplicants { get; set; }
+
+        public bool PersonalPageCompleted { get; set; }
+        public bool EmploymentPageCompleted { get; set; }
+        public bool EducationPageCompleted { get; set; }
+        public bool FinancesPageCompleted { get; set; }
+        public bool LoanPageCompleted { get; set; }
     }
 }

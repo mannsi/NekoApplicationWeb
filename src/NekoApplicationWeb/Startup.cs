@@ -8,6 +8,7 @@ using NekoApplicationWeb.Models;
 using NekoApplicationWeb.Services;
 using NekoApplicationWeb.ServiceInterfaces;
 using Microsoft.EntityFrameworkCore;
+using NekoApplicationWeb.Data;
 using Newtonsoft.Json.Serialization;
 using Serilog;
 
@@ -76,6 +77,7 @@ namespace NekoApplicationWeb
             services.AddTransient<ICostOfLivingService, CostOfLivingService>();
             services.AddTransient<ICreditScoreService, CreditScoreService>();
             services.AddTransient<IPropertyValuationService, PropertyValuationService>();
+            services.AddTransient<IApplicationService, ApplicationService>();
 
             services.Configure<MailOptions>(myOptions =>
             {
@@ -122,8 +124,8 @@ namespace NekoApplicationWeb
                     template: "{controller=Account}/{action=MyFakeSignIn}/{id?}");
             });
 
-            //InitialData.CreateLenders(app.ApplicationServices);
-            //InitialData.CreateInterestInfo(app.ApplicationServices);
+            InitialData.CreateLenders(app.ApplicationServices);
+            InitialData.CreateInterestInfo(app.ApplicationServices);
             //InitialData.CreateCostOfLivingEntries(app.ApplicationServices);
             //InitialData.ImportPropertyValuationData(app.ApplicationServices);
         }

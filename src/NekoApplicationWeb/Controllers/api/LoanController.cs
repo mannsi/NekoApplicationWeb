@@ -24,6 +24,7 @@ namespace NekoApplicationWeb.Controllers.api
         private readonly ICostOfLivingService _costOfLivingService;
         private readonly IPropertyValuationService _propertyValuationService;
         private readonly ILogger<LoanController> _logger;
+        private readonly ICompletionService _completionService;
 
         public LoanController(
             ApplicationDbContext dbContext,
@@ -32,7 +33,8 @@ namespace NekoApplicationWeb.Controllers.api
             UserManager<ApplicationUser> userManager,
             ICostOfLivingService costOfLivingService,
             IPropertyValuationService propertyValuationService,
-            ILogger<LoanController> logger)
+            ILogger<LoanController> logger,
+            ICompletionService completionService)
         {
             _dbContext = dbContext;
             _loanService = loanService;
@@ -41,6 +43,7 @@ namespace NekoApplicationWeb.Controllers.api
             _costOfLivingService = costOfLivingService;
             _propertyValuationService = propertyValuationService;
             _logger = logger;
+            _completionService = completionService;
         }
 
         [Route("")]
@@ -70,6 +73,11 @@ namespace NekoApplicationWeb.Controllers.api
                 }
             }
         
+            _dbContext.SaveChanges();
+
+            // Update the completion status of the application
+            application.LoanPageCompleted = _completionService.LoanCompleted(User);
+            _dbContext.Update(application);
             _dbContext.SaveChanges();
         }
 

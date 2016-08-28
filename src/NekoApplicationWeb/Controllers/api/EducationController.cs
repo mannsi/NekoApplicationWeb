@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NekoApplicationWeb.Models;
+using NekoApplicationWeb.ServiceInterfaces;
 using NekoApplicationWeb.ViewModels.Page.Education;
 using NekoApplicationWeb.ViewModels.Page.Personal;
 
@@ -18,11 +19,13 @@ namespace NekoApplicationWeb.Controllers.api
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ICompletionService _completionService;
 
-        public EducationController(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager)
+        public EducationController(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager, ICompletionService completionService)
         {
             _dbContext = dbContext;
             _userManager = userManager;
+            _completionService = completionService;
         }
 
         [Route("list")]
@@ -57,6 +60,12 @@ namespace NekoApplicationWeb.Controllers.api
                 }
             }
 
+            _dbContext.SaveChanges();
+
+            // Update the completion status of the application
+            var application = PageController.GetApplicationForUser(loggedInUser, _dbContext);
+            application.EducationPageCompleted = _completionService.EducationCompleted(User);
+            _dbContext.Update(application);
             _dbContext.SaveChanges();
         }
 

@@ -13,6 +13,7 @@ using NekoApplicationWeb.ViewModels.Page.Personal;
 using System.Linq;
 using System.ServiceModel.Syndication;
 using Microsoft.EntityFrameworkCore;
+using NekoApplicationWeb.ServiceInterfaces;
 
 namespace NekoApplicationWeb.Controllers.api
 {
@@ -22,11 +23,13 @@ namespace NekoApplicationWeb.Controllers.api
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ICompletionService _completionService;
 
-        public FinancesController(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager)
+        public FinancesController(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager, ICompletionService completionService)
         {
             _dbContext = dbContext;
             _userManager = userManager;
+            _completionService = completionService;
         }
 
         [Route("list")]
@@ -45,6 +48,11 @@ namespace NekoApplicationWeb.Controllers.api
                 UpdateDebts(vm.DebtsViewModel, application);
                 transaction.Commit();
             }
+
+            // Update the completion status of the application
+            application.FinancesPageCompleted = _completionService.FinancesCompleted(User);
+            _dbContext.Update(application);
+            _dbContext.SaveChanges();
         }
 
         private void UpdateIncome(List<IncomeViewModel> incomesViewModel, Application application)

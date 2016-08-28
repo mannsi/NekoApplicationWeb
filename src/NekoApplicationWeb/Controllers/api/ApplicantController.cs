@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Razor.Tools.Internal;
 using NekoApplicationWeb.Models;
@@ -23,17 +24,24 @@ namespace NekoApplicationWeb.Controllers.api
         private readonly ApplicationDbContext _dbContext;
         private readonly IThjodskraService _thjodskraService;
         private readonly IUserService _userService;
+        private readonly ICompletionService _completionService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ApplicantController(ApplicationDbContext dbContext, IThjodskraService thjodskraService, IUserService userService)
+        public ApplicantController(ApplicationDbContext dbContext, 
+            IThjodskraService thjodskraService, IUserService userService, 
+            ICompletionService completionService,
+            UserManager<ApplicationUser> userManager)
         {
             _dbContext = dbContext;
             _thjodskraService = thjodskraService;
             _userService = userService;
+            _completionService = completionService;
+            _userManager = userManager;
         }
 
         [Route("list")]
         [HttpPost]
-        public void SaveList([FromBody]List<UserViewModel> vm)
+        public async Task SaveList([FromBody]List<UserViewModel> vm)
         {
             using (var transaction = _dbContext.Database.BeginTransaction())
             {
@@ -54,6 +62,13 @@ namespace NekoApplicationWeb.Controllers.api
 
                 transaction.Commit();
             }
+
+            // Update the completion status of the application
+            var loggedInUser = await _userManager.GetUserAsync(User);
+            var application = PageController.GetApplicationForUser(loggedInUser, _dbContext);
+            application.PersonalPageCompleted = _completionService.PersonalCompleted(User);
+            _dbContext.Update(application);
+            _dbContext.SaveChanges();
         }
 
         //[Route("create")]
